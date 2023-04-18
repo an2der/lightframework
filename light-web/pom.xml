@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>lightframework</artifactId>
+        <groupId>com.lightframework</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>light-web</artifactId>
+    <packaging>pom</packaging>
+    <description>web框架</description>
+    <!--  项目中通过dependencyManagement标签以type定义pom、scope定义import引入  -->
+    <modules>
+        <module>light-web-common</module>
+        <module>light-web-core</module>
+        <module>light-web-auth</module>
+        <module>light-web-websocket</module>
+        <module>light-web-database</module>
+    </modules>
+
+    <properties>
+        <springboot.version>2.7.0</springboot.version>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
