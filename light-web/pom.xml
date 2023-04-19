@@ -19,6 +19,7 @@
         <module>light-web-auth</module>
         <module>light-web-websocket</module>
         <module>light-web-database</module>
+        <module>light-web-bom</module>
     </modules>
 
     <properties>
