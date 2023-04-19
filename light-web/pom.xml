@@ -12,7 +12,7 @@
     <artifactId>light-web</artifactId>
     <packaging>pom</packaging>
     <description>web框架</description>
-    <!--  项目中通过dependencyManagement标签以type定义pom、scope定义import引入  -->
+    <!--  项目中通过parent引入  -->
     <modules>
         <module>light-web-common</module>
         <module>light-web-core</module>
@@ -37,4 +37,54 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>config/**</exclude>
+                        </excludes>
+                        <archive>
+                            <manifest>
+                                <mainClass>${mainClass}</mainClass>
+                                <addClasspath>true</addClasspath>
+                                <classpathPrefix>lib/</classpathPrefix>
+                            </manifest>
+                            <manifestEntries>
+                                <Implementation-Title>${project.artifactId}</Implementation-Title>
+                                <Implementation-Version>${project.version}</Implementation-Version>
+                                <Class-Path>./</Class-Path>
+                            </manifestEntries>
+                        </archive>
+                        <skip>${skipBuild}</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <configuration>
+                        <!-- not append assembly id in release file name -->
+                        <appendAssemblyId>false</appendAssemblyId>
+                        <descriptors>
+                            <descriptor>src/main/assembly/assembly.xml</descriptor>
+                        </descriptors>
+                        <skipAssembly>${skipBuild}</skipAssembly>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>make-assembly</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

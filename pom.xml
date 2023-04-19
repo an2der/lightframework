@@ -6,7 +6,7 @@
 
     <groupId>com.lightframework</groupId>
     <artifactId>lightframework</artifactId>
-    <version>1.0</version>
+    <version>${lightframework.version}</version>
     <modules>
         <module>light-web</module>
         <module>light-util</module>
@@ -16,6 +16,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <lightframework.version>1.0</lightframework.version>
         <fastjson2.version>2.0.27</fastjson2.version>
         <slf4j.version>1.7.36</slf4j.version>
     </properties>
@@ -34,24 +35,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <!-- 工程pom.xml配置私服,优先级低于maven的settings.xml -->
-    <!-- maven的settings.xml不配置mirror仓库地址,此处才会生效 -->
-    <repositories>
-        <repository>
-            <id>CongXing</id>
-            <url>http://192.168.1.221:8081/repository/maven-public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-
-            <!-- maven默认关闭snapshot快照库在此打开snapshot快照库 -->
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <distributionManagement>
         <!-- 注意： maven会判断工程版本version后面是否带了-SNAPSHOT，如果带了就发布到snapshots仓库，否则发布到release仓库。-->
