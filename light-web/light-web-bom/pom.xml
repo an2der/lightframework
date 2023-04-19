@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <description>定义一整套相互兼容的jar包版本集合</description>
-    <!--  项目中通过以type定义pom、scope定义provided引入  -->
+    <!--  项目中通过以type定义pom  -->
     <artifactId>light-web-bom</artifactId>
     <packaging>pom</packaging>
 
@@ -35,5 +35,4 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-
 </project>
