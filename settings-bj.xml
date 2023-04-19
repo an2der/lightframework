@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <localRepository>C:\Users\98568\.m2\repository</localRepository>
+  <servers>
+	<server>
+      <id>CongXing</id>
+      <username>admin</username>
+      <password>admin888</password>
+    </server>
+	<server>
+      <id>releases</id>  
+      <username>admin</username>
+      <password>admin888</password>
+    </server>
+     <server>
+      <id>snapshots</id> 
+      <username>admin</username>
+      <password>admin888</password>
+    </server>
+  </servers>
+    <mirrors>
+        <mirror>
+            <id>CongXing</id>
+            <name>CongXing Central</name>
+            <url>http://192.168.1.221:8081/repository/maven-public/</url>
+            <mirrorOf>central</mirrorOf>
+        </mirror>
+    </mirrors>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <env>dev</env>
+                <skipBuild>true</skipBuild>
+            </properties>
+            <activation>
+                <!--不指定环境的时候默认使用dev-->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>uat</id>
+            <properties>
+                <env>uat</env>
+                <skipBuild>false</skipBuild>
+            </properties>
+        </profile>
+        <profile>
+            <id>pro</id>
+            <properties>
+                <env>pro</env>
+                <skipBuild>false</skipBuild>
+            </properties>
+        </profile>
+    </profiles>
+
+</settings>
