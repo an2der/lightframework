@@ -9,12 +9,29 @@
     <version>1.0</version>
     <modules>
         <module>light-web</module>
+        <module>light-util</module>
     </modules>
     <packaging>pom</packaging>
     <description>快速开发框架</description>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <fastjson2.version>2.0.27</fastjson2.version>
+        <slf4j.version>1.7.36</slf4j.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
