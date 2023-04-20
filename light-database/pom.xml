@@ -8,14 +8,11 @@
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <description>web实用工具</description>
+    <description>web数据库访问</description>
     <modules>
-        <module>light-util-base</module>
-        <module>light-util-excel</module>
-        <module>light-util-shell</module>
-        <module>light-util-verifycode</module>
+        <module>light-database-jta</module>
+        <module>light-database-mybatisplus</module>
     </modules>
-    <artifactId>light-util</artifactId>
+    <artifactId>light-database</artifactId>
     <packaging>pom</packaging>
-
 </project>

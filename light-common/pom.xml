@@ -8,14 +8,6 @@
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <description>web实用工具</description>
-    <modules>
-        <module>light-util-base</module>
-        <module>light-util-excel</module>
-        <module>light-util-shell</module>
-        <module>light-util-verifycode</module>
-    </modules>
-    <artifactId>light-util</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>light-common</artifactId>
 
 </project>
