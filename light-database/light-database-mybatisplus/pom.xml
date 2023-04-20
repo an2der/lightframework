@@ -11,20 +11,13 @@
 
     <artifactId>light-database-mybatisplus</artifactId>
     <properties>
-        <mybatis-plus-boot.version>3.5.1</mybatis-plus-boot.version>
         <velocity.version>1.7</velocity.version>
-        <junit.version>4.13.2</junit.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis-plus-boot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
             <version>${mybatis-plus-boot.version}</version>
         </dependency>
         <!--mybatis-plus 代码生成器-->
@@ -44,7 +37,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

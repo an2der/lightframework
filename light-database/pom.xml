@@ -12,7 +12,11 @@
     <modules>
         <module>light-database-jta</module>
         <module>light-database-mybatisplus</module>
+        <module>light-database-mybatisplus-dynamic-datasource</module>
     </modules>
     <artifactId>light-database</artifactId>
     <packaging>pom</packaging>
+    <properties>
+        <mybatis-plus-boot.version>3.5.1</mybatis-plus-boot.version>
+    </properties>
 </project>

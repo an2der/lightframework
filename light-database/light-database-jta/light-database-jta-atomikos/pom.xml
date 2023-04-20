@@ -10,7 +10,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <description>java分布式事务管理实现-atomikos</description>
-    <!--  与mybatis plus配合使用,用DS注解切换数据源要使用DSTransactional注解开启事务   -->
     <artifactId>light-database-jta-atomikos</artifactId>
 
     <dependencies>
