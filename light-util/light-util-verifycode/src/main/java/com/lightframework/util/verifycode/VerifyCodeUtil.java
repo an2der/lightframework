@@ -9,6 +9,8 @@ import java.util.Random;
 
 public class VerifyCodeUtil {
 
+    public static final String VERIFY_CODE = "verifyCode";
+
     /**
      * 创建指定数量的随机字符串
      * @param numberFlag 是否是数字

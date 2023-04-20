@@ -14,11 +14,6 @@
     <dependencies>
         <dependency>
             <groupId>com.lightframework</groupId>
-            <artifactId>light-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.lightframework</groupId>
             <artifactId>light-auth-core</artifactId>
             <version>${project.version}</version>
         </dependency>
