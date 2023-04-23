@@ -33,14 +33,14 @@ import java.util.*;
  */
 public class ExcelUtil {
 
-    private Logger logger = LoggerFactory.getLogger(ExcelUtil.class);
+    private static Logger logger = LoggerFactory.getLogger(ExcelUtil.class);
     /**
      * 读取excel数据，默认忽略第一行
      * @param request
      * @return
      * @throws IOException
      */
-    public <T> List<T> readData(HttpServletRequest request, Class<T>  clazz){
+    public static <T> List<T> readData(HttpServletRequest request, Class<T>  clazz){
         return readData(request,true,clazz);
     }
 
@@ -51,7 +51,7 @@ public class ExcelUtil {
      * @return
      * @throws IOException
      */
-    public <T> List<T>  readData(HttpServletRequest request,boolean ignoreFirstRow,Class<T> clazz) {
+    public static <T> List<T>  readData(HttpServletRequest request,boolean ignoreFirstRow,Class<T> clazz) {
         List<T> resultData = new ArrayList<>();
         InputStream inputStream = null;
         try {
@@ -116,7 +116,7 @@ public class ExcelUtil {
         return resultData;
     }
 
-    public <T> void exportExcel(String filename, Map<String,String> heads, List<T> data, HttpServletResponse response) {
+    public static <T> void exportExcel(String filename, Map<String,String> heads, List<T> data, HttpServletResponse response) {
         OutputStream outputStream = null;
         SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook();
         List<Integer> columnWidth = new ArrayList<>();
