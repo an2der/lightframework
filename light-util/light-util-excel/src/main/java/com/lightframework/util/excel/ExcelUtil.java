@@ -116,7 +116,7 @@ public class ExcelUtil {
         return resultData;
     }
 
-    public static <T> void exportExcel(String filename, Map<String,String> heads, List<T> data, HttpServletResponse response) {
+    public static <T> void exportExcel(String filename, LinkedHashMap<String,String> heads, List<T> data, HttpServletResponse response) {
         OutputStream outputStream = null;
         SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook();
         List<Integer> columnWidth = new ArrayList<>();
