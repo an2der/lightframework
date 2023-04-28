@@ -33,7 +33,6 @@
             <id>dev</id>
             <properties>
                 <env>dev</env>
-                <skipBuild>true</skipBuild>
             </properties>
             <activation>
                 <!--不指定环境的时候默认使用dev-->
@@ -44,14 +43,12 @@
             <id>uat</id>
             <properties>
                 <env>uat</env>
-                <skipBuild>false</skipBuild>
             </properties>
         </profile>
         <profile>
             <id>pro</id>
             <properties>
                 <env>pro</env>
-                <skipBuild>false</skipBuild>
             </properties>
         </profile>
     </profiles>
