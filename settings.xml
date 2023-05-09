@@ -25,7 +25,7 @@
             <id>YuLing</id>
             <name>YuLing Central</name>
             <url>http://192.168.51.9:8081/repository/maven-public/</url>
-            <mirrorOf>central</mirrorOf>
+            <mirrorOf>*</mirrorOf>
         </mirror>
     </mirrors>
     <profiles>
