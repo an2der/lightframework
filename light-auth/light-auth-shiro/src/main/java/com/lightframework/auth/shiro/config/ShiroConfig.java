@@ -1,5 +1,6 @@
 package com.lightframework.auth.shiro.config;
 
+import com.lightframework.auth.core.model.AuthConfigProperties;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -21,11 +22,14 @@ public class ShiroConfig {
     @Autowired
     private AuthorizingRealm realm;
 
+    @Autowired
+    private AuthConfigProperties authConfigProperties;
+
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(realm);
-//        securityManager.setSessionManager(defaultWebSessionManager());//配置session管理器
+        securityManager.setSessionManager(defaultWebSessionManager());//配置session管理器
         return securityManager;
     }
 
@@ -42,10 +46,19 @@ public class ShiroConfig {
 
         //资源拦截器.
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
-        //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
+        AuthConfigProperties.InterceptUrl interceptUrl = authConfigProperties.getInterceptUrl();
+        if(interceptUrl != null){
+            //配置拦截路径
+            if(interceptUrl.getIncludes() != null){
+                interceptUrl.getIncludes().forEach(s -> filterChainDefinitionMap.put(s, "authc"));
+            }
+            //配置忽略路径
+            if(interceptUrl.getExcludes() != null){
+                interceptUrl.getExcludes().forEach(s -> filterChainDefinitionMap.put(s, "anon"));
+            }
+        }
         filterChainDefinitionMap.put("/api/auth/**", "anon");
 
-        filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
@@ -60,21 +73,11 @@ public class ShiroConfig {
 
     @Bean
     public DefaultWebSessionManager defaultWebSessionManager(){
-        DefaultWebSessionManager defaultWebSessionManager=new WebSessionManager();
-        defaultWebSessionManager.setGlobalSessionTimeout(24*60*60*1000);//单位ms
-        defaultWebSessionManager.setSessionValidationInterval(24*60*60*1000);//ms
-        defaultWebSessionManager.setDeleteInvalidSessions(true);
-        defaultWebSessionManager.setSessionIdCookieEnabled(false);//管不cookie
-        //defaultWebSessionManager.setSessionIdCookie(simpleCookie());
+        DefaultWebSessionManager defaultWebSessionManager = new WebSessionManager();
+        if(authConfigProperties.getExpireTimeMinute() != null && authConfigProperties.getExpireTimeMinute().intValue() > 0) {
+            defaultWebSessionManager.setGlobalSessionTimeout(authConfigProperties.getExpireTimeMinute().intValue() * 60 * 1000);//单位ms
+        }
         return defaultWebSessionManager;
     }
-
-//    @Bean
-//    public SimpleCookie simpleCookie(){
-//        SimpleCookie simpleCookie=new SimpleCookie("JSESSIONID");
-//        simpleCookie.setHttpOnly(true);
-//        simpleCookie.setMaxAge(-1);
-//        return simpleCookie;
-//    }
 
 }

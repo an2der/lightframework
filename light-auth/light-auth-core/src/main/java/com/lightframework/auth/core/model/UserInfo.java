@@ -11,13 +11,16 @@ import java.util.Map;
  */
 public class UserInfo implements Serializable{
 
+	public static final short MAN = 1;
+	public static final short WOMAN = 0;
+
 	private static final long serialVersionUID = 6818738597004272801L;
 	
-	private long userId;
+	private String userId;
 	private String userName;
 	private String realName;
 	private Short age;
-	private Character gender;
+	private Short gender;
 	private String phone;
 	private String email;
 	private String headImg;
@@ -29,11 +32,11 @@ public class UserInfo implements Serializable{
 	private List<String> privileges;
 	private Map<String,Object> others;
 
-	public long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
@@ -61,11 +64,11 @@ public class UserInfo implements Serializable{
 		this.age = age;
 	}
 
-	public Character getGender() {
+	public Short getGender() {
 		return gender;
 	}
 
-	public void setGender(Character gender) {
+	public void setGender(Short gender) {
 		this.gender = gender;
 	}
 

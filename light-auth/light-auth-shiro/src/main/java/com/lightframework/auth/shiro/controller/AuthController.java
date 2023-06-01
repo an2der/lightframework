@@ -44,7 +44,7 @@ public class AuthController {
         }catch (AuthenticationException e){
             throw new BusinessException("登录失败");
         }
-        return "登录成功";
+        return subject.getSession().getId();
     }
 
     @GetMapping("/logout")
