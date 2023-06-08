@@ -1,6 +1,5 @@
 package com.lightframework.auth.core.resolver;
 
-import com.lightframework.auth.core.annotation.CurrentUser;
 import com.lightframework.auth.core.model.UserInfo;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -17,7 +16,7 @@ public abstract class UserInfoMethodArgumentAnnotationResolver implements Handle
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(CurrentUser.class);
+        return parameter.getParameterType() == UserInfo.class;
     }
 
     @Override

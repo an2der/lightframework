@@ -23,11 +23,12 @@ public class UserInfo implements Serializable{
 	private Short gender;
 	private String phone;
 	private String email;
+	private String address;
 	private String headImg;
 	private boolean isAdmin = false;
-	private Long roleId;
+	private String roleId;
 	private String roleName;
-	private Long departmentId;
+	private String departmentId;
 	private String departmentName;
 	private List<String> privileges;
 	private Map<String,Object> others;
@@ -88,6 +89,14 @@ public class UserInfo implements Serializable{
 		this.email = email;
 	}
 
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	public String getHeadImg() {
 		return headImg;
 	}
@@ -104,11 +113,11 @@ public class UserInfo implements Serializable{
 		isAdmin = admin;
 	}
 
-	public Long getRoleId() {
+	public String getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(Long roleId) {
+	public void setRoleId(String roleId) {
 		this.roleId = roleId;
 	}
 
@@ -120,11 +129,11 @@ public class UserInfo implements Serializable{
 		this.roleName = roleName;
 	}
 
-	public Long getDepartmentId() {
+	public String getDepartmentId() {
 		return departmentId;
 	}
 
-	public void setDepartmentId(Long departmentId) {
+	public void setDepartmentId(String departmentId) {
 		this.departmentId = departmentId;
 	}
 
