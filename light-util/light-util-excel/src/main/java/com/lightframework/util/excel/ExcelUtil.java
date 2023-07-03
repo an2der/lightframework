@@ -126,28 +126,9 @@ public class ExcelUtil {
             String fileName = new String((filename + ".xlsx").getBytes("gb2312"), "iso-8859-1");
             response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
             response.setContentType("application/octet-stream");
-            SXSSFSheet sxssfSheet = sxssfWorkbook.createSheet();
-            //创建首行，并设置样式
-            SXSSFRow headRow = sxssfSheet.createRow(0);
-            Font headFont = sxssfWorkbook.createFont();
-            headFont.setFontName("宋体");
-            headFont.setFontHeightInPoints((short) 11);
-            headFont.setBold(true);
-            CellStyle headStyle = sxssfWorkbook.createCellStyle();
-            headStyle.setFont(headFont);
-            headStyle.setAlignment(HorizontalAlignment.CENTER);
-            headStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-            headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            headStyle.setFillForegroundColor(IndexedColors.SEA_GREEN.index);
-            headStyle.setWrapText(true);
-            SXSSFCell headCell;
-            int headIndex = 0;
-            for(String head:heads.keySet()){
-                headCell = headRow.createCell(headIndex++);
-                headCell.setCellStyle(headStyle);
-                headCell.setCellValue(head);
-                columnWidth.add(head.getBytes().length  * 256);
-            }
+            SXSSFSheet sxssfSheet = null;
+            SXSSFRow dataRow;
+            SXSSFCell dataCell;
             //创建数据行
             Font dataFont = sxssfWorkbook.createFont();
             dataFont.setFontName("宋体");
@@ -156,11 +137,37 @@ public class ExcelUtil {
             dataStyle.setFont(dataFont);
             dataStyle.setAlignment(HorizontalAlignment.CENTER);
             dataStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-            SXSSFRow dataRow;
-            SXSSFCell dataCell;
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             for (int i = 0;i < data.size();i++){
-                dataRow = sxssfSheet.createRow(i+1);
+                int index = i % (1048576 - 1); //xlsx最大数据行 减去一行标题
+                if(index == 0){
+                    for (int j = 0; j < columnWidth.size(); j++) {
+                        sxssfSheet.setColumnWidth(j,columnWidth.get(j) > maxWidth?maxWidth:columnWidth.get(j));
+                    }
+                    sxssfSheet = sxssfWorkbook.createSheet();
+                    //创建首行，并设置样式
+                    SXSSFRow headRow = sxssfSheet.createRow(0);
+                    Font headFont = sxssfWorkbook.createFont();
+                    headFont.setFontName("宋体");
+                    headFont.setFontHeightInPoints((short) 11);
+                    headFont.setBold(true);
+                    CellStyle headStyle = sxssfWorkbook.createCellStyle();
+                    headStyle.setFont(headFont);
+                    headStyle.setAlignment(HorizontalAlignment.CENTER);
+                    headStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+                    headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    headStyle.setFillForegroundColor(IndexedColors.SEA_GREEN.index);
+                    headStyle.setWrapText(true);
+                    SXSSFCell headCell;
+                    int headIndex = 0;
+                    for(String head:heads.keySet()){
+                        headCell = headRow.createCell(headIndex++);
+                        headCell.setCellStyle(headStyle);
+                        headCell.setCellValue(head);
+                        columnWidth.add(head.getBytes().length  * 256);
+                    }
+                }
+                dataRow = sxssfSheet.createRow(index+1);
                 T obj = data.get(i);
                 Class objClass = obj.getClass();
                 int dataIndex = 0;
@@ -192,7 +199,6 @@ public class ExcelUtil {
             sxssfWorkbook.write(outputStream);
         } catch (Exception e) {
             logger.error("导出excel发生异常",e);
-            throw new BusinessException("导出失败");
         }finally {
             try {
                 outputStream.close();
