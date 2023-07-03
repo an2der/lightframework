@@ -2,6 +2,7 @@ package com.lightframework.database.mybatisplus.generator;
 
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
+import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -22,6 +23,7 @@ public class MyBatisPlusGenerator {
 //                            .enableSwagger() // 开启 swagger 模式
                             .fileOverride() // 覆盖已生成文件
                             .disableOpenDir()
+                            .dateType(DateType.ONLY_DATE)
                             .outputDir("src\\main\\java"); // 指定输出目录
                 })
                 .packageConfig(builder -> {   //包配置
