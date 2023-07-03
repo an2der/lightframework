@@ -27,6 +27,11 @@
             <version>${mybatis-plus-boot.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!--mybatis-plus 代码生成器 依赖模板引擎velocity-->
         <dependency>
             <groupId>org.apache.velocity</groupId>
