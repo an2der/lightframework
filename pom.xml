@@ -21,6 +21,7 @@
         <module>light-database</module>
         <module>light-starter</module>
         <module>light-util</module>
+        <module>light-system-log</module>
     </modules>
     <packaging>pom</packaging>
     <description>微框架</description>
@@ -45,7 +46,26 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <fastjson2.version>2.0.27</fastjson2.version>
+        <clickhouse.version>0.4.6</clickhouse.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
@@ -53,6 +73,12 @@
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.clickhouse</groupId>
+                <artifactId>clickhouse-jdbc</artifactId>
+                <version>${clickhouse.version}</version>
+                <classifier>all</classifier>
             </dependency>
         </dependencies>
     </dependencyManagement>

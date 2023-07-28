@@ -1,4 +1,4 @@
-package com.lightframework.database.mybatisplus.generator;
+package generator;
 
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
@@ -11,9 +11,10 @@ public class MyBatisPlusGenerator {
 
     @Test
     public void generatorAll(){
-        generator("imm_common","common");
-        generator("imm_history","history");
-        generator("imm_state","state");
+//        generator("imm_common","common");
+//        generator("imm_history","history");
+//        generator("imm_state","state");
+        generator("imm_common",null);
     }
 
     private void generator(String databaseName,String name){
@@ -27,23 +28,24 @@ public class MyBatisPlusGenerator {
                             .outputDir("src\\main\\java"); // 指定输出目录
                 })
                 .packageConfig(builder -> {   //包配置
-                    builder.parent("cn.com.cx.oms.imm") // 设置父包名
+                    builder.parent("com.lightframework.system.log") // 设置父包名
                             .moduleName(null) // 设置父包模块名,可以设置为空，默认在包名之下,设置成null，防止生成双斜杠问题
-                            .entity("model."+name)
-                            .mapper("dao."+name)
-                            .service("service."+name)
-                            .serviceImpl("service."+name+".impl")
-                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "src\\main\\resources\\mapper\\"+name)); // 设置mapperXml生成路径
+                            .entity("model")
+                            .mapper("dao")
+                            .service("service")
+                            .serviceImpl("service.impl")
+                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "src\\main\\resources\\mapper")); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
-                    builder.addTablePrefix("t_", "sys"); // 设置过滤表前缀,忽略一些表头，如“sys_user”,填写了sys，就会忽略sys，生成user
+                    builder.addTablePrefix("t_", "sys")
+                            .addInclude("t_system_log")
+                            .entityBuilder()
+                            .enableLombok(); // 设置过滤表前缀,忽略一些表头，如“sys_user”,填写了sys，就会忽略sys，生成user
+                }).templateConfig(builder -> {
+                    builder.controller(null); //不生成controller
                 })
 //                .templateEngine(new FreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
                 .execute();
     }
 
-    @Test
-    public void test(){
-        System.out.println((Long)null);
-    }
 }

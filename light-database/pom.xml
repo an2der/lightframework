@@ -13,6 +13,7 @@
         <module>light-database-jta</module>
         <module>light-database-mybatisplus</module>
         <module>light-database-mybatisplus-dynamic-datasource</module>
+        <module>light-database-mybatisplus-generator</module>
     </modules>
     <artifactId>light-database</artifactId>
     <packaging>pom</packaging>

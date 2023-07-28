@@ -25,19 +25,12 @@ public class BusinessReturnValueConfigurer implements InitializingBean {
     private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
     @Autowired
-    private JacksonProperties jacksonProperties;
+    private ObjectMapper objectMapper;
 
     @Override
     public void afterPropertiesSet() {
-        ObjectMapper mapper = new ObjectMapper();
-        if(jacksonProperties.getDateFormat() != null){
-            mapper.setDateFormat(new SimpleDateFormat(jacksonProperties.getDateFormat()));
-        }
-        if(jacksonProperties.getTimeZone() != null){
-            mapper.setTimeZone(jacksonProperties.getTimeZone());
-        }
         List<HandlerMethodReturnValueHandler> returnValueHandlers = new ArrayList<>();
-        returnValueHandlers.add(new BusinessReturnValueHandler(mapper));
+        returnValueHandlers.add(new BusinessReturnValueHandler(objectMapper));
         returnValueHandlers.addAll(requestMappingHandlerAdapter.getReturnValueHandlers());
         requestMappingHandlerAdapter.setReturnValueHandlers(returnValueHandlers);
     }

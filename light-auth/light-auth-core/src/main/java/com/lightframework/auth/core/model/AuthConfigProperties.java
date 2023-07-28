@@ -1,5 +1,7 @@
 package com.lightframework.auth.core.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,8 @@ import java.util.List;
  */
 @Component
 @ConfigurationProperties(prefix = "auth")
+@Getter
+@Setter
 public class AuthConfigProperties {
 
     private InterceptUrl interceptUrl;
@@ -20,49 +24,12 @@ public class AuthConfigProperties {
 
     private boolean enableVerifyCode = false;
 
-    public Integer getExpireTimeMinute() {
-        return expireTimeMinute;
-    }
 
-    public void setExpireTimeMinute(Integer expireTimeMinute) {
-        this.expireTimeMinute = expireTimeMinute;
-    }
-
-    public InterceptUrl getInterceptUrl() {
-        return interceptUrl;
-    }
-
-    public void setInterceptUrl(InterceptUrl interceptUrl) {
-        this.interceptUrl = interceptUrl;
-    }
-
-    public boolean isEnableVerifyCode() {
-        return enableVerifyCode;
-    }
-
-    public void setEnableVerifyCode(boolean enableVerifyCode) {
-        this.enableVerifyCode = enableVerifyCode;
-    }
-
+    @Getter
+    @Setter
     public class InterceptUrl{
         private List<String> includes;
 
         private List<String> excludes;
-
-        public List<String> getIncludes() {
-            return includes;
-        }
-
-        public void setIncludes(List<String> includes) {
-            this.includes = includes;
-        }
-
-        public List<String> getExcludes() {
-            return excludes;
-        }
-
-        public void setExcludes(List<String> excludes) {
-            this.excludes = excludes;
-        }
     }
 }

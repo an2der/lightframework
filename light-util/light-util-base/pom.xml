@@ -11,5 +11,11 @@
     <description>基础实用工具</description>
     <artifactId>light-util-base</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
