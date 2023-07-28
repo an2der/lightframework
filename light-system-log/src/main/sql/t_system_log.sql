@@ -20,8 +20,8 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `t_system_log`;
 CREATE TABLE `t_system_log` (
-  `id` varchar(36) NOT NULL COMMENT 'id',
-  `user_id` varchar(36) DEFAULT NULL COMMENT '用户id',
+  `id` varchar(64) NOT NULL COMMENT 'id',
+  `user_id` varchar(64) DEFAULT NULL COMMENT '用户id',
   `username` varchar(32) DEFAULT NULL COMMENT '用户名',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `ip_addr` varchar(15) DEFAULT NULL COMMENT 'ip地址',
