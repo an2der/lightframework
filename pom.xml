@@ -47,6 +47,9 @@
         <maven.compiler.target>8</maven.compiler.target>
         <fastjson2.version>2.0.27</fastjson2.version>
         <clickhouse.version>0.4.6</clickhouse.version>
+        <jsch.version>0.1.55</jsch.version>
+        <commons-net.version>3.8.0</commons-net.version>
+        <commons-io.version>2.11.0</commons-io.version>
     </properties>
 
     <dependencies>
@@ -78,6 +81,21 @@
                 <artifactId>clickhouse-jdbc</artifactId>
                 <version>${clickhouse.version}</version>
                 <classifier>all</classifier>
+            </dependency>
+            <dependency>
+                <groupId>com.jcraft</groupId>
+                <artifactId>jsch</artifactId>
+                <version>${jsch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>${commons-net.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
