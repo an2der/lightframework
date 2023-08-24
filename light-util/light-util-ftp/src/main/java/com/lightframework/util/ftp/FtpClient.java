@@ -1,7 +1,6 @@
 package com.lightframework.util.ftp;
 
 import com.lightframework.common.BusinessException;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
  * @version 1.0
  */
 
-@Slf4j
 public class FtpClient extends BaseFtp {
 
     private static final FTPFileFilter systemFilter = new FTPFileFilter() {
@@ -78,12 +76,10 @@ public class FtpClient extends BaseFtp {
             int reply = ftpClient.getReplyCode();   //获取状态码
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftpClient.disconnect();        //结束连接
-                log.error("FTP服务器连接异常![host="+host+",port="+port+",reply="+reply+"]" + ftpClient.getReplyString());
                 throw new BusinessException("FTP服务器连接异常!");
             }
             if(!ftpClient.login(username,password)){//登录
                 ftpClient.disconnect();
-                log.error("FTP登录失败![host="+host+",port="+port+",username="+username+",password="+password+"]");
                 throw new BusinessException("FTP登录失败!");
             }
             if(Charset.forName(encode) == StandardCharsets.UTF_8){
@@ -97,7 +93,6 @@ public class FtpClient extends BaseFtp {
                 this.changeDir(rootPath);
             }
         } catch (IOException e) {
-            log.error("FTP服务器连接异常![host="+host+",port="+port+"]",e);
             throw new BusinessException("FTP服务器连接异常!",e);
         }
         return true;
@@ -116,7 +111,6 @@ public class FtpClient extends BaseFtp {
             try {
                 ftpClient.disconnect();
             } catch (IOException e) {
-                log.error("FTP服务器关闭连接异常![host="+host+",port="+port+"]",e);
                 throw new BusinessException("FTP服务器关闭连接异常!",e);
             }
         }
@@ -171,7 +165,6 @@ public class FtpClient extends BaseFtp {
         try {
             return ftpClient.rename(oldPath,newPath);
         } catch (IOException e) {
-            log.error("文件重命名异常![host=" + host + ",oldPath=" + oldPath + ",newPath=" + newPath + "]",e);
             throw new BusinessException(e);
         }
     }

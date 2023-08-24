@@ -6,7 +6,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.lightframework.common.BusinessException;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.InputStream;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
  * @date 2023/8/21 11:09
  * @version 1.0
  */
-@Slf4j
 public class SFtpClient extends BaseFtp {
 
 	private Session session = null;
@@ -74,7 +72,6 @@ public class SFtpClient extends BaseFtp {
 			}
 			return true;
 		} catch (Exception e) {
-			log.error("sftp 服务器登录失败！ ", e);
 			throw new BusinessException("sftp 服务器登录失败");
 		}
 	}

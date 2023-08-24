@@ -2,9 +2,10 @@ package com.lightframework.util.ftp;
 
 import com.lightframework.common.BusinessException;
 import com.lightframework.util.ftp.tool.ToolKit;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -13,7 +14,6 @@ import java.util.List;
  * @date 2022/10/20 16:40
  * @version 1.0
  */
-@Slf4j
 public class FtpDecorator implements Ftp{
 
     private BaseFtp baseFtp;
@@ -61,13 +61,11 @@ public class FtpDecorator implements Ftp{
                     inputStream.close();
             }
         }catch (IOException e){
-            log.error("上传文件发生异常![host=" + baseFtp.host + ",filepath=" + filepath + "]", e);
             throw new BusinessException("上传文件发生异常!");
         }catch (BusinessException e) {
             if(needReconnection(e)){
                 return upload(filepath,filename,inputStream);
             }else {
-                log.error("上传文件发生异常![host=" + baseFtp.host + ",filepath=" + filepath + "]", e);
                 throw e;
             }
         }
@@ -76,13 +74,11 @@ public class FtpDecorator implements Ftp{
     public boolean upload(String filepath, String filename, String localPath) {
         File file = new File(localPath);
         if(!file.exists()){
-            log.error("文件不存在![host="+baseFtp.host+",filename="+filepath+"]");
             throw new BusinessException("文件不存在!");
         }
         try {
             return upload(filepath,filename,new FileInputStream(file));
         } catch (FileNotFoundException e) {
-            log.error("拒绝访问异常![host="+baseFtp.host+",filepath="+filepath+"]",e);
             throw new BusinessException("拒绝访问");
         }
     }
@@ -109,7 +105,6 @@ public class FtpDecorator implements Ftp{
             }
             return true;
         } catch (IOException e) {
-            log.error("文件夹上传异常![host="+baseFtp.host+",sourcePath="+sourcePath+",destinationPath="+destinationPath+"]",e);
             throw new BusinessException("文件夹上传异常");
         }
     }
@@ -120,13 +115,12 @@ public class FtpDecorator implements Ftp{
     }
 
     @Override
-    public boolean downloadForFolder(String sourcePath, String destinationPath) {
-        return downloadForFolderToLinux(sourcePath, destinationPath);
+    public boolean downloadForFolder(String sourcePath, String destinationPath,boolean conflictOverwrite,List<String> includes,List<String> excludes) {
+        return downloadForFolderToLinux(sourcePath, destinationPath,conflictOverwrite,includes,excludes);
     }
 
     public boolean download(String remotePath, String fileName, String localPath,String localName, boolean toWindows) {
         if(!validateRemoteFileExist(remotePath,fileName,false)){
-            log.error("文件不存在![host="+baseFtp.host+",remotePath="+remotePath+",filename="+fileName+"]");
             throw new BusinessException("文件不存在!");
         }
         try {
@@ -143,13 +137,11 @@ public class FtpDecorator implements Ftp{
             }
             return baseFtp.download(remotePath, fileName, clearLocalPath,clearLocalName);
         } catch (IOException e) {
-            log.error("文件下载异常![host=" + baseFtp.host + ",remotePath=" + remotePath + ",filename=" + fileName + "]",e);
             throw new BusinessException("文件下载异常");
         }catch (BusinessException e) {
             if(needReconnection(e)){
                 return download(remotePath,fileName,localPath,localName,toWindows);
             }else {
-                log.error("文件下载异常![host=" + baseFtp.host + ",remotePath=" + remotePath + ",filename=" + fileName + "]",e);
                 throw e;
             }
         }
@@ -163,12 +155,20 @@ public class FtpDecorator implements Ftp{
         return this.download(remotePath,fileName,localPath,localName,false);
     }
 
-    public boolean downloadForFolder(String sourcePath, String destinationPath, boolean toWindows) {
+    public boolean downloadForFolder(String sourcePath, String destinationPath,boolean conflictOverwrite,List<String> includes,List<String> excludes, boolean toWindows) {
+        if (!this.changeDir(sourcePath)) {
+            throw new BusinessException("目录不存在!");
+        }
+        if(!Ftp.separator.equals(sourcePath.substring(sourcePath.length() - 1))){
+            sourcePath += Ftp.separator;
+        }
+        return this.downloadForFolder(sourcePath,"", destinationPath,conflictOverwrite, includes, excludes, toWindows);
+    }
+
+
+    private boolean downloadForFolder(String sourcePath,String sourceChildPath, String destinationPath,boolean conflictOverwrite,List<String> includes,List<String> excludes, boolean toWindows) {
         try {
-            if (!this.changeDir(sourcePath)) {
-                throw new BusinessException("目录不存在!");
-            }
-            List<FtpNode> files = list(sourcePath);
+            List<FtpNode> files = list(sourcePath + sourceChildPath);
             if(files != null && files.size() > 0) {
                 String clearDestinationPath = toWindows? ToolKit.clearWindowsFilePathSpecialCharacter(destinationPath):destinationPath;
                 File file = new File(clearDestinationPath);
@@ -176,16 +176,27 @@ public class FtpDecorator implements Ftp{
                     file.mkdirs();
                 }
                 for (FtpNode f : files) {
+                    Path childPath = Paths.get(f.getPath().substring(sourcePath.length()));
                     String clearDestinationName = f.getName();
-                    if(toWindows) {
+                    File downloadFile;
+                    if (toWindows) {
                         clearDestinationName = ToolKit.clearWindowsFileNameSpecialCharacter(f.getName());
-                        ToolKit.clearDuplicateNameFiles(new File(clearDestinationPath,clearDestinationName), f.isDirectory());
+                        downloadFile = new File(clearDestinationPath, clearDestinationName);
+                        ToolKit.clearDuplicateNameFiles(downloadFile, f.isDirectory());
+                    }else {
+                        downloadFile = new File(clearDestinationPath, clearDestinationName);
                     }
                     boolean b;
                     if (f.isDirectory()) {
-                        b = downloadForFolder(sourcePath + baseFtp.separator + f.getName(), Paths.get(clearDestinationPath,clearDestinationName).toString(),toWindows);
+                        b = downloadForFolder(sourcePath, childPath.toString(), Paths.get(clearDestinationPath, clearDestinationName).toString(),conflictOverwrite,includes,excludes, toWindows);
                     } else {
-                        b = baseFtp.download(sourcePath,f.getName(),clearDestinationPath,clearDestinationName);
+                        if(!conflictOverwrite && downloadFile.exists()){
+                            continue;
+                        }
+                        if(!checkDownload(childPath,includes,excludes)){
+                            continue;
+                        }
+                        b = baseFtp.download(sourcePath + sourceChildPath, f.getName(), clearDestinationPath, clearDestinationName);
                     }
                     if (!b) {
                         return b;
@@ -194,24 +205,44 @@ public class FtpDecorator implements Ftp{
             }
             return true;
         } catch (IOException e) {
-            log.error("文件夹下载异常![host=" + baseFtp.host + ",sourcePath=" + sourcePath + ",destinationPath=" + destinationPath + "]",e);
             throw new BusinessException("文件夹下载异常");
         }catch (BusinessException e) {
             if(needReconnection(e)){
-                return downloadForFolder(sourcePath, destinationPath,toWindows);
+                return downloadForFolder(sourcePath,sourceChildPath, destinationPath,conflictOverwrite,includes,excludes,toWindows);
             }else {
-                log.error("文件夹下载异常![host=" + baseFtp.host + ",sourcePath=" + sourcePath + ",destinationPath=" + destinationPath + "]",e);
                 throw e;
             }
         }
     }
 
-    public boolean downloadForFolderToWindows(String sourcePath, String destinationPath) {
-        return this.downloadForFolder(sourcePath,destinationPath,true);
+    private boolean checkDownload(Path path,List<String> includes,List<String> excludes){
+        boolean needDownload = true;
+        if(includes != null && includes.size() > 0){
+            needDownload = false;
+            for (String include : includes) {
+                if(include != null && include.length() > 0 && FileSystems.getDefault().getPathMatcher("glob:"+include).matches(path)){
+                    needDownload = true;
+                    break;
+                }
+            }
+        }
+        if(needDownload && excludes != null && excludes.size() > 0){
+            for (String exclude : excludes) {
+                if(exclude != null && exclude.length() > 0 && FileSystems.getDefault().getPathMatcher("glob:"+exclude).matches(path)){
+                    needDownload = false;
+                    break;
+                }
+            }
+        }
+        return needDownload;
     }
 
-    public boolean downloadForFolderToLinux(String sourcePath, String destinationPath) {
-        return this.downloadForFolder(sourcePath,destinationPath,false);
+    public boolean downloadForFolderToWindows(String sourcePath, String destinationPath,boolean conflictOverwrite,List<String> includes,List<String> excludes) {
+        return this.downloadForFolder(sourcePath,destinationPath,conflictOverwrite,includes,excludes,true);
+    }
+
+    public boolean downloadForFolderToLinux(String sourcePath, String destinationPath,boolean conflictOverwrite,List<String> includes,List<String> excludes) {
+        return this.downloadForFolder(sourcePath,destinationPath,conflictOverwrite,includes,excludes,false);
     }
 
     @Override
@@ -242,7 +273,6 @@ public class FtpDecorator implements Ftp{
             if(needReconnection(e)){
                 return remove(filepath);
             }else {
-                log.error("文件删除异常![host=" + baseFtp.host + ",filepath=" + filepath + "]",e);
                 throw e;
             }
         }
@@ -263,7 +293,6 @@ public class FtpDecorator implements Ftp{
             if(needReconnection(e)){
                 return removeDir(path);
             }else {
-                log.error("文件夹删除异常![host=" + baseFtp.host + ",path=" + path + "]",e);
                 throw e;
             }
         }
@@ -280,7 +309,6 @@ public class FtpDecorator implements Ftp{
             if(needReconnection(e)){
                 return list(path);
             }else {
-                log.error("获取文件列表异常![host=" + baseFtp.host + "]",e);
                 throw e;
             }
         }
@@ -296,7 +324,6 @@ public class FtpDecorator implements Ftp{
             if(needReconnection(e)){
                 mkdir(path);
             }else {
-                log.error("创建文件夹异常![host=" + baseFtp.host + ",path=" + path + "]",e);
                 throw e;
             }
         }
@@ -310,7 +337,6 @@ public class FtpDecorator implements Ftp{
             if(needReconnection(e)){
                 return validateRemoteFileExist(path,fileName,isDir);
             }else {
-                log.error("获取FTP服务器文件列表异常![host=" + baseFtp.host + ",path=" + path + "]",e);
                 throw e;
             }
         }
@@ -327,7 +353,6 @@ public class FtpDecorator implements Ftp{
             if(needReconnection(e)){
                 return changeDir(path);
             }else {
-                log.error("改变FTP工作路径失败![host=" + baseFtp.host + ",path=" + path + "]",e);
                 throw e;
             }
         }
@@ -346,7 +371,6 @@ public class FtpDecorator implements Ftp{
             if(needReconnection(e)){
                 return currentDir();
             }else {
-                log.error("获取当前文件夹异常![host=" + baseFtp.host + "]",e);
                 throw e;
             }
         }

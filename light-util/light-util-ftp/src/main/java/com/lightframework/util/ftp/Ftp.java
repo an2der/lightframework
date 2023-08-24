@@ -69,7 +69,7 @@ public interface Ftp {
      * @param sourcePath
      * @param destinationPath
      */
-    boolean downloadForFolder(String sourcePath, String destinationPath);
+    boolean downloadForFolder(String sourcePath, String destinationPath,boolean conflictOverwrite,List<String> includes,List<String> excludes);
 
     /**
      * 文件重命名

@@ -1,5 +1,7 @@
 package com.lightframework.util.ftp;
 
+import java.util.List;
+
 /** 所有方法路径参数传全路径
  * @author yg
  * @date 2022/10/20 14:58
@@ -75,7 +77,7 @@ public abstract class BaseFtp implements Ftp{
     }
 
     @Override
-    public boolean downloadForFolder(String sourcePath, String destinationPath) {
+    public boolean downloadForFolder(String sourcePath, String destinationPath,boolean conflictOverwrite, List<String> includes, List<String> excludes) {
         return false;
     }
 
