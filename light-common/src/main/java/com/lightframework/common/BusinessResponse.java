@@ -70,4 +70,8 @@ public class BusinessResponse implements Serializable {
     public BusinessResponse(){
         this(BusinessStatus.SUCCESS.getCode(),BusinessStatus.SUCCESS.getMessage(),null);
     }
+
+    public void throwBusinessException(){
+        throw new BusinessException(this.code,this.message);
+    }
 }

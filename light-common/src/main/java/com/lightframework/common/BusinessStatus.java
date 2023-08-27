@@ -30,4 +30,13 @@ public enum BusinessStatus {
     public String getMessage() {
         return message;
     }
+
+    public static BusinessStatus getByCode(int code){
+        for (BusinessStatus value : BusinessStatus.values()) {
+            if(value.getCode() == code){
+                return value;
+            }
+        }
+        return null;
+    }
 }
