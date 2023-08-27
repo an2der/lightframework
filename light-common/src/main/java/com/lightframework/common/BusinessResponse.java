@@ -66,4 +66,8 @@ public class BusinessResponse implements Serializable {
         this.message = message;
         this.data = data;
     }
+
+    public BusinessResponse(){
+        this(BusinessStatus.SUCCESS.getCode(),BusinessStatus.SUCCESS.getMessage(),null);
+    }
 }
