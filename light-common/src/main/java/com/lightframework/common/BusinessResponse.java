@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @date 2022/6/10 18:44
  * @version 1.0
  */
-public class BusinessResponse implements Serializable {
+public class BusinessResponse<T> implements Serializable {
 
     private static final long serialVersionUID = -4651321568722805550L;
 
@@ -15,7 +15,7 @@ public class BusinessResponse implements Serializable {
 
     private String message;
 
-    private Object data;
+    private T data;
 
     public int getCode() {
         return code;
@@ -33,11 +33,11 @@ public class BusinessResponse implements Serializable {
         this.message = message;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 
@@ -49,7 +49,7 @@ public class BusinessResponse implements Serializable {
         this(status.getCode(),status.getMessage(),null);
     }
 
-    public BusinessResponse(Object data){
+    public BusinessResponse(T data){
         this(BusinessStatus.SUCCESS.getCode(), BusinessStatus.SUCCESS.getMessage(),data);
     }
 
@@ -57,11 +57,11 @@ public class BusinessResponse implements Serializable {
         this(code,message,null);
     }
 
-    public BusinessResponse(String message, Object data) {
+    public BusinessResponse(String message, T data) {
         this(BusinessStatus.SUCCESS.getCode(),message,data);
     }
 
-    public BusinessResponse(int code, String message, Object data) {
+    public BusinessResponse(int code, String message, T data) {
         this.code = code;
         this.message = message;
         this.data = data;
