@@ -22,6 +22,7 @@
         <module>light-starter</module>
         <module>light-util</module>
         <module>light-system-log</module>
+        <module>light-project-structure</module>
     </modules>
     <packaging>pom</packaging>
     <description>微框架</description>
@@ -132,6 +133,32 @@
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>unpack</id>
+                            <phase>process-sources</phase>
+                            <goals>
+                                <goal>unpack</goal>
+                            </goals>
+                            <configuration>
+                                <artifactItems>
+                                    <artifactItem>
+                                        <groupId>com.lightframework</groupId>
+                                        <artifactId>light-project-structure</artifactId>
+                                        <version>${lightframework.version}</version>
+                                        <type>jar</type>
+                                        <overWrite>false</overWrite>
+                                        <outputDirectory>${project.basedir}/src</outputDirectory>
+                                        <excludes>META-INF/**</excludes>
+                                    </artifactItem>
+                                </artifactItems>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
