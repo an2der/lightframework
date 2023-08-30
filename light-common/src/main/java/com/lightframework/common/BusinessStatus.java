@@ -9,6 +9,7 @@ public enum BusinessStatus {
     UNKNOWN(0,"未知错误，请联系管理员"),
     SUCCESS(200,"执行成功"),
     FAIL(300,"执行失败"),
+    BAD_REQUEST(400,"请求参数错误"),
     UNAUTHORIZED(401,"未登录"),
     FORBIDDEN(403,"没有访问权限"),
     NOT_FOUND(404,"资源不存在"),
