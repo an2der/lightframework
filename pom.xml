@@ -12,7 +12,7 @@
 
     <groupId>com.lightframework</groupId>
     <artifactId>lightframework</artifactId>
-    <version>1.0</version>
+    <version>${revision}</version>
     <modules>
         <module>light-common</module>
         <module>light-core</module>
@@ -42,7 +42,8 @@
     </distributionManagement>
 
     <properties>
-        <lightframework.version>1.0</lightframework.version>
+        <revision>1.0</revision>
+        <lightframework.version>${revision}</lightframework.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <fastjson2.version>2.0.27</fastjson2.version>
@@ -50,6 +51,7 @@
         <jsch.version>0.1.55</jsch.version>
         <commons-net.version>3.8.0</commons-net.version>
         <commons-io.version>2.11.0</commons-io.version>
+        <flatten.version>1.4.1</flatten.version>
     </properties>
 
     <dependencies>
@@ -101,6 +103,33 @@
     </dependencyManagement>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten.version}</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>

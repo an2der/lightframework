@@ -5,7 +5,7 @@
     <parent>
         <artifactId>light-util</artifactId>
         <groupId>com.lightframework</groupId>
-        <version>1.0</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <description>基础实用工具</description>

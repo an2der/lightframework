@@ -20,3 +20,5 @@ target/
 .classpath
 .idea
 *.iml
+.flattened-pom.xml
+*.lck
