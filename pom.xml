@@ -22,25 +22,10 @@
         <module>light-starter</module>
         <module>light-util</module>
         <module>light-system-log</module>
-        <module>light-project-structure</module>
+        <module>light-plugin</module>
     </modules>
     <packaging>pom</packaging>
     <description>微框架</description>
-
-    <distributionManagement>
-        <!-- 注意： maven会判断工程版本version后面是否带了-SNAPSHOT，如果带了就发布到snapshots仓库，否则发布到release仓库。-->
-        <repository>
-            <!--id任意，在setting文件中<server>的ID与这里一致-->
-            <id>releases</id>
-            <!--指向仓库类型为host(宿主仓库）的储存类型为Release的仓库-->
-            <url>http://192.168.51.9:8081/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <!--指向仓库类型为host(宿主仓库）的储存类型为Snapshot的仓库-->
-            <url>http://192.168.51.9:8081/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <properties>
         <revision>1.0</revision>
@@ -135,32 +120,6 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>unpack</id>
-                            <phase>process-sources</phase>
-                            <goals>
-                                <goal>unpack</goal>
-                            </goals>
-                            <configuration>
-                                <artifactItems>
-                                    <artifactItem>
-                                        <groupId>com.lightframework</groupId>
-                                        <artifactId>light-project-structure</artifactId>
-                                        <version>${lightframework.version}</version>
-                                        <type>jar</type>
-                                        <overWrite>false</overWrite>
-                                        <outputDirectory>${project.basedir}/src</outputDirectory>
-                                        <excludes>META-INF/**</excludes>
-                                    </artifactItem>
-                                </artifactItems>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <configuration>
                         <excludes>
@@ -205,4 +164,82 @@
             </plugins>
         </pluginManagement>
     </build>
+    <profiles>
+        <profile>
+            <id>NEXUS-YuLing</id>
+            <properties>
+                <!--      nexus.name与settings文件中server的id保持一致          -->
+                <nexus.name>YuLing</nexus.name>
+                <nexus.url>http://192.168.51.9:8081</nexus.url>
+            </properties>
+            <repositories>
+                <repository>
+                    <id>${nexus.name}-central</id>
+                    <name>${nexus.name} Central</name>
+                    <url>${nexus.url}/repository/maven-public/</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>${nexus.name}-central</id>
+                    <name>${nexus.name} Central</name>
+                    <url>${nexus.url}/repository/maven-public/</url>
+                </pluginRepository>
+            </pluginRepositories>
+            <distributionManagement>
+                <!-- 注意： maven会判断工程版本version后面是否带了-SNAPSHOT，如果带了就发布到snapshots仓库，否则发布到release仓库。-->
+                <repository>
+                    <!--id任意，在setting文件中<server>的ID与这里一致-->
+                    <id>${nexus.name}</id>
+                    <name>${nexus.name} Releases</name>
+                    <!--指向仓库类型为host(宿主仓库）的储存类型为Release的仓库-->
+                    <url>${nexus.url}/repository/maven-releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>${nexus.name}</id>
+                    <name>${nexus.name} Snapshots</name>
+                    <!--指向仓库类型为host(宿主仓库）的储存类型为Snapshot的仓库-->
+                    <url>${nexus.url}/repository/maven-snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>NEXUS-CongXing</id>
+            <properties>
+                <!--      nexus.name与settings文件中server的id保持一致          -->
+                <nexus.name>CongXing</nexus.name>
+                <nexus.url>http://192.168.1.21:8081</nexus.url>
+            </properties>
+            <repositories>
+                <repository>
+                    <id>${nexus.name}-central</id>
+                    <name>${nexus.name} Central</name>
+                    <url>${nexus.url}/repository/maven-public/</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>${nexus.name}-central</id>
+                    <name>${nexus.name} Central</name>
+                    <url>${nexus.url}/repository/maven-public/</url>
+                </pluginRepository>
+            </pluginRepositories>
+            <distributionManagement>
+                <!-- 注意： maven会判断工程版本version后面是否带了-SNAPSHOT，如果带了就发布到snapshots仓库，否则发布到release仓库。-->
+                <repository>
+                    <!--id任意，在setting文件中<server>的ID与这里一致-->
+                    <id>${nexus.name}</id>
+                    <name>${nexus.name} Releases</name>
+                    <!--指向仓库类型为host(宿主仓库）的储存类型为Release的仓库-->
+                    <url>${nexus.url}/repository/maven-releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>${nexus.name}</id>
+                    <name>${nexus.name} Snapshots</name>
+                    <!--指向仓库类型为host(宿主仓库）的储存类型为Snapshot的仓库-->
+                    <url>${nexus.url}/repository/maven-snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 </project>
