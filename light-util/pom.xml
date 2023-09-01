@@ -15,6 +15,7 @@
         <module>light-util-shell</module>
         <module>light-util-verifycode</module>
         <module>light-util-ftp</module>
+        <module>light-util-project</module>
     </modules>
     <artifactId>light-util</artifactId>
     <packaging>pom</packaging>

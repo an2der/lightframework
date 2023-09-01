@@ -15,7 +15,7 @@
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-common</artifactId>
-            <version>${project.version}</version>
+            <version>${lightframework.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jcraft</groupId>

@@ -19,22 +19,22 @@
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-common</artifactId>
-            <version>${project.version}</version>
+            <version>${lightframework.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-util-base</artifactId>
-            <version>${project.version}</version>
+            <version>${lightframework.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-database-mybatisplus</artifactId>
-            <version>${project.version}</version>
+            <version>${lightframework.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-auth-core</artifactId>
-            <version>${project.version}</version>
+            <version>${lightframework.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

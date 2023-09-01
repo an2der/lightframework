@@ -5,6 +5,11 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+
+import java.io.File;
+import java.io.IOException;
+
 
 /*** 
  * @author yg
@@ -14,9 +19,16 @@ import org.apache.maven.plugins.annotations.Mojo;
 @Mojo(name = "init-starter",defaultPhase = LifecyclePhase.NONE)
 public class InitStarterPlugin extends AbstractMojo {
 
+    @Parameter(defaultValue = "${basedir}",readonly = true)
+    private String basedir;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        this.getLog().info("init root plugin!");
+        try {
+            JarUtil.extract("structure/init-starter",new File(basedir,"src/main").getAbsolutePath(),false);
+        } catch (IOException e) {
+            this.getLog().error(e.getMessage());
+        }
     }
 
 }

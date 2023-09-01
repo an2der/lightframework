@@ -23,6 +23,7 @@
         <module>light-util</module>
         <module>light-system-log</module>
         <module>light-plugin</module>
+        <module>light-parent</module>
     </modules>
     <packaging>pom</packaging>
     <description>微框架</description>
@@ -38,6 +39,8 @@
         <commons-net.version>3.8.0</commons-net.version>
         <commons-io.version>2.11.0</commons-io.version>
         <flatten.version>1.4.1</flatten.version>
+        <maven.version>3.9.4</maven.version>
+        <maven-plugin.version>3.9.0</maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -85,11 +88,33 @@
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-model</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-tools</groupId>
+                <artifactId>maven-plugin-annotations</artifactId>
+                <version>${maven-plugin.version}</version>
+                <scope>provided</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <build>
         <plugins>
+            <!--    maven版本管理插件        -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
@@ -116,53 +141,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <configuration>
-                        <excludes>
-                            <exclude>config/**</exclude>
-                        </excludes>
-                        <archive>
-                            <manifest>
-                                <mainClass>${mainClass}</mainClass>
-                                <addClasspath>true</addClasspath>
-                                <classpathPrefix>lib/</classpathPrefix>
-                            </manifest>
-                            <manifestEntries>
-                                <Implementation-Title>${project.artifactId}</Implementation-Title>
-                                <Implementation-Version>${project.version}</Implementation-Version>
-                                <Class-Path>./</Class-Path>
-                            </manifestEntries>
-                        </archive>
-<!--                        <skip>${skipBuild}</skip>-->
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <configuration>
-                        <!-- not append assembly id in release file name -->
-                        <appendAssemblyId>false</appendAssemblyId>
-                        <descriptors>
-                            <descriptor>src/main/assembly/assembly.xml</descriptor>
-                        </descriptors>
-<!--                        <skipAssembly>${skipBuild}</skipAssembly>-->
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>make-assembly</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>single</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
     <profiles>
         <profile>

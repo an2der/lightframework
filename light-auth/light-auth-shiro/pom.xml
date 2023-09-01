@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-auth-core</artifactId>
-            <version>${project.version}</version>
+            <version>${lightframework.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>

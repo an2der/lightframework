@@ -15,12 +15,12 @@
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-core</artifactId>
-            <version>${project.version}</version>
+            <version>${lightframework.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-util-verifycode</artifactId>
-            <version>${project.version}</version>
+            <version>${lightframework.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
