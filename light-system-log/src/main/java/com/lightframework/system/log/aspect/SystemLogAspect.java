@@ -3,6 +3,7 @@ package com.lightframework.system.log.aspect;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lightframework.auth.core.model.UserInfo;
+import com.lightframework.auth.core.service.UserInfoService;
 import com.lightframework.common.BusinessException;
 import com.lightframework.common.BusinessStatus;
 import com.lightframework.common.annotation.SystemLogger;
@@ -50,6 +51,9 @@ public class SystemLogAspect {
     @Autowired
     private ISystemLogService systemLogService;
 
+    @Autowired(required = false)
+    private UserInfoService userInfoService;
+
     @Pointcut("@annotation(com.lightframework.common.annotation.SystemLogger)")
     public void systemLogPointCut(){
     }
@@ -84,8 +88,11 @@ public class SystemLogAspect {
             SystemLogger logger = getAnnotation(joinPoint);
             SystemLog systemLog = new SystemLog();
             systemLog.setId(UUID.randomUUID().toString());
-//            systemLog.setUserId();
-//            systemLog.setUsername();
+            if(userInfoService != null) {
+                UserInfo userInfo = userInfoService.getUserInfo();
+                systemLog.setUserId(userInfo.getUserId());
+                systemLog.setUsername(userInfo.getUserName());
+            }
             systemLog.setCreateTime(date);
             systemLog.setIpAddr(IPUtil.getRemoteIpAddr(((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest()));
             systemLog.setRequestParam(getArgsToJsonArrayString(joinPoint));

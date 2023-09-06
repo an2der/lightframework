@@ -14,7 +14,7 @@ public class MyBatisPlusGenerator {
 //        generator("imm_common","common");
 //        generator("imm_history","history");
 //        generator("imm_state","state");
-        generator("rbc_common",null);
+        generator("rbc_common","common");
     }
 
     private void generator(String databaseName,String name){
@@ -28,17 +28,17 @@ public class MyBatisPlusGenerator {
                             .outputDir("src\\main\\java"); // 指定输出目录
                 })
                 .packageConfig(builder -> {   //包配置
-                    builder.parent("cn.com.cx.ftptool") // 设置父包名
+                    builder.parent("cn.com.cx.th.log.analysis") // 设置父包名
                             .moduleName(null) // 设置父包模块名,可以设置为空，默认在包名之下,设置成null，防止生成双斜杠问题
-                            .entity("model")
-                            .mapper("dao")
-                            .service("service")
-                            .serviceImpl("service.impl")
+                            .entity("model."+name)
+                            .mapper("dao."+name)
+                            .service("service."+name)
+                            .serviceImpl("service."+name+".impl")
                             .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "src\\main\\resources\\mapper")); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
                     builder.addTablePrefix("t_", "sys")
-                            .addInclude("t_rssp_data")
+                            .addInclude("t_device_info")
                             .entityBuilder()
                             .enableLombok(); // 设置过滤表前缀,忽略一些表头，如“sys_user”,填写了sys，就会忽略sys，生成user
                 }).templateConfig(builder -> {

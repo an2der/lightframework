@@ -1,6 +1,6 @@
 package com.lightframework.auth.core.config;
 
-import com.lightframework.auth.core.resolver.UserInfoMethodArgumentAnnotationResolver;
+import com.lightframework.auth.core.resolver.UserInfoMethodArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -16,13 +16,11 @@ import java.util.List;
 @Configuration
 public class UserInfoConfigurer implements WebMvcConfigurer {
 
-    @Autowired(required = false)
-    private UserInfoMethodArgumentAnnotationResolver userinfoMethodArgumentAnnotationResolver;
+    @Autowired
+    private UserInfoMethodArgumentResolver userinfoMethodArgumentResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        if(userinfoMethodArgumentAnnotationResolver != null) {
-            resolvers.add(userinfoMethodArgumentAnnotationResolver);
-        }
+        resolvers.add(userinfoMethodArgumentResolver);
     }
 }

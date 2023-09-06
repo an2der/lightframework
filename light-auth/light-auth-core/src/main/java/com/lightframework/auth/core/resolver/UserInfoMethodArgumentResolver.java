@@ -1,18 +1,25 @@
 package com.lightframework.auth.core.resolver;
 
 import com.lightframework.auth.core.model.UserInfo;
+import com.lightframework.auth.core.service.UserInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-/** 用户信息注解解析抽象
+/** 用户信息方法参数对象
  * @author yg
  * @date 2022/6/13 11:16
  * @version 1.0
  */
-public abstract class UserInfoMethodArgumentAnnotationResolver implements HandlerMethodArgumentResolver {
+@Component
+public class UserInfoMethodArgumentResolver implements HandlerMethodArgumentResolver {
+
+    @Autowired
+    private UserInfoService userInfoService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -20,6 +27,8 @@ public abstract class UserInfoMethodArgumentAnnotationResolver implements Handle
     }
 
     @Override
-    public abstract UserInfo resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory);
+    public UserInfo resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory){
+        return userInfoService.getUserInfo();
+    }
 
 }
