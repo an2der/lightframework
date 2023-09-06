@@ -27,7 +27,7 @@ public class ProjectUtil {
         if(baseFile.isDirectory()){
             return baseFile.getAbsolutePath();
         }else {
-            return baseFile.getAbsolutePath().substring(0, baseFile.getAbsolutePath().lastIndexOf(File.separator));
+            return baseFile.getParent();
         }
     }
 
