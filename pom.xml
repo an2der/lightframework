@@ -26,7 +26,9 @@
         <module>light-parent</module>
     </modules>
     <packaging>pom</packaging>
-    <description>微框架</description>
+    <description>微框架,用于解决开发过程中重复的工作，提高效率，不容易出错，
+        此项目提供快速生成新项目结构需要的文件，统一的公共配置（如：MAVEN私服、MAVEN打包插件等配置），高内聚低耦合的公共功能模块，依赖版本统一管理，项目版本管理，更实用的工具类
+    </description>
 
     <properties>
         <revision>1.0</revision>
