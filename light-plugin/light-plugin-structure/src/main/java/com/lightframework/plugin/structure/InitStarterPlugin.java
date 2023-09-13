@@ -16,7 +16,7 @@ import java.io.IOException;
  * @date 2023/8/31 21:19
  * @version 1.0
  */
-@Mojo(name = "init-starter",defaultPhase = LifecyclePhase.NONE)
+@Mojo(name = "init-starter",aggregator = true,defaultPhase = LifecyclePhase.NONE)
 public class InitStarterPlugin extends AbstractMojo {
 
     @Parameter(defaultValue = "${basedir}",readonly = true)
