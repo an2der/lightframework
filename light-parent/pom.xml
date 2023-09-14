@@ -13,6 +13,8 @@
     <packaging>pom</packaging>
 
     <properties>
+        <skipPackZip>true</skipPackZip>
+        <mainClass></mainClass>
     </properties>
 
     <build>
@@ -22,53 +24,83 @@
                 <artifactId>light-plugin-structure</artifactId>
                 <version>${lightframework.version}</version>
             </plugin>
+            <plugin>
+                <groupId>com.lightframework.plugin</groupId>
+                <artifactId>light-plugin-pack</artifactId>
+                <version>${lightframework.version}</version>
+                <executions>
+                    <execution>
+                        <id>pack-jar</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>config/**</exclude>
+                            </excludes>
+                            <archive>
+                                <manifest>
+                                    <mainClass>${mainClass}</mainClass>
+                                    <addClasspath>true</addClasspath>
+                                    <classpathPrefix>lib/</classpathPrefix>
+                                </manifest>
+                                <manifestEntries>
+                                    <Implementation-Title>${project.artifactId}</Implementation-Title>
+                                    <Implementation-Version>${project.version}</Implementation-Version>
+                                    <Class-Path>./</Class-Path>
+                                </manifestEntries>
+                            </archive>
+                            <classifier>run</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <finalName>${project.artifactId}</finalName>
+                    <!-- not append assembly id in release file name -->
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>src/main/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                    <skipAssembly>${skipPackZip}</skipAssembly>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <configuration>
-                        <excludes>
-                            <exclude>config/**</exclude>
-                        </excludes>
-                        <archive>
-                            <manifest>
-                                <mainClass>${mainClass}</mainClass>
-                                <addClasspath>true</addClasspath>
-                                <classpathPrefix>lib/</classpathPrefix>
-                            </manifest>
-                            <manifestEntries>
-                                <Implementation-Title>${project.artifactId}</Implementation-Title>
-                                <Implementation-Version>${project.version}</Implementation-Version>
-                                <Class-Path>./</Class-Path>
-                            </manifestEntries>
-                        </archive>
-                        <!--                        <skip>${skipBuild}</skip>-->
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <configuration>
-                        <finalName>${project.artifactId}</finalName>
-                        <!-- not append assembly id in release file name -->
-                        <appendAssemblyId>false</appendAssemblyId>
-                        <descriptors>
-                            <descriptor>src/main/assembly/assembly.xml</descriptor>
-                        </descriptors>
-                        <!--                        <skipAssembly>${skipBuild}</skipAssembly>-->
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>make-assembly</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>single</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
+<!--                <plugin>-->
+<!--                    <groupId>org.apache.maven.plugins</groupId>-->
+<!--                    <artifactId>maven-jar-plugin</artifactId>-->
+<!--                    <configuration>-->
+<!--                        <excludes>-->
+<!--                            <exclude>config/**</exclude>-->
+<!--                        </excludes>-->
+<!--                        <archive>-->
+<!--                            <manifest>-->
+<!--                                <mainClass>${mainClass}</mainClass>-->
+<!--                                <addClasspath>true</addClasspath>-->
+<!--                                <classpathPrefix>lib/</classpathPrefix>-->
+<!--                            </manifest>-->
+<!--                            <manifestEntries>-->
+<!--                                <Implementation-Title>${project.artifactId}</Implementation-Title>-->
+<!--                                <Implementation-Version>${project.version}</Implementation-Version>-->
+<!--                                <Class-Path>./</Class-Path>-->
+<!--                            </manifestEntries>-->
+<!--                        </archive>-->
+<!--                    </configuration>-->
+<!--                </plugin>-->
             </plugins>
         </pluginManagement>
     </build>

@@ -24,7 +24,7 @@
 
 	<files>
 		<file>
-			<source>${project.build.directory}/${project.build.finalName}.${project.packaging}</source>
+			<source>${project.build.directory}/${project.build.finalName}-run.${project.packaging}</source>
 			<outputDirectory/>
 			<destName>${project.artifactId}.jar</destName>
 		</file>
