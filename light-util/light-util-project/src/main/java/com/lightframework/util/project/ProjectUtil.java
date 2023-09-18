@@ -8,8 +8,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /***
  * @author yg
@@ -48,10 +51,55 @@ public class ProjectUtil {
                 throw new FileNotFoundException("not found file (MANIFEST.MF) in " + baseFile.getAbsolutePath());
             }
         }else {
-            File pomFile = new File(baseFile.getParentFile().getParent(),"pom.xml");
+            File projectPath = new File(baseFile.getParentFile().getParent());
+            File pomFile = new File(projectPath,"pom.xml");
             Model model = new MavenXpp3Reader().read(new FileInputStream(pomFile));
-            return model.getVersion();
+            String version = (model.getVersion() == null && model.getParent() != null)
+                    || (model.getVersion() != null && model.getVersion().equals("${parent.version}"))
+                    ?model.getParent().getVersion():model.getVersion();
+            if(version == null){
+                return null;
+            }
+            Pattern pattern = Pattern.compile("\\$\\{(((?!}).)+)\\}");
+            Matcher matcher = pattern.matcher(version);
+            if(matcher.find()) {
+                Properties properties = getProjectPomAllProperties(projectPath);
+                StringBuffer stringBuffer = new StringBuffer();
+                do{
+                    String key = matcher.group(1);
+                    String val = properties.getProperty(key);
+                    if(val != null) {
+                        matcher.appendReplacement(stringBuffer, val);
+                    }
+                }while (matcher.find());
+                matcher.appendTail(stringBuffer);
+                return stringBuffer.toString();
+            }else {
+                return version;
+            }
         }
+    }
+
+    private static Properties getProjectPomAllProperties(File projectPath){
+        File pomFile = new File(projectPath,"pom.xml");
+        Properties properties = new Properties();
+        if(pomFile.exists()){
+            try {
+                Model model = new MavenXpp3Reader().read(new FileInputStream(pomFile));
+                if(model != null){
+                    if(model.getProperties() != null){
+                        properties.putAll(model.getProperties());
+                    }
+                    if(model.getParent() != null){
+                        Properties parentProperties = getProjectPomAllProperties(projectPath.getParentFile());
+                        parentProperties.putAll(properties);
+                        properties = parentProperties;
+                    }
+                }
+            } catch (Exception e) {
+            }
+        }
+        return properties;
     }
 
     public static Manifest getProjectManifest() throws IOException {
