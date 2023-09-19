@@ -32,9 +32,9 @@
 
 	<files>
 		<file>
-			<source>${project.build.directory}/${project.build.finalName}-run.${project.packaging}</source>
+			<source>${project.build.directory}/${packName}-run.${project.packaging}</source>
 			<outputDirectory/>
-			<destName>${project.artifactId}.jar</destName>
+			<destName>${packName}.jar</destName>
 		</file>
 	</files>
 	<dependencySets>
