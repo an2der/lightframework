@@ -32,9 +32,9 @@
 
 	<files>
 		<file>
-			<source>${project.build.directory}/${packName}-run.${project.packaging}</source>
+			<source>${project.build.directory}/${appName}-run.${project.packaging}</source>
 			<outputDirectory/>
-			<destName>${packName}.jar</destName>
+			<destName>${appName}.jar</destName>
 		</file>
 	</files>
 	<dependencySets>

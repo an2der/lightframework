@@ -15,7 +15,7 @@
     <properties>
         <skipPackZip>true</skipPackZip>
         <mainClass></mainClass>
-        <packName>${project.artifactId}</packName>
+        <appName>${project.artifactId}</appName>
     </properties>
 
     <build>
@@ -36,7 +36,7 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <finalName>${packName}</finalName>
+                            <finalName>${appName}</finalName>
                             <excludes>
                                 <exclude>config/**</exclude>
                             </excludes>
@@ -61,7 +61,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>${packName}</finalName>
+                    <finalName>${appName}</finalName>
                     <!-- not append assembly id in release file name -->
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
