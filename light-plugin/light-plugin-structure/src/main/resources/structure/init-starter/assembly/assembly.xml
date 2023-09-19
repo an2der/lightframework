@@ -17,6 +17,14 @@
 			<lineEnding>unix</lineEnding>
 		</fileSet>
 		<fileSet>
+			<directory>src/main/scripts/windows</directory>
+			<outputDirectory>${file.separator}</outputDirectory>
+			<includes>
+				<include>*.bat</include>
+			</includes>
+			<lineEnding>windows</lineEnding>
+		</fileSet>
+		<fileSet>
 			<directory>src/main/env/${env}</directory>
 			<outputDirectory>config</outputDirectory>
 		</fileSet>
