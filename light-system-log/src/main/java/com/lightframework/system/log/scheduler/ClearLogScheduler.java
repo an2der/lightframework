@@ -19,7 +19,7 @@ public class ClearLogScheduler {
     @Autowired
     private ISystemLogService systemLogService;
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void clearLog(){
         LocalDate localDate = LocalDate.now();
         localDate.minusDays(systemLogProperties.getReservedDays());
