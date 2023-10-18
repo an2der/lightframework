@@ -153,26 +153,8 @@
     </build>
     <profiles>
         <profile>
+            <!-- 需要配合settings配置文件使用，并且id一致 -->
             <id>NEXUS-YuLing</id>
-            <properties>
-                <!--      nexus.name与settings文件中server的id保持一致          -->
-                <nexus.name>YuLing</nexus.name>
-                <nexus.url>http://192.168.51.9:8081</nexus.url>
-            </properties>
-            <repositories>
-                <repository>
-                    <id>${nexus.name}-central</id>
-                    <name>${nexus.name} Central</name>
-                    <url>${nexus.url}/repository/maven-public/</url>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>${nexus.name}-central</id>
-                    <name>${nexus.name} Central</name>
-                    <url>${nexus.url}/repository/maven-public/</url>
-                </pluginRepository>
-            </pluginRepositories>
             <distributionManagement>
                 <!-- 注意： maven会判断工程版本version后面是否带了-SNAPSHOT，如果带了就发布到snapshots仓库，否则发布到release仓库。-->
                 <repository>
@@ -191,26 +173,8 @@
             </distributionManagement>
         </profile>
         <profile>
+            <!-- 需要配合settings配置文件使用，并且id一致 -->
             <id>NEXUS-CongXing</id>
-            <properties>
-                <!--      nexus.name与settings文件中server的id保持一致          -->
-                <nexus.name>CongXing</nexus.name>
-                <nexus.url>http://192.168.1.21:8081</nexus.url>
-            </properties>
-            <repositories>
-                <repository>
-                    <id>${nexus.name}-central</id>
-                    <name>${nexus.name} Central</name>
-                    <url>${nexus.url}/repository/maven-public/</url>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>${nexus.name}-central</id>
-                    <name>${nexus.name} Central</name>
-                    <url>${nexus.url}/repository/maven-public/</url>
-                </pluginRepository>
-            </pluginRepositories>
             <distributionManagement>
                 <!-- 注意： maven会判断工程版本version后面是否带了-SNAPSHOT，如果带了就发布到snapshots仓库，否则发布到release仓库。-->
                 <repository>
