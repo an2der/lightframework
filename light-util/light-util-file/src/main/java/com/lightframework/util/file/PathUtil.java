@@ -1,39 +1,41 @@
-package com.lightframework.util.ftp.tool;
+package com.lightframework.util.file;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /***
  * @author yg
  * @date 2023/8/21 15:58
  * @version 1.0
  */
-public class ToolKit {
-    /**
-     * 路径如果不存在则自动创建
-     **/
-    public static void isChartPathExist(String dirPath) {
-        File file = new File(dirPath);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-    }
+public class PathUtil {
 
+    /**
+     * 清除windows文件名中特殊字符
+     * @param name
+     * @return
+     */
     public static String clearWindowsFileNameSpecialCharacter(String name){
         return name.replaceAll("[\\\\\\/:\\*\\?\"<>\\|]","#");
     }
 
+    /**
+     * 清除windows路径中特殊字符
+     * @param name
+     * @return
+     */
     public static String clearWindowsFilePathSpecialCharacter(String name){
         return name.replaceAll("[\\*\\?\"<>\\|]","#");
     }
 
-
+    /**
+     * 验证是否是有效绝对路径
+     * @param path
+     * @return
+     */
     public static boolean isAbsolutePath(String path) {
         if ((System.getProperty("os.name").toLowerCase().contains("windows") && path.indexOf(":") > 0) || (System.getProperty("os.name").toLowerCase().contains("linux") && path.startsWith("/"))) {
             return true;
@@ -67,21 +69,4 @@ public class ToolKit {
         }
     }
 
-    public static String extractIoExceptionMsg(IOException e){
-        String message = e.getMessage();
-        Pattern pattern = Pattern.compile("\\(.+\\)$");
-        Matcher matcher = pattern.matcher(message);
-        String result = "文件被占用，无法访问";
-        if (matcher.find()) {
-            result = matcher.group().replaceAll("(\\(|\\)|。)", "");
-        }
-        return result;
-    }
-
-    public static String getNetFileSizeDescription(long bytes) {
-        if (bytes == 0) return "0B";
-        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
-        int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
-        return new DecimalFormat("#,##0.##").format(bytes / Math.pow(1024, digitGroups)) + "" + units[digitGroups];
-    }
 }

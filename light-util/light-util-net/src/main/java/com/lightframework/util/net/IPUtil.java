@@ -1,4 +1,4 @@
-package com.lightframework.util.base;
+package com.lightframework.util.net;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,6 +16,10 @@ import java.util.Enumeration;
 @Slf4j
 public class IPUtil {
 
+    /**
+     * 获取本地ip
+     * @return
+     */
     public static InetAddress getLocalHostExactAddress() {
         try {
             InetAddress candidateAddress = null;
@@ -51,7 +55,11 @@ public class IPUtil {
         return null;
     }
 
-    //获取IP地址
+    /**
+     * 获取ip地址
+     * @param request
+     * @return
+     */
     public static String getRemoteIpAddr(HttpServletRequest request) {
         String ipAddress = request.getHeader("x-forwarded-for");
         if (ipAddress == null || ipAddress.length() == 0

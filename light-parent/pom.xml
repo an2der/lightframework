@@ -32,6 +32,7 @@
                 <executions>
                     <execution>
                         <id>pack-jar</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
@@ -60,15 +61,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <finalName>${appName}</finalName>
-                    <!-- not append assembly id in release file name -->
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <descriptors>
-                        <descriptor>src/main/assembly/assembly.xml</descriptor>
-                    </descriptors>
-                    <skipAssembly>${skipPackZip}</skipAssembly>
-                </configuration>
                 <executions>
                     <execution>
                         <id>make-assembly</id>
@@ -76,6 +68,15 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <finalName>${appName}</finalName>
+                            <!-- not append assembly id in release file name -->
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>src/main/assembly/assembly.xml</descriptor>
+                            </descriptors>
+                            <skipAssembly>${skipPackZip}</skipAssembly>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

@@ -1,7 +1,7 @@
 package com.lightframework.util.ftp;
 
 import com.lightframework.common.BusinessException;
-import com.lightframework.util.ftp.tool.ToolKit;
+import com.lightframework.util.file.PathUtil;
 
 import java.io.*;
 import java.nio.file.FileSystems;
@@ -127,9 +127,9 @@ public class FtpDecorator implements Ftp{
             String clearLocalPath = localPath;
             String clearLocalName = localName;
             if(toWindows){ //处理windows路径特殊符号与文件名大小写冲突
-                clearLocalPath = ToolKit.clearWindowsFilePathSpecialCharacter(localPath);
-                clearLocalName = ToolKit.clearWindowsFileNameSpecialCharacter(localName);
-                ToolKit.clearDuplicateNameFiles(new File(clearLocalPath,clearLocalName), false);
+                clearLocalPath = PathUtil.clearWindowsFilePathSpecialCharacter(localPath);
+                clearLocalName = PathUtil.clearWindowsFileNameSpecialCharacter(localName);
+                PathUtil.clearDuplicateNameFiles(new File(clearLocalPath,clearLocalName), false);
             }
             File file = new File(clearLocalPath);
             if(!file.exists()){
@@ -170,7 +170,7 @@ public class FtpDecorator implements Ftp{
         try {
             List<FtpNode> files = list(sourcePath + sourceChildPath);
             if(files != null && files.size() > 0) {
-                String clearDestinationPath = toWindows? ToolKit.clearWindowsFilePathSpecialCharacter(destinationPath):destinationPath;
+                String clearDestinationPath = toWindows? PathUtil.clearWindowsFilePathSpecialCharacter(destinationPath):destinationPath;
                 File file = new File(clearDestinationPath);
                 if (!file.exists()) {
                     file.mkdirs();
@@ -180,9 +180,9 @@ public class FtpDecorator implements Ftp{
                     String clearDestinationName = f.getName();
                     File downloadFile;
                     if (toWindows) {
-                        clearDestinationName = ToolKit.clearWindowsFileNameSpecialCharacter(f.getName());
+                        clearDestinationName = PathUtil.clearWindowsFileNameSpecialCharacter(f.getName());
                         downloadFile = new File(clearDestinationPath, clearDestinationName);
-                        ToolKit.clearDuplicateNameFiles(downloadFile, f.isDirectory());
+                        PathUtil.clearDuplicateNameFiles(downloadFile, f.isDirectory());
                     }else {
                         downloadFile = new File(clearDestinationPath, clearDestinationName);
                     }

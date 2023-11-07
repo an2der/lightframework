@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
-            <artifactId>light-util-base</artifactId>
+            <artifactId>light-util-net</artifactId>
             <version>${lightframework.version}</version>
         </dependency>
         <dependency>

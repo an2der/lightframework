@@ -8,14 +8,10 @@
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <description>基础实用工具</description>
-    <artifactId>light-util-base</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
+    <artifactId>light-util-codec</artifactId>
+    <description>编码、解码</description>
+    <properties>
+    </properties>
+
 </project>

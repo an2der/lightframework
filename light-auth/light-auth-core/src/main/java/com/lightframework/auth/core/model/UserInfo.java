@@ -3,6 +3,7 @@ package com.lightframework.auth.core.model;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /** 用户信息实体
  * @author yg
@@ -17,7 +18,10 @@ public class UserInfo implements Serializable{
 	private static final long serialVersionUID = 6818738597004272801L;
 	
 	private String userId;
-	private String userName;
+	private String username;
+
+	private transient String password;
+
 	private String realName;
 	private Short age;
 	private Short gender;
@@ -30,7 +34,7 @@ public class UserInfo implements Serializable{
 	private String roleName;
 	private String departmentId;
 	private String departmentName;
-	private List<String> privileges;
+	private Set<String> permissions;
 	private Map<String,Object> others;
 
 	public String getUserId() {
@@ -41,12 +45,16 @@ public class UserInfo implements Serializable{
 		this.userId = userId;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getRealName() {
@@ -145,12 +153,12 @@ public class UserInfo implements Serializable{
 		this.departmentName = departmentName;
 	}
 
-	public List<String> getPrivileges() {
-		return privileges;
+	public Set<String> getPermissions() {
+		return permissions;
 	}
 
-	public void setPrivileges(List<String> privileges) {
-		this.privileges = privileges;
+	public void setPermissions(Set<String> permissions) {
+		this.permissions = permissions;
 	}
 
 	public Map<String, Object> getOthers() {
@@ -159,5 +167,9 @@ public class UserInfo implements Serializable{
 
 	public void setOthers(Map<String, Object> others) {
 		this.others = others;
+	}
+
+	public String password() {
+		return password;
 	}
 }

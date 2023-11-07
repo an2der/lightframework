@@ -8,22 +8,21 @@
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <description>ftp工具</description>
-    <artifactId>light-util-ftp</artifactId>
 
+    <artifactId>light-util-toolkit</artifactId>
+    <description>工具箱</description>
+    <properties>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.lightframework</groupId>
-            <artifactId>light-common</artifactId>
+            <artifactId>light-util-network</artifactId>
             <version>${lightframework.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-project</artifactId>
+            <version>${lightframework.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>

@@ -9,7 +9,7 @@ import com.lightframework.common.BusinessStatus;
 import com.lightframework.common.annotation.SystemLogger;
 import com.lightframework.system.log.model.SystemLog;
 import com.lightframework.system.log.service.ISystemLogService;
-import com.lightframework.util.base.IPUtil;
+import com.lightframework.util.net.IPUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -91,7 +91,7 @@ public class SystemLogAspect {
             if(userInfoService != null) {
                 UserInfo userInfo = userInfoService.getUserInfo();
                 systemLog.setUserId(userInfo.getUserId());
-                systemLog.setUsername(userInfo.getUserName());
+                systemLog.setUsername(userInfo.getUsername());
             }
             systemLog.setCreateTime(date);
             systemLog.setIpAddr(IPUtil.getRemoteIpAddr(((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest()));
