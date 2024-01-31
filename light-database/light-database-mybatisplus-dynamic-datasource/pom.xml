@@ -5,7 +5,7 @@
     <parent>
         <artifactId>light-database</artifactId>
         <groupId>com.lightframework</groupId>
-        <version>${revision}</version>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <description>mybatisplus多数据源</description>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-database-jta-atomikos</artifactId>
-            <version>${lightframework.version}</version>
+            <version>1.0.1</version>
         </dependency>
     </dependencies>
 </project>

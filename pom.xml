@@ -12,7 +12,7 @@
 
     <groupId>com.lightframework</groupId>
     <artifactId>lightframework</artifactId>
-    <version>${revision}</version>
+    <version>1.0.1</version>
     <modules>
         <module>light-common</module>
         <module>light-core</module>
@@ -26,14 +26,12 @@
         <module>light-parent</module>
     </modules>
     <packaging>pom</packaging>
-    <description>微框架,用于解决开发过程中重复的工作，提高效率，不容易出错，
+    <description>微框架,用于解决开发过程中重复的工作，提高效率，同时降低出错率，
         此项目提供快速生成新项目结构需要的文件，统一的公共配置（如：MAVEN私服、MAVEN打包插件等配置），高内聚低耦合的可插拔公共功能模块 ，
         依赖版本统一管理与依赖版本兼容解决，项目版本管理，更实用的工具类，让项目代码变得整洁
     </description>
 
     <properties>
-        <revision>1.0</revision>
-        <lightframework.version>${revision}</lightframework.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <fastjson2.version>2.0.27</fastjson2.version>
@@ -122,8 +120,8 @@
     </dependencyManagement>
 
     <build>
-        <plugins>
-            <!--    maven版本管理插件        -->
+        <plugins><!--
+            &lt;!&ndash;    maven版本管理插件        &ndash;&gt;
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
@@ -148,6 +146,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.16.2</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms> <!-- 禁用备份pom文件的生成 -->
+                </configuration>
             </plugin>
         </plugins>
     </build>

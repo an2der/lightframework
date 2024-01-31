@@ -5,7 +5,7 @@
     <parent>
         <artifactId>light-plugin</artifactId>
         <groupId>com.lightframework.plugin</groupId>
-        <version>${revision}</version>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

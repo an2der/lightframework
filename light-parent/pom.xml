@@ -5,7 +5,7 @@
     <parent>
         <artifactId>lightframework</artifactId>
         <groupId>com.lightframework</groupId>
-        <version>${revision}</version>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -23,12 +23,12 @@
             <plugin>
                 <groupId>com.lightframework.plugin</groupId>
                 <artifactId>light-plugin-structure</artifactId>
-                <version>${lightframework.version}</version>
+                <version>1.0.1</version>
             </plugin>
             <plugin>
                 <groupId>com.lightframework.plugin</groupId>
                 <artifactId>light-plugin-pack</artifactId>
-                <version>${lightframework.version}</version>
+                <version>1.0.1</version>
                 <executions>
                     <execution>
                         <id>pack-jar</id>
@@ -69,7 +69,7 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
-                            <finalName>${appName}</finalName>
+                            <finalName>${appName}-${project.version}</finalName>
                             <!-- not append assembly id in release file name -->
                             <appendAssemblyId>false</appendAssemblyId>
                             <descriptors>

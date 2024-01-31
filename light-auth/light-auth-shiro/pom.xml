@@ -5,7 +5,7 @@
     <parent>
         <artifactId>light-auth</artifactId>
         <groupId>com.lightframework</groupId>
-        <version>${revision}</version>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <description>web授权实现-shiro</description>
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-auth-core</artifactId>
-            <version>${lightframework.version}</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>

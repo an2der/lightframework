@@ -5,7 +5,7 @@
     <parent>
         <artifactId>lightframework</artifactId>
         <groupId>com.lightframework</groupId>
-        <version>${revision}</version>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,22 +19,22 @@
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-common</artifactId>
-            <version>${lightframework.version}</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-util-net</artifactId>
-            <version>${lightframework.version}</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-database-mybatisplus</artifactId>
-            <version>${lightframework.version}</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-auth-core</artifactId>
-            <version>${lightframework.version}</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
