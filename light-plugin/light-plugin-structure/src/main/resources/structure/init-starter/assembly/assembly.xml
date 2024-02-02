@@ -6,6 +6,7 @@
 		<format>zip</format>
 	</formats>
 	<includeBaseDirectory>true</includeBaseDirectory>
+	<baseDirectory>${appName}</baseDirectory>
 	<fileSets>
 		<fileSet>
 			<directory>src/main/scripts/linux</directory>

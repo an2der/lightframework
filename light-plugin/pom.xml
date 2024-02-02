@@ -15,6 +15,7 @@
     <modules>
         <module>light-plugin-structure</module>
         <module>light-plugin-pack</module>
+        <module>light-plugin-version</module>
     </modules>
 
     <properties>
