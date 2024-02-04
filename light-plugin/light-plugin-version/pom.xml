@@ -27,6 +27,11 @@
             <artifactId>maven-release-manager</artifactId>
             <version>3.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>versions-maven-plugin</artifactId>
+            <version>${maven-versions-plugin.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

@@ -43,6 +43,7 @@
         <maven.version>3.9.4</maven.version>
         <maven-plugin.version>3.9.0</maven-plugin.version>
         <hutool.version>5.8.21</hutool.version>
+        <maven-versions-plugin.version>2.16.2</maven-versions-plugin.version>
     </properties>
 
     <dependencies>
@@ -150,10 +151,11 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.16.2</version>
+                <version>${maven-versions-plugin.version}</version>
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms> <!-- 禁用备份pom文件的生成 -->
                 </configuration>
+                <inherited>false</inherited>
             </plugin>
         </plugins>
     </build>
