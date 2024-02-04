@@ -63,20 +63,20 @@
             <properties>
                 <!--      nexus.name与settings文件中server的id保持一致          -->
                 <nexus.name>CongXing</nexus.name>
-                <nexus.url>http://192.168.1.21:8081</nexus.url>
+                <nexus.url>http://192.168.33.21:8081</nexus.url>
             </properties>
             <repositories>
                 <repository>
                     <id>CongXing-central</id>
                     <name>CongXing Central</name>
-                    <url>http://192.168.1.21:8081/repository/maven-public/</url>
+                    <url>http://192.168.33.21:8081/repository/maven-public/</url>
                 </repository>
             </repositories>
             <pluginRepositories>
                 <pluginRepository>
                     <id>CongXing-central</id>
                     <name>CongXing Central</name>
-                    <url>http://192.168.1.21:8081/repository/maven-public/</url>
+                    <url>http://192.168.33.21:8081/repository/maven-public/</url>
                 </pluginRepository>
             </pluginRepositories>
         </profile>
