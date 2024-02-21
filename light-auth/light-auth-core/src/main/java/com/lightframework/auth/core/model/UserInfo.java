@@ -21,6 +21,7 @@ public class UserInfo implements Serializable{
 	private String username;
 
 	private transient String password;
+	private transient String salt;
 
 	private String realName;
 	private Short age;
@@ -30,6 +31,7 @@ public class UserInfo implements Serializable{
 	private String address;
 	private String headImg;
 	private boolean isAdmin = false;
+	private boolean isEnable = true;
 	private String roleId;
 	private String roleName;
 	private String departmentId;
@@ -55,6 +57,10 @@ public class UserInfo implements Serializable{
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 
 	public String getRealName() {
@@ -121,6 +127,14 @@ public class UserInfo implements Serializable{
 		isAdmin = admin;
 	}
 
+	public boolean isEnable() {
+		return isEnable;
+	}
+
+	public void setEnable(boolean enable) {
+		isEnable = enable;
+	}
+
 	public String getRoleId() {
 		return roleId;
 	}
@@ -171,5 +185,9 @@ public class UserInfo implements Serializable{
 
 	public String password() {
 		return password;
+	}
+
+	public String salt(){
+		return salt;
 	}
 }

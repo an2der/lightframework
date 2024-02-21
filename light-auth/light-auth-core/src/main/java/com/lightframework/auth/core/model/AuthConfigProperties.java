@@ -24,6 +24,8 @@ public class AuthConfigProperties {
 
     private boolean enableVerifyCode = false;
 
+    private PasswordCrypto passwordCrypto;
+
 
     @Getter
     @Setter
@@ -31,5 +33,13 @@ public class AuthConfigProperties {
         private List<String> includes;
 
         private List<String> excludes;
+    }
+
+    @Getter
+    @Setter
+    public class PasswordCrypto{
+        private String hashAlgorithm = "MD5";
+
+        private int hashIterations = 1;
     }
 }

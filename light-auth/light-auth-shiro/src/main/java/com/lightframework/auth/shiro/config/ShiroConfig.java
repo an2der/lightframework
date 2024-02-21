@@ -2,6 +2,7 @@ package com.lightframework.auth.shiro.config;
 
 import com.lightframework.auth.core.model.AuthConfigProperties;
 import com.lightframework.auth.shiro.realm.DefaultShiroRealm;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -32,6 +33,14 @@ public class ShiroConfig {
         securityManager.setRealm(realm);
         securityManager.setSessionManager(defaultWebSessionManager());//配置session管理器
         return securityManager;
+    }
+
+    @Bean
+    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        hashedCredentialsMatcher.setHashAlgorithmName(authConfigProperties.getPasswordCrypto().getHashAlgorithm());//散列算法
+        hashedCredentialsMatcher.setHashIterations(authConfigProperties.getPasswordCrypto().getHashIterations());//散列的次数;
+        return hashedCredentialsMatcher;
     }
 
     @Bean

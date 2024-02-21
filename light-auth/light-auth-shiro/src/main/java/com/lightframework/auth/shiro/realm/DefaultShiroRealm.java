@@ -49,7 +49,7 @@ public class DefaultShiroRealm extends AuthorizingRealm {
         String username = (String) authenticationToken.getPrincipal();
         UserInfo userInfo = userService.getUserInfoByUsername(username);
         if(userInfo != null){
-            return new SimpleAuthenticationInfo(userInfo,userInfo.password(),ByteSource.Util.bytes(username),getName());
+            return new SimpleAuthenticationInfo(userInfo,userInfo.password(),ByteSource.Util.bytes(userInfo.salt()),getName());
         }
         return null;
     }
