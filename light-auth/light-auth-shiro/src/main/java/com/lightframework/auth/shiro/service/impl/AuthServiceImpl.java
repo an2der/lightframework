@@ -35,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             subject.login(token);
         }catch (AuthenticationException e){
-            throw new BusinessException("登录失败");
+            throw new BusinessException("用户名或密码不正确");
         }
         return subject.getSession().getId().toString();
     }

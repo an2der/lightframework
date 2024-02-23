@@ -55,11 +55,10 @@ public class DefaultShiroRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String username = (String) authenticationToken.getPrincipal();
         UserInfo userInfo = userService.getUserInfoByUsername(username);
-        if(userInfo == null){
-            throw new BusinessException("用户不存在");
-        }else {
+        if(userInfo != null){
             return new SimpleAuthenticationInfo(userInfo,userInfo.password(),userInfo.salt() == null?null:ByteSource.Util.bytes(userInfo.salt()),getName());
         }
+        return null;
     }
 
     @Override
