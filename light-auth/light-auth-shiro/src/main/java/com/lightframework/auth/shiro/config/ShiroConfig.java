@@ -36,14 +36,6 @@ public class ShiroConfig {
     }
 
     @Bean
-    public HashedCredentialsMatcher hashedCredentialsMatcher() {
-        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        hashedCredentialsMatcher.setHashAlgorithmName(authConfigProperties.getPasswordCrypto().getHashAlgorithm());//散列算法
-        hashedCredentialsMatcher.setHashIterations(authConfigProperties.getPasswordCrypto().getHashIterations());//散列的次数;
-        return hashedCredentialsMatcher;
-    }
-
-    @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 
@@ -55,20 +47,19 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilters(myFilters);
 
         //资源拦截器.
-        Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
+        Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
+        filterChainDefinitionMap.put("/api/auth/**", "anon");
         AuthConfigProperties.InterceptUrl interceptUrl = authConfigProperties.getInterceptUrl();
         if(interceptUrl != null){
-            //配置拦截路径
-            if(interceptUrl.getIncludes() != null){
-                interceptUrl.getIncludes().forEach(s -> filterChainDefinitionMap.put(s, "authc"));
-            }
             //配置忽略路径
             if(interceptUrl.getExcludes() != null){
                 interceptUrl.getExcludes().forEach(s -> filterChainDefinitionMap.put(s, "anon"));
             }
+            //配置拦截路径
+            if(interceptUrl.getIncludes() != null){
+                interceptUrl.getIncludes().forEach(s -> filterChainDefinitionMap.put(s, "authc"));
+            }
         }
-        filterChainDefinitionMap.put("/api/auth/**", "anon");
-
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }

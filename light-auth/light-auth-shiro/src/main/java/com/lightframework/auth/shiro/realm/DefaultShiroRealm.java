@@ -1,11 +1,15 @@
 package com.lightframework.auth.shiro.realm;
 
+import com.lightframework.auth.core.model.AuthConfigProperties;
 import com.lightframework.auth.core.model.UserInfo;
 import com.lightframework.auth.core.service.UserAuthService;
+import com.lightframework.common.BusinessException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.credential.CredentialsMatcher;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -24,6 +28,9 @@ public class DefaultShiroRealm extends AuthorizingRealm {
 
     @Autowired
     private UserAuthService userService;
+
+    @Autowired
+    private AuthConfigProperties authConfigProperties;
 
     /**
      * 权限
@@ -48,9 +55,18 @@ public class DefaultShiroRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String username = (String) authenticationToken.getPrincipal();
         UserInfo userInfo = userService.getUserInfoByUsername(username);
-        if(userInfo != null){
-            return new SimpleAuthenticationInfo(userInfo,userInfo.password(),ByteSource.Util.bytes(userInfo.salt()),getName());
+        if(userInfo == null){
+            throw new BusinessException("用户不存在");
+        }else {
+            return new SimpleAuthenticationInfo(userInfo,userInfo.password(),userInfo.salt() == null?null:ByteSource.Util.bytes(userInfo.salt()),getName());
         }
-        return null;
+    }
+
+    @Override
+    public CredentialsMatcher getCredentialsMatcher() {
+        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        hashedCredentialsMatcher.setHashAlgorithmName(authConfigProperties.getPasswordCrypto().getHashAlgorithm());//散列算法
+        hashedCredentialsMatcher.setHashIterations(authConfigProperties.getPasswordCrypto().getHashIterations());//散列的次数;
+        return hashedCredentialsMatcher;
     }
 }

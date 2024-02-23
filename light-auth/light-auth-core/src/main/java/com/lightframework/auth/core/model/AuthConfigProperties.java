@@ -24,12 +24,12 @@ public class AuthConfigProperties {
 
     private boolean enableVerifyCode = false;
 
-    private PasswordCrypto passwordCrypto;
+    private PasswordCrypto passwordCrypto = new PasswordCrypto();
 
 
     @Getter
     @Setter
-    public class InterceptUrl{
+    public static class InterceptUrl{
         private List<String> includes;
 
         private List<String> excludes;
@@ -37,7 +37,7 @@ public class AuthConfigProperties {
 
     @Getter
     @Setter
-    public class PasswordCrypto{
+    public static class PasswordCrypto{
         private String hashAlgorithm = "MD5";
 
         private int hashIterations = 1;
