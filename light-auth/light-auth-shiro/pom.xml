@@ -19,7 +19,6 @@
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-auth-core</artifactId>
-            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>

@@ -21,7 +21,6 @@
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-database-jta-atomikos</artifactId>
-            <version>1.0.1</version>
         </dependency>
     </dependencies>
 </project>

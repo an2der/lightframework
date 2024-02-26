@@ -15,12 +15,10 @@
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-database-mybatisplus</artifactId>
-            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-core</artifactId>
-            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

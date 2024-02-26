@@ -1,6 +1,7 @@
 package com.lightframework.auth.core.service;
 
 import com.lightframework.auth.core.model.LoginParam;
+import com.lightframework.auth.core.model.UserInfo;
 
 /***
  * @author yg
@@ -14,7 +15,7 @@ public interface AuthService {
      * @param loginParam 登录请求对象
      * @return session id
      */
-    String login(LoginParam loginParam);
+    UserInfo login(LoginParam loginParam);
 
     /**
      * 登出

@@ -23,12 +23,10 @@
             <plugin>
                 <groupId>com.lightframework.plugin</groupId>
                 <artifactId>light-plugin-structure</artifactId>
-                <version>1.0.1</version>
             </plugin>
             <plugin>
                 <groupId>com.lightframework.plugin</groupId>
                 <artifactId>light-plugin-version</artifactId>
-                <version>1.0.1</version>
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms> <!-- 禁用备份pom文件的生成 -->
                 </configuration>
@@ -36,7 +34,6 @@
             <plugin>
                 <groupId>com.lightframework.plugin</groupId>
                 <artifactId>light-plugin-pack</artifactId>
-                <version>1.0.1</version>
                 <executions>
                     <execution>
                         <id>pack-jar</id>

@@ -1,6 +1,7 @@
 package com.lightframework.auth.core.controller;
 
 import com.lightframework.auth.core.model.LoginParam;
+import com.lightframework.auth.core.model.UserInfo;
 import com.lightframework.auth.core.service.AuthService;
 import com.lightframework.common.BusinessType;
 import com.lightframework.common.annotation.SystemLogger;
@@ -29,7 +30,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @SystemLogger(moduleKey = "AUTH", moduleName = "授权",operationDesc = "登录",businessType = BusinessType.LOGIN)
-    public String login(@RequestBody LoginParam loginParam){
+    public UserInfo login(@RequestBody LoginParam loginParam){
         return authService.login(loginParam);
     }
 

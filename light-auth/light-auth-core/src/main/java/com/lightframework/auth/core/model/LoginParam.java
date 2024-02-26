@@ -11,6 +11,8 @@ public class LoginParam {
 
     private String password;
 
+    private boolean rememberMe;
+
     private String verifyCode;
 
     public String getUsername() {
@@ -27,6 +29,14 @@ public class LoginParam {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean getRememberMe() {
+        return rememberMe;
+    }
+
+    public void setRememberMe(boolean rememberMe) {
+        this.rememberMe = rememberMe;
     }
 
     public String getVerifyCode() {
