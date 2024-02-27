@@ -43,6 +43,7 @@ public class DefaultAuthServiceImpl implements AuthService {
                     throw new BusinessException("登录失败，用户已被禁用！");
                 }
             }
+            userInfo.setAccessToken(subject.getSession().getId().toString());
             return userInfo;
         }catch (AuthenticationException e){
             throw new BusinessException("用户名或密码不正确");

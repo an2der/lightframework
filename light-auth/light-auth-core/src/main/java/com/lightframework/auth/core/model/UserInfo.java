@@ -16,6 +16,8 @@ public class UserInfo implements Serializable{
 	public static final short WOMAN = 0;
 
 	private static final long serialVersionUID = 6818738597004272801L;
+
+	private String accessToken;
 	
 	private String userId;
 	private String username;
@@ -38,6 +40,14 @@ public class UserInfo implements Serializable{
 	private String departmentName;
 	private Set<String> permissions;
 	private Map<String,Object> others;
+
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
 
 	public String getUserId() {
 		return userId;
