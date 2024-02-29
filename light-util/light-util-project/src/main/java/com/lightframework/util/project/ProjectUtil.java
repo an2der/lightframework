@@ -2,11 +2,9 @@ package com.lightframework.util.project;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.jar.JarFile;
@@ -27,7 +25,7 @@ public class ProjectUtil {
      */
     public static String getProjectRootPath() {
         File baseFile = getBaseFile();
-        if(baseFile.isDirectory()){
+        if(baseFile != null && baseFile.isDirectory()){
             return baseFile.getAbsolutePath();
         }else {
             return baseFile.getParent();
@@ -37,23 +35,31 @@ public class ProjectUtil {
     /**
      * 获取项目版本
      * @return
-     * @throws IOException
-     * @throws XmlPullParserException
      */
-    public static String getProjectVersion() throws IOException, XmlPullParserException {
+    public static String getProjectVersion() {
         File baseFile = getBaseFile();
-        if(baseFile.isFile()){
-            JarFile jarFile = new JarFile(baseFile);
-            Manifest manifest = jarFile.getManifest();
+        if(baseFile != null && baseFile.isFile()){
+            Manifest manifest;
+            try {
+                JarFile jarFile = new JarFile(baseFile);
+                manifest = jarFile.getManifest();
+            }catch (Exception e){
+                throw new RuntimeException("Read file (MANIFEST.MF) error in " + baseFile.getAbsolutePath(),e);
+            }
             if(manifest != null){
                 return manifest.getMainAttributes().getValue("Implementation-Version");
             }else {
-                throw new FileNotFoundException("not found file (MANIFEST.MF) in " + baseFile.getAbsolutePath());
+                throw new RuntimeException("Not found file (MANIFEST.MF) in " + baseFile.getAbsolutePath());
             }
         }else {
             File projectPath = new File(baseFile.getParentFile().getParent());
             File pomFile = new File(projectPath,"pom.xml");
-            Model model = new MavenXpp3Reader().read(new FileInputStream(pomFile));
+            Model model;
+            try {
+                model = new MavenXpp3Reader().read(new FileInputStream(pomFile));
+            } catch (Exception e) {
+                throw new RuntimeException("Parse pom.xml error in " + pomFile.getAbsolutePath(),e);
+            }
             String version = (model.getVersion() == null && model.getParent() != null)
                     || (model.getVersion() != null && model.getVersion().equals("${parent.version}"))
                     ?model.getParent().getVersion():model.getVersion();
@@ -97,16 +103,21 @@ public class ProjectUtil {
                     }
                 }
             } catch (Exception e) {
+                throw new RuntimeException("Parse pom.xml error in " + pomFile.getAbsolutePath(),e);
             }
         }
         return properties;
     }
 
-    public static Manifest getProjectManifest() throws IOException {
+    public static Manifest getProjectManifest() {
         File baseFile = getBaseFile();
-        if(baseFile.isFile()) {
-            JarFile jarFile = new JarFile(baseFile);
-            return jarFile.getManifest();
+        if(baseFile != null && baseFile.isFile()) {
+            try {
+                JarFile jarFile = new JarFile(baseFile);
+                return jarFile.getManifest();
+            } catch (IOException e) {
+
+            }
         }
         return null;
     }
@@ -131,5 +142,4 @@ public class ProjectUtil {
             return null;
         }
     }
-
 }
