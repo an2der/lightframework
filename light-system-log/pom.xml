@@ -26,11 +26,7 @@
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
-            <artifactId>light-database-mybatisplus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.lightframework</groupId>
-            <artifactId>light-auth-core</artifactId>
+            <artifactId>light-auth-common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -44,6 +40,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

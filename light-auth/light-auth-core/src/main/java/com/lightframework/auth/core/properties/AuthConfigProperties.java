@@ -1,4 +1,4 @@
-package com.lightframework.auth.core.model;
+package com.lightframework.auth.core.properties;
 
 import lombok.Getter;
 import lombok.Setter;

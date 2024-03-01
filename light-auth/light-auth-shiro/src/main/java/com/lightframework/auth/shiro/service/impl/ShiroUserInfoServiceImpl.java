@@ -1,7 +1,7 @@
 package com.lightframework.auth.shiro.service.impl;
 
-import com.lightframework.auth.core.model.UserInfo;
-import com.lightframework.auth.core.service.UserInfoService;
+import com.lightframework.auth.common.model.UserInfo;
+import com.lightframework.auth.common.service.UserInfoService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 

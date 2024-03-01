@@ -1,4 +1,4 @@
-package com.lightframework.auth.core.model;
+package com.lightframework.auth.common.model;
 
 import java.io.Serializable;
 import java.util.List;

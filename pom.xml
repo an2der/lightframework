@@ -44,6 +44,9 @@
         <maven-plugin.version>3.9.0</maven-plugin.version>
         <hutool.version>5.8.21</hutool.version>
         <maven-versions-plugin.version>2.16.2</maven-versions-plugin.version>
+        <mybatis.version>3.5.9</mybatis.version>
+        <mybatis-spring.version>2.0.7</mybatis-spring.version>
+        <mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
     </properties>
 
     <dependencies>
@@ -68,6 +71,11 @@
             <!-- light-framework start -->
 
             <!-- light-auth -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-auth-common</artifactId>
+                <version>1.0.1</version>
+            </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-auth-core</artifactId>
@@ -238,6 +246,21 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis-spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring-boot-starter.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

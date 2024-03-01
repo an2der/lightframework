@@ -1,7 +1,7 @@
 package com.lightframework.auth.core.resolver;
 
-import com.lightframework.auth.core.model.UserInfo;
-import com.lightframework.auth.core.service.UserInfoService;
+import com.lightframework.auth.common.model.UserInfo;
+import com.lightframework.auth.common.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

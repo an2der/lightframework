@@ -1,7 +1,9 @@
 package com.lightframework.system.log.service;
 
+
 import com.lightframework.system.log.model.SystemLog;
-import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.time.LocalDate;
 
 /**
  * <p>
@@ -11,6 +13,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author yg
  * @since 2023-07-28
  */
-public interface ISystemLogService extends IService<SystemLog> {
+public interface ISystemLogService {
 
+    void createTable();
+
+    void save(SystemLog systemLog);
+
+    void removeLessThanCreateTime(LocalDate localDate);
 }

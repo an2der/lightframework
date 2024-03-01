@@ -1,7 +1,7 @@
 package com.lightframework.auth.core.controller;
 
 import com.lightframework.auth.core.model.LoginParam;
-import com.lightframework.auth.core.model.UserInfo;
+import com.lightframework.auth.common.model.UserInfo;
 import com.lightframework.auth.core.service.AuthService;
 import com.lightframework.common.BusinessType;
 import com.lightframework.common.annotation.SystemLogger;

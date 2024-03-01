@@ -1,6 +1,6 @@
 package com.lightframework.auth.shiro.crypto;
 
-import com.lightframework.auth.core.model.AuthConfigProperties;
+import com.lightframework.auth.core.properties.AuthConfigProperties;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

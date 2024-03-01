@@ -1,6 +1,5 @@
 package com.lightframework.system.log.model;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Getter;
@@ -16,7 +15,6 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@TableName("t_system_log")
 public class SystemLog implements Serializable {
 
     private static final long serialVersionUID = 1L;

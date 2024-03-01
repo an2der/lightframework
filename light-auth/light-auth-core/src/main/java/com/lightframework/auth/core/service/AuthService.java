@@ -1,7 +1,7 @@
 package com.lightframework.auth.core.service;
 
 import com.lightframework.auth.core.model.LoginParam;
-import com.lightframework.auth.core.model.UserInfo;
+import com.lightframework.auth.common.model.UserInfo;
 
 /***
  * @author yg

@@ -2,8 +2,8 @@ package com.lightframework.system.log.aspect;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lightframework.auth.core.model.UserInfo;
-import com.lightframework.auth.core.service.UserInfoService;
+import com.lightframework.auth.common.model.UserInfo;
+import com.lightframework.auth.common.service.UserInfoService;
 import com.lightframework.common.BusinessException;
 import com.lightframework.common.BusinessStatus;
 import com.lightframework.common.annotation.SystemLogger;

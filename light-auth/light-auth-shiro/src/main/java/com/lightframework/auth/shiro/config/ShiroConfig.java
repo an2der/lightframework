@@ -1,6 +1,6 @@
 package com.lightframework.auth.shiro.config;
 
-import com.lightframework.auth.core.model.AuthConfigProperties;
+import com.lightframework.auth.core.properties.AuthConfigProperties;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;

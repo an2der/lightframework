@@ -1,8 +1,8 @@
 package com.lightframework.auth.shiro.service.impl;
 
-import com.lightframework.auth.core.model.AuthConfigProperties;
+import com.lightframework.auth.core.properties.AuthConfigProperties;
 import com.lightframework.auth.core.model.LoginParam;
-import com.lightframework.auth.core.model.UserInfo;
+import com.lightframework.auth.common.model.UserInfo;
 import com.lightframework.auth.core.service.AuthService;
 import com.lightframework.common.BusinessException;
 import com.lightframework.util.verifycode.VerifyCodeUtil;

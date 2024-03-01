@@ -1,9 +1,8 @@
 package com.lightframework.auth.shiro.realm;
 
-import com.lightframework.auth.core.model.AuthConfigProperties;
-import com.lightframework.auth.core.model.UserInfo;
+import com.lightframework.auth.core.properties.AuthConfigProperties;
+import com.lightframework.auth.common.model.UserInfo;
 import com.lightframework.auth.core.service.UserAuthService;
-import com.lightframework.common.BusinessException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
