@@ -1,18 +1,3 @@
-/*
-Navicat MySQL Data Transfer
-
-Source Server         : localhost
-Source Server Version : 50505
-Source Host           : localhost:3306
-Source Database       : imm_common
-
-Target Server Type    : MYSQL
-Target Server Version : 50505
-File Encoding         : 65001
-
-Date: 2023-07-28 11:34:44
-*/
-
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -20,7 +5,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `t_system_log`;
 CREATE TABLE `t_system_log` (
-  `id` varchar(64) NOT NULL COMMENT 'id',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `user_id` varchar(64) DEFAULT NULL COMMENT '用户id',
   `username` varchar(32) DEFAULT NULL COMMENT '用户名',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',

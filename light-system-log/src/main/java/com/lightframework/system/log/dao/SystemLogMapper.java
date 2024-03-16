@@ -26,7 +26,7 @@ public interface SystemLogMapper {
     void deleteLessThanCreateTime(LocalDate localDate);
 
     @Update("CREATE TABLE IF NOT EXISTS `t_system_log` (\n" +
-            "  `id` varchar(64) NOT NULL COMMENT 'id',\n" +
+            "  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',\n" +
             "  `user_id` varchar(64) DEFAULT NULL COMMENT '用户id',\n" +
             "  `username` varchar(32) DEFAULT NULL COMMENT '用户名',\n" +
             "  `create_time` datetime DEFAULT NULL COMMENT '创建时间',\n" +

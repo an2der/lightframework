@@ -10,6 +10,7 @@ import com.lightframework.common.annotation.SystemLogger;
 import com.lightframework.system.log.model.SystemLog;
 import com.lightframework.system.log.service.ISystemLogService;
 import com.lightframework.util.net.IPUtil;
+import com.lightframework.util.spring.SpringServletUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -19,8 +20,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -84,17 +82,17 @@ public class SystemLogAspect {
      */
     private void systemLogHandler(JoinPoint joinPoint, BusinessStatus status){
         Date date = new Date();
+        HttpServletRequest request = SpringServletUtil.getRequest();
         executorService.execute(()->{
             SystemLogger logger = getAnnotation(joinPoint);
             SystemLog systemLog = new SystemLog();
-            systemLog.setId(UUID.randomUUID().toString());
             if(userInfoService != null) {
                 UserInfo userInfo = userInfoService.getUserInfo();
                 systemLog.setUserId(userInfo.getUserId());
                 systemLog.setUsername(userInfo.getUsername());
             }
             systemLog.setCreateTime(date);
-            systemLog.setIpAddr(IPUtil.getRemoteIpAddr(((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest()));
+            systemLog.setIpAddr(IPUtil.getRemoteIpAddr(request));
             systemLog.setRequestParam(getArgsToJsonArrayString(joinPoint));
             systemLog.setExecuteResult(status.getCode());
             systemLog.setOperationDesc(logger.operationDesc());

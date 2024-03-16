@@ -22,7 +22,7 @@ public class SystemLog implements Serializable {
     /**
      * id
      */
-    private String id;
+    private Long id;
 
     /**
      * 用户id
