@@ -1,10 +1,7 @@
-SET FOREIGN_KEY_CHECKS=0;
-
 -- ----------------------------
 -- Table structure for t_system_log
 -- ----------------------------
-DROP TABLE IF EXISTS `t_system_log`;
-CREATE TABLE `t_system_log` (
+CREATE TABLE IF NOT EXISTS `t_system_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `user_id` varchar(64) DEFAULT NULL COMMENT '用户id',
   `username` varchar(32) DEFAULT NULL COMMENT '用户名',

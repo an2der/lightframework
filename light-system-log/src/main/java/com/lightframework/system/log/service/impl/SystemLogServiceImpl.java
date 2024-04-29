@@ -4,8 +4,11 @@ import com.lightframework.system.log.dao.SystemLogMapper;
 import com.lightframework.system.log.model.SystemLog;
 import com.lightframework.system.log.service.ISystemLogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import java.time.LocalDate;
 
 /**
@@ -22,9 +25,17 @@ public class SystemLogServiceImpl implements ISystemLogService {
     @Autowired
     private SystemLogMapper systemLogMapper;
 
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    private ResourceLoader resourceLoader;
+
     @Override
     public void createTable() {
-        systemLogMapper.createTable();
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        populator.addScripts(resourceLoader.getResource("classpath:sql/system_log.sql"));
+        populator.execute(dataSource);
     }
 
     @Override
