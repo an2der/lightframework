@@ -9,7 +9,7 @@
 	<baseDirectory>${appName}</baseDirectory>
 	<fileSets>
 		<fileSet>
-			<directory>src/main/scripts/linux</directory>
+			<directory>src/main/bin</directory>
 			<outputDirectory>${file.separator}</outputDirectory>
 			<includes>
 				<include>*.sh</include>
@@ -18,7 +18,7 @@
 			<lineEnding>unix</lineEnding>
 		</fileSet>
 		<fileSet>
-			<directory>src/main/scripts/windows</directory>
+			<directory>src/main/bin</directory>
 			<outputDirectory>${file.separator}</outputDirectory>
 			<includes>
 				<include>*.bat</include>
