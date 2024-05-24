@@ -1,10 +1,11 @@
 package com.lightframework.auth.shiro.service.impl;
 
-import com.lightframework.auth.core.properties.AuthConfigProperties;
 import com.lightframework.auth.core.model.LoginParam;
 import com.lightframework.auth.common.model.UserInfo;
 import com.lightframework.auth.core.service.AuthService;
+import com.lightframework.auth.shiro.properties.ShiroAuthConfigProperties;
 import com.lightframework.common.BusinessException;
+import com.lightframework.util.verifycode.VerifyCode;
 import com.lightframework.util.verifycode.VerifyCodeUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -22,14 +23,22 @@ import javax.servlet.http.HttpSession;
 public class DefaultAuthServiceImpl implements AuthService {
 
     @Autowired
-    private AuthConfigProperties authConfigProperties;
+    private ShiroAuthConfigProperties authConfigProperties;
 
     @Override
     public UserInfo login(LoginParam loginParam) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String verifyCode = (String) request.getSession().getAttribute(VerifyCodeUtil.VERIFY_CODE);
-        if(authConfigProperties.isEnableVerifyCode() && (verifyCode == null || !verifyCode.equals(loginParam.getVerifyCode()))){
-            throw new BusinessException("验证码输入错误");
+        VerifyCode verifyCode = (VerifyCode) request.getSession().getAttribute(VerifyCodeUtil.VERIFY_CODE);
+        if(authConfigProperties.getVerifyCode().isEnableVerifyCode()){
+            if(verifyCode == null){
+                throw new BusinessException("验证码无效");
+            }else if(loginParam.getVerifyCode() == null || loginParam.getVerifyCode().length() == 0){
+                throw new BusinessException("请输入验证码");
+            }else if(!verifyCode.getCode().equals(loginParam.getVerifyCode())){
+                throw new BusinessException("验证码输入错误");
+            }else if(verifyCode.isExpired()){
+                throw new BusinessException("验证码已过期");
+            }
         }
         UsernamePasswordToken token = new UsernamePasswordToken(loginParam.getUsername(), loginParam.getPassword());
         token.setRememberMe(loginParam.getRememberMe());
@@ -60,9 +69,9 @@ public class DefaultAuthServiceImpl implements AuthService {
     @Override
     public String generateVerifyCode() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String verifyCode = VerifyCodeUtil.createRandom(false,4);
+        VerifyCode verifyCode = VerifyCodeUtil.createRandom(false,4,authConfigProperties.getVerifyCode().getExpireTimeSecond());
         HttpSession httpSession = request.getSession();
         httpSession.setAttribute(VerifyCodeUtil.VERIFY_CODE,verifyCode);
-        return verifyCode;
+        return verifyCode.getCode();
     }
 }

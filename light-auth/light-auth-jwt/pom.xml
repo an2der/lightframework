@@ -8,11 +8,11 @@
         <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <description>web授权实现-shiro</description>
-    <artifactId>light-auth-shiro</artifactId>
+    <description>web授权实现-jwt</description>
+    <artifactId>light-auth-jwt</artifactId>
 
     <properties>
-        <shiro-spring.version>1.11.0</shiro-spring.version>
+        <jjwt.version>0.9.1</jjwt.version>
     </properties>
 
     <dependencies>
@@ -21,9 +21,13 @@
             <artifactId>light-auth-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-spring</artifactId>
-            <version>${shiro-spring.version}</version>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

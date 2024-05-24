@@ -12,34 +12,31 @@ import java.util.List;
  * @date 2023/5/31 14:38
  * @version 1.0
  */
-@Component
-@ConfigurationProperties(prefix = "auth")
 @Getter
 @Setter
 public class AuthConfigProperties {
 
-    private InterceptUrl interceptUrl;
+    private String tokenKey = "Authorization";
 
-    private Integer expireTimeMinute; //分钟
+    private String secret = "LIGHT123456789ABCDEF";
 
-    private boolean enableVerifyCode = false;
+    private int expireTimeMinute = 43200; //分钟
 
-    private PasswordCrypto passwordCrypto = new PasswordCrypto();
+    private List<String> permitUrls;
+
+    private VerifyCode verifyCode = new VerifyCode();
 
 
+    /**
+     * 验证码设置
+     */
     @Getter
     @Setter
-    public static class InterceptUrl{
-        private List<String> includes;
+    public static class VerifyCode{
+        private boolean enableVerifyCode = false;
 
-        private List<String> excludes;
+        private int expireTimeSecond = 0; //过期时间：秒
+
     }
 
-    @Getter
-    @Setter
-    public static class PasswordCrypto{
-        private String hashAlgorithm = "MD5";
-
-        private int hashIterations = 1;
-    }
 }

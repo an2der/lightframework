@@ -1,6 +1,6 @@
 package com.lightframework.auth.shiro.crypto;
 
-import com.lightframework.auth.core.properties.AuthConfigProperties;
+import com.lightframework.auth.shiro.properties.ShiroAuthConfigProperties;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class ShiroCrypto {
 
     @Autowired
-    private AuthConfigProperties authConfigProperties;
+    private ShiroAuthConfigProperties authConfigProperties;
 
     /**
      * 通过MD5加密密码
@@ -24,5 +24,9 @@ public class ShiroCrypto {
      */
     public String encryptPassword(String password,String salt){
         return new SimpleHash(authConfigProperties.getPasswordCrypto().getHashAlgorithm(), password, salt, authConfigProperties.getPasswordCrypto().getHashIterations()).toString();
+    }
+
+    public String encryptPassword(String password){
+        return this.encryptPassword(password, authConfigProperties.getSecret());
     }
 }

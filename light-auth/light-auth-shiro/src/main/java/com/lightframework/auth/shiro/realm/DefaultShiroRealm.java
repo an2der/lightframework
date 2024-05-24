@@ -1,8 +1,8 @@
 package com.lightframework.auth.shiro.realm;
 
-import com.lightframework.auth.core.properties.AuthConfigProperties;
 import com.lightframework.auth.common.model.UserInfo;
 import com.lightframework.auth.core.service.UserAuthService;
+import com.lightframework.auth.shiro.properties.ShiroAuthConfigProperties;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -29,7 +29,7 @@ public class DefaultShiroRealm extends AuthorizingRealm {
     private UserAuthService userService;
 
     @Autowired
-    private AuthConfigProperties authConfigProperties;
+    private ShiroAuthConfigProperties authConfigProperties;
 
     /**
      * 权限
@@ -55,7 +55,7 @@ public class DefaultShiroRealm extends AuthorizingRealm {
         String username = (String) authenticationToken.getPrincipal();
         UserInfo userInfo = userService.getUserInfoByUsername(username);
         if(userInfo != null){
-            return new SimpleAuthenticationInfo(userInfo,userInfo.password(),userInfo.salt() == null?null:ByteSource.Util.bytes(userInfo.salt()),getName());
+            return new SimpleAuthenticationInfo(userInfo,userInfo.password(),userInfo.salt() == null?ByteSource.Util.bytes(authConfigProperties.getSecret()):ByteSource.Util.bytes(userInfo.salt()),getName());
         }
         return null;
     }

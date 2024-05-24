@@ -16,6 +16,7 @@
         <module>light-auth-core</module>
         <module>light-auth-oauth2</module>
         <module>light-auth-common</module>
+        <module>light-auth-jwt</module>
     </modules>
 
 

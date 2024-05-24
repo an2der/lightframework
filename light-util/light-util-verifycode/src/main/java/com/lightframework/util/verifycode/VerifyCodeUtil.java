@@ -17,7 +17,7 @@ public class VerifyCodeUtil {
      * @param length
      * @return
      */
-    public static String createRandom(boolean numberFlag, int length) {
+    public static VerifyCode createRandom(boolean numberFlag, int length,int expireTimeSecond) {
         String retStr = "";
         String strTable = numberFlag ? "1234567890" : "1234567890abcdefghijkmnpqrstuvwxyz";
         int len = strTable.length();
@@ -38,7 +38,7 @@ public class VerifyCodeUtil {
                 bDone = false;
             }
         } while (bDone);
-        return retStr;
+        return new VerifyCode(retStr,expireTimeSecond);
     }
 
     private static Color getRandColor(int fc, int bc) {
