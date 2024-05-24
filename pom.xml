@@ -34,6 +34,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <spring-boot.version>2.7.0</spring-boot.version>
         <fastjson2.version>2.0.27</fastjson2.version>
         <clickhouse.version>0.4.6</clickhouse.version>
         <jsch.version>0.1.55</jsch.version>
@@ -68,6 +69,18 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- spring-boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
             <!-- light-framework start -->
 
             <!-- light-auth -->
