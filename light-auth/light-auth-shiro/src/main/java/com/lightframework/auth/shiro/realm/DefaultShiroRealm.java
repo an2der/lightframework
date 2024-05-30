@@ -55,7 +55,7 @@ public class DefaultShiroRealm extends AuthorizingRealm {
         String username = (String) authenticationToken.getPrincipal();
         UserInfo userInfo = userService.getUserInfoByUsername(username);
         if(userInfo != null){
-            return new SimpleAuthenticationInfo(userInfo,userInfo.password(),userInfo.salt() == null?ByteSource.Util.bytes(authConfigProperties.getSecret()):ByteSource.Util.bytes(userInfo.salt()),getName());
+            return new SimpleAuthenticationInfo(userInfo,userInfo.password(),userInfo.salt() == null || userInfo.salt().isEmpty()?ByteSource.Util.bytes(authConfigProperties.getSecret()):ByteSource.Util.bytes(userInfo.salt()),getName());
         }
         return null;
     }
