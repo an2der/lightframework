@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lightframework.websocket.model.WebSocketMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -25,13 +26,16 @@ public class WebSocket {
 
     private static final ConcurrentHashMap<String, Session> SESSIONS = new ConcurrentHashMap<>();
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     /**
      * 连接建立成功调用的方法
      */
     @OnOpen
     public void onOpen(Session session) throws JsonProcessingException {
         SESSIONS.put(session.getId(), session);
-        sendMessage(session, new ObjectMapper().writeValueAsString(new WebSocketMessage(WebSocketMessage.SESSION_ID_MESSAGE_TYPE,session.getId())));
+        sendMessage(session, objectMapper.writeValueAsString(new WebSocketMessage(WebSocketMessage.SESSION_ID_MESSAGE_TYPE,session.getId())));
     }
 
 
