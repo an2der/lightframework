@@ -1,4 +1,4 @@
-package com.lightframework.websocket.config;
+package com.lightframework.websocket.tomcat.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

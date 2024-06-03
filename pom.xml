@@ -211,7 +211,17 @@
             <!-- light-websocket -->
             <dependency>
                 <groupId>com.lightframework</groupId>
-                <artifactId>light-websocket</artifactId>
+                <artifactId>light-websocket-common</artifactId>
+                <version>1.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-websocket-tomcat</artifactId>
+                <version>1.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-websocket-netty</artifactId>
                 <version>1.0.2</version>
             </dependency>
             <!-- light-framework end  -->
