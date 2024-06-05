@@ -5,7 +5,6 @@ import cn.hutool.json.JSONUtil;
 import com.lightframework.websocket.common.constant.WebSocketMsgTypeConstants;
 import com.lightframework.websocket.common.model.TextWebSocketMessage;
 import com.lightframework.websocket.common.model.WebSocketMessage;
-import com.lightframework.websocket.tomcat.cache.WebSocketCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,16 +24,21 @@ import java.io.IOException;
 @Slf4j
 public class WebSocketServer {
 
+    private static AbstractWebSocketHandler abstractWebSocketHandler;
+
     @Autowired
-    private WebSocketReceiver webSocketReceiver;
+    public void setAbstractWebSocketHandler(AbstractWebSocketHandler abstractWebSocketHandler) {
+        WebSocketServer.abstractWebSocketHandler = abstractWebSocketHandler;
+    }
 
     /**
      * 连接建立成功调用的方法
      */
     @OnOpen
     public void onOpen(Session session) {
-        WebSocketCache.SESSIONS.put(session.getId(), session);
-        WebSocketSender.sendMessage(session, new WebSocketMessage(WebSocketMsgTypeConstants.SESSION_ID,session.getId()));
+        WebSocketManager.SESSIONS.put(session.getId(), session);
+        WebSocketManager.sendMessage(session, new WebSocketMessage(WebSocketMsgTypeConstants.SESSION_ID,session.getId()));
+        abstractWebSocketHandler.open(session);
     }
 
 
@@ -44,8 +48,9 @@ public class WebSocketServer {
     @OnClose
     public void onClose(Session session) {
         try {
-            WebSocketCache.SESSIONS.remove(session.getId());
+            WebSocketManager.SESSIONS.remove(session.getId());
             session.close();
+            abstractWebSocketHandler.close(session);
         } catch (IOException e) {
             log.error("WebSocket Close发生异常 ", e);
         }
@@ -56,12 +61,17 @@ public class WebSocketServer {
      */
     @OnMessage
     public void onMessage(String message, Session session) {
-        JSONObject jsonObject = JSONUtil.parseObj(message);
-        if(jsonObject.containsKey("type")){
-            webSocketReceiver.receive(session,jsonObject.toBean(TextWebSocketMessage.class));
-        }else {
-            log.warn("无效的WebSocket消息：{}",message);
+        try {
+            JSONObject jsonObject = JSONUtil.parseObj(message);
+            if(jsonObject.containsKey("type")){
+                abstractWebSocketHandler.receive(session,jsonObject.toBean(TextWebSocketMessage.class));
+            }else {
+                log.warn("无效的WebSocket消息：{}",message);
+            }
+        }catch (Exception e){
+            log.error("WebSocket Message发生异常 ", e);
         }
+
     }
 
     /**
@@ -70,6 +80,7 @@ public class WebSocketServer {
     @OnError
     public void onError(Session session, Throwable error) {
         onClose(session);
+        abstractWebSocketHandler.error(session,error);
         log.error("WebSocket出现错误", error);
     }
 

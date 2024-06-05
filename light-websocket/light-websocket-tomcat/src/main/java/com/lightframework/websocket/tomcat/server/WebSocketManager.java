@@ -2,11 +2,11 @@ package com.lightframework.websocket.tomcat.server;
 
 import cn.hutool.json.JSONUtil;
 import com.lightframework.websocket.common.model.WebSocketMessage;
-import com.lightframework.websocket.tomcat.cache.WebSocketCache;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
 
 /*** 
  * @author yg
@@ -14,12 +14,16 @@ import java.io.IOException;
  * @version 1.0
  */
 @Slf4j
-public class WebSocketSender {
+public class WebSocketManager {
+
+    public static final ConcurrentHashMap<String, Session> SESSIONS = new ConcurrentHashMap<>();
 
     public static void sendMessage(Session session, WebSocketMessage message){
         try {
-            if(session != null) {
-                session.getBasicRemote().sendText(JSONUtil.toJsonStr(message));
+            if(session != null && session.isOpen()) {
+                synchronized (session) {
+                    session.getBasicRemote().sendText(JSONUtil.toJsonStr(message));
+                }
             }
         } catch (IOException e) {
             log.error("WebSocket sendMessage error!", e);
@@ -33,7 +37,7 @@ public class WebSocketSender {
      * @param message
      */
     public static void sendMessageToSingleClient(String clientId, WebSocketMessage message) {
-        Session session = WebSocketCache.SESSIONS.get(clientId);
+        Session session = SESSIONS.get(clientId);
         try {
             sendMessage(session, message);
         } catch (Exception e) {
@@ -46,7 +50,7 @@ public class WebSocketSender {
      */
     public static void sendMessageToAll(WebSocketMessage message){
         try {
-            WebSocketCache.SESSIONS.entrySet().forEach(e->sendMessage(e.getValue(),message));
+            SESSIONS.entrySet().forEach(e->sendMessage(e.getValue(),message));
         } catch (Exception e) {
             log.error("WebSocket sendMessageToAll error!", e);
         }
