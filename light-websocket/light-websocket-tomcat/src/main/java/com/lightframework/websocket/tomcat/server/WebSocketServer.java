@@ -1,7 +1,6 @@
 package com.lightframework.websocket.tomcat.server;
 
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import com.lightframework.websocket.common.constant.WebSocketMsgTypeConstants;
 import com.lightframework.websocket.common.model.TextWebSocketMessage;
 import com.lightframework.websocket.common.model.WebSocketMessage;
@@ -62,12 +61,7 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(String message, Session session) {
         try {
-            JSONObject jsonObject = JSONUtil.parseObj(message);
-            if(jsonObject.containsKey("type")){
-                abstractWebSocketHandler.receive(session,jsonObject.toBean(TextWebSocketMessage.class));
-            }else {
-                log.warn("无效的WebSocket消息：{}",message);
-            }
+            abstractWebSocketHandler.receive(session,JSON.parseObject(message,TextWebSocketMessage.class));
         }catch (Exception e){
             log.error("WebSocket Message发生异常 ", e);
         }

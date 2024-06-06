@@ -1,6 +1,7 @@
 package com.lightframework.websocket.tomcat.server;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lightframework.websocket.common.model.WebSocketMessage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +23,7 @@ public class WebSocketManager {
         try {
             if(session != null && session.isOpen()) {
                 synchronized (session) {
-                    session.getBasicRemote().sendText(JSONUtil.toJsonStr(message));
+                    session.getBasicRemote().sendText(JSON.toJSONString(message));
                 }
             }
         } catch (IOException e) {

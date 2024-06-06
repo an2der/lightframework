@@ -24,6 +24,7 @@
         <module>light-system-log</module>
         <module>light-plugin</module>
         <module>light-parent</module>
+        <module>light-comm</module>
     </modules>
     <packaging>pom</packaging>
     <description>微框架,用于解决开发过程中重复的工作，提高效率，同时降低出错率，
@@ -109,6 +110,13 @@
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-auth-jwt</artifactId>
+                <version>1.0.2</version>
+            </dependency>
+
+            <!-- light-comm -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-serial</artifactId>
                 <version>1.0.2</version>
             </dependency>
 
