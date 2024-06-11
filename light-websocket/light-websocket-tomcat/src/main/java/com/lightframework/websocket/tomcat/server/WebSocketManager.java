@@ -37,12 +37,12 @@ public class WebSocketManager {
      * @param clientId
      * @param message
      */
-    public static void sendMessageToSingleClient(String clientId, WebSocketMessage message) {
+    public static void sendMessage(String clientId, WebSocketMessage message) {
         Session session = SESSIONS.get(clientId);
         try {
             sendMessage(session, message);
         } catch (Exception e) {
-            log.error("WebSocket sendMessageToSingleClient error!", e);
+            log.error("WebSocket sendMessage error!", e);
         }
     }
 
