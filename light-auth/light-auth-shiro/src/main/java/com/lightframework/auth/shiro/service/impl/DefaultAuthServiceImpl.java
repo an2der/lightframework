@@ -29,7 +29,7 @@ public class DefaultAuthServiceImpl implements AuthService {
     public UserInfo login(LoginParam loginParam) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         VerifyCode verifyCode = (VerifyCode) request.getSession().getAttribute(VerifyCodeUtil.VERIFY_CODE);
-        if(authConfigProperties.getVerifyCode().isEnableVerifyCode()){
+        if(authConfigProperties.getConfiguration().getVerifyCode().isEnableVerifyCode()){
             if(verifyCode == null){
                 throw new BusinessException("验证码无效");
             }else if(loginParam.getVerifyCode() == null || loginParam.getVerifyCode().length() == 0){
@@ -69,7 +69,7 @@ public class DefaultAuthServiceImpl implements AuthService {
     @Override
     public String generateVerifyCode() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        VerifyCode verifyCode = VerifyCodeUtil.createRandom(false,4,authConfigProperties.getVerifyCode().getExpireTimeSecond());
+        VerifyCode verifyCode = VerifyCodeUtil.createRandom(false,4,authConfigProperties.getConfiguration().getVerifyCode().getExpireTimeSecond());
         HttpSession httpSession = request.getSession();
         httpSession.setAttribute(VerifyCodeUtil.VERIFY_CODE,verifyCode);
         return verifyCode.getCode();

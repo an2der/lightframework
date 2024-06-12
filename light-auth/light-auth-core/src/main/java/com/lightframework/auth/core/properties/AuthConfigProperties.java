@@ -5,6 +5,8 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /** 授权配置对象
@@ -12,6 +14,8 @@ import java.util.List;
  * @date 2023/5/31 14:38
  * @version 1.0
  */
+@Component
+@ConfigurationProperties("auth")
 @Getter
 @Setter
 public class AuthConfigProperties {
@@ -22,9 +26,20 @@ public class AuthConfigProperties {
 
     private int expireTimeMinute = 43200; //分钟
 
-    private List<String> permitUrls;
+    private InterceptUrl interceptUrl = new InterceptUrl();
 
     private VerifyCode verifyCode = new VerifyCode();
+
+    /**
+     * 拦截地址
+     */
+    @Getter
+    @Setter
+    public static class InterceptUrl{
+        private List<String> includes = Arrays.asList("/**");
+
+        private List<String> excludes;
+    }
 
 
     /**

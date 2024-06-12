@@ -6,6 +6,8 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Properties;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -25,10 +27,14 @@ public class ProjectUtil {
      */
     public static String getProjectRootPath() {
         File baseFile = getBaseFile();
-        if(baseFile != null && baseFile.isDirectory()){
-            return baseFile.getAbsolutePath();
-        }else {
-            return baseFile.getParent();
+        try {
+            if(baseFile != null && baseFile.isDirectory()){
+                return URLDecoder.decode(baseFile.getAbsolutePath(),"UTF-8");
+            }else {
+                return URLDecoder.decode(baseFile.getParent(),"UTF-8");
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Unsupported Encoding 'UTF-8'",e);
         }
     }
 
@@ -116,7 +122,7 @@ public class ProjectUtil {
                 JarFile jarFile = new JarFile(baseFile);
                 return jarFile.getManifest();
             } catch (IOException e) {
-
+                throw new RuntimeException("Unable to read file!",e);
             }
         }
         return null;
@@ -139,7 +145,7 @@ public class ProjectUtil {
             //通过调用者类文件获取真实绝对路径
             return new File(clazz.getProtectionDomain().getCodeSource().getLocation().getFile());
         } catch (ClassNotFoundException e) {
-            return null;
+            throw new RuntimeException("Class Not Found!",e);
         }
     }
 }

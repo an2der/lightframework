@@ -1,8 +1,10 @@
 package com.lightframework.auth.jwt.properties;
 
 import com.lightframework.auth.core.properties.AuthConfigProperties;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +14,23 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  */
 @Component
-@ConfigurationProperties(prefix = "auth")
+@ConfigurationProperties(prefix = "auth.jwt")
 @Getter
 @Setter
-public class JwtAuthConfigProperties extends AuthConfigProperties {
+public class JwtAuthConfigProperties {
+
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private AuthConfigProperties configuration;
+
+    @Autowired
+    public void configuration(AuthConfigProperties configuration) {
+        this.configuration = configuration;
+    }
+
+    public AuthConfigProperties getConfiguration() {
+        return configuration;
+    }
 
     private String tokenPrefix = "Bearer ";
 }

@@ -27,6 +27,6 @@ public class ShiroCrypto {
     }
 
     public String encryptPassword(String password){
-        return this.encryptPassword(password, authConfigProperties.getSecret());
+        return this.encryptPassword(password, authConfigProperties.getConfiguration().getSecret());
     }
 }
