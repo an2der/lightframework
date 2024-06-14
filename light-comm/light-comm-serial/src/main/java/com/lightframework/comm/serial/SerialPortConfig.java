@@ -11,7 +11,8 @@ public class SerialPortConfig {
     private int dataBits = 8;//数据位
     private int stopBits = SerialPort.ONE_STOP_BIT;//停止位
     private int parity = SerialPort.NO_PARITY;//校验位
-    private boolean autoReconnection = true;
+    private boolean autoReconnection = true;//自动重连
+    private int reconnectionInterval = 5;//重连时间间隔 秒
 
     private SerialPortDataReceiver dataReceiver;
 

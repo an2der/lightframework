@@ -75,7 +75,7 @@ public class SerialPortManager {
                 public void run() {
                     while (!comPort.isOpen()){
                         try {
-                            TimeUnit.SECONDS.sleep(5);
+                            TimeUnit.SECONDS.sleep(serialPortConfig.getReconnectionInterval());
                         } catch (InterruptedException e) {
                             log.error("串口："+serialPortConfig.getSerialPortName()+" 重连时发生异常！",e);
                         }
