@@ -13,12 +13,15 @@ public class SerialPortManager {
 
     private SerialPortConfig serialPortConfig;
 
+    private volatile boolean closed = false;
+
     public SerialPortManager(SerialPortConfig serialPortConfig){
         this.serialPortConfig = serialPortConfig;
         comPort = SerialPort.getCommPort(serialPortConfig.getSerialPortName());
     }
 
     public boolean open(){
+        closed = false;
         return open(false);
     }
 
@@ -49,6 +52,7 @@ public class SerialPortManager {
         if(comPort.isOpen()){
             if(comPort.closePort()){
                 log.info("串口：{} 关闭成功！",serialPortConfig.getSerialPortName());
+                closed = true;
                 return true;
             }else {
                 log.info("串口：{} 关闭失败！",serialPortConfig.getSerialPortName());
@@ -68,12 +72,12 @@ public class SerialPortManager {
     }
 
     private void reconnection(){
-        if(serialPortConfig.isAutoReconnection()){
+        if(!closed && serialPortConfig.isAutoReconnection()){
             new Thread(){
                 {start();}
                 @Override
                 public void run() {
-                    while (!comPort.isOpen()){
+                    while (!closed && !comPort.isOpen()){
                         try {
                             TimeUnit.SECONDS.sleep(serialPortConfig.getReconnectionInterval());
                         } catch (InterruptedException e) {
