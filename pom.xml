@@ -178,7 +178,7 @@
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
-                <artifactId>light-util-file</artifactId>
+                <artifactId>light-util-io</artifactId>
                 <version>1.0.2</version>
             </dependency>
             <dependency>

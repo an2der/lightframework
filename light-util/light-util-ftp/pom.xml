@@ -26,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
-            <artifactId>light-util-file</artifactId>
+            <artifactId>light-util-io</artifactId>
         </dependency>
     </dependencies>
 </project>

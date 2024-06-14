@@ -1,7 +1,7 @@
 package com.lightframework.util.ftp;
 
 import com.lightframework.common.BusinessException;
-import com.lightframework.util.file.PathUtil;
+import com.lightframework.util.io.PathUtil;
 
 import java.io.*;
 import java.nio.file.FileSystems;

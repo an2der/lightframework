@@ -1,4 +1,4 @@
-package com.lightframework.util.file;
+package com.lightframework.util.io;
 
 import org.apache.commons.io.FileUtils;
 
