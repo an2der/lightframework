@@ -5,6 +5,8 @@ import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.TimeUnit;
+
 @Slf4j
 public class SerialPortManager {
     private SerialPort comPort;
@@ -17,17 +19,24 @@ public class SerialPortManager {
     }
 
     public boolean open(){
+        return open(false);
+    }
+
+    private boolean open(boolean reconnection){
         if (!comPort.isOpen()){
             comPort.setBaudRate(serialPortConfig.getBaudRate());//波特率
             comPort.setNumDataBits(serialPortConfig.getDataBits());//数据位
             comPort.setNumStopBits(serialPortConfig.getStopBits());//停止位
             comPort.setParity(serialPortConfig.getParity());//校验位
-            comPort.addDataListener(new SerialPortReader());
+            comPort.addDataListener(new SerialPortListener());
             if(comPort.openPort()) {
                 log.info("串口：{} 开启成功！",serialPortConfig.getSerialPortName());
                 return true;
-            }else {
+            } else {
                 log.info("串口：{} 开启失败！",serialPortConfig.getSerialPortName());
+                if(!reconnection) {
+                    reconnection();
+                }
                 return false;
             }
         }else {
@@ -58,19 +67,47 @@ public class SerialPortManager {
         }
     }
 
-    private class SerialPortReader implements SerialPortDataListener{
+    private void reconnection(){
+        if(serialPortConfig.isAutoReconnection()){
+            new Thread(){
+                {start();}
+                @Override
+                public void run() {
+                    while (!comPort.isOpen()){
+                        try {
+                            TimeUnit.SECONDS.sleep(5);
+                        } catch (InterruptedException e) {
+                            log.error("串口："+serialPortConfig.getSerialPortName()+" 重连时发生异常！",e);
+                        }
+                        log.info("串口：{} 开始重连...",serialPortConfig.getSerialPortName());
+                        if(open(true)){
+                            break;
+                        }
+                    }
+                }
+            };
+        }
+    }
+
+    private class SerialPortListener implements SerialPortDataListener{
 
         @Override
         public int getListeningEvents() {
-            return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+            return SerialPort.LISTENING_EVENT_DATA_AVAILABLE | SerialPort.LISTENING_EVENT_PORT_DISCONNECTED;
         }
 
         @Override
         public void serialEvent(SerialPortEvent serialPortEvent) {
-            if(serialPortConfig.getDataReceiver() != null) {
+            if(serialPortEvent.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
                 byte[] data = new byte[comPort.bytesAvailable()]; // 创建缓冲区，大小为当前可用的字节数
                 comPort.readBytes(data, data.length); // 读取数据
-                serialPortConfig.getDataReceiver().receive(data);
+                if (serialPortConfig.getDataReceiver() != null) {
+                    serialPortConfig.getDataReceiver().receive(data);
+                }
+            }else if(serialPortEvent.getEventType() == SerialPort.LISTENING_EVENT_PORT_DISCONNECTED){
+                log.info("串口：{} 断开连接！",serialPortConfig.getSerialPortName());
+                comPort.closePort();
+                reconnection();
             }
         }
     }
