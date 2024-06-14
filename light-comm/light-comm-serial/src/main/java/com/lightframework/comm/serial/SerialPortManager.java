@@ -83,9 +83,11 @@ public class SerialPortManager {
                         } catch (InterruptedException e) {
                             log.error("串口："+serialPortConfig.getSerialPortName()+" 重连时发生异常！",e);
                         }
-                        log.info("串口：{} 开始重连...",serialPortConfig.getSerialPortName());
-                        if(open(true)){
-                            break;
+                        if(!closed) {
+                            log.info("串口：{} 开始重连...", serialPortConfig.getSerialPortName());
+                            if (open(true)) {
+                                break;
+                            }
                         }
                     }
                 }
