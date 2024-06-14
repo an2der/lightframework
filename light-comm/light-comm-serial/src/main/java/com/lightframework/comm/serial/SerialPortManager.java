@@ -49,10 +49,10 @@ public class SerialPortManager {
     }
 
     public boolean close(){
+        closed = true;
         if(comPort.isOpen()){
             if(comPort.closePort()){
                 log.info("串口：{} 关闭成功！",serialPortConfig.getSerialPortName());
-                closed = true;
                 return true;
             }else {
                 log.info("串口：{} 关闭失败！",serialPortConfig.getSerialPortName());
