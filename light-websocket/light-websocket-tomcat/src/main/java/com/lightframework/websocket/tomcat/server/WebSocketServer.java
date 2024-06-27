@@ -36,8 +36,12 @@ public class WebSocketServer {
     @OnOpen
     public void onOpen(Session session) {
         WebSocketManager.SESSIONS.put(session.getId(), session);
-        WebSocketManager.sendMessage(session, new WebSocketMessage(WebSocketMsgTypeConstants.SESSION_ID,session.getId()));
-        abstractWebSocketHandler.open(session);
+        try {
+            WebSocketManager.sendMessage(session, new WebSocketMessage(WebSocketMsgTypeConstants.SESSION_ID,session.getId()));
+            abstractWebSocketHandler.open(session);
+        }catch (Exception e){
+            log.error("WebSocket Open发生异常 ", e);
+        }
     }
 
 
@@ -48,9 +52,8 @@ public class WebSocketServer {
     public void onClose(Session session) {
         try {
             WebSocketManager.SESSIONS.remove(session.getId());
-            session.close();
             abstractWebSocketHandler.close(session);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("WebSocket Close发生异常 ", e);
         }
     }
@@ -73,9 +76,8 @@ public class WebSocketServer {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        onClose(session);
         abstractWebSocketHandler.error(session,error);
-        log.error("WebSocket出现错误", error);
+        log.error("WebSocket 出现异常", error);
     }
 
 }

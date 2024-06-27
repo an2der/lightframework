@@ -19,16 +19,20 @@ public class WebSocketManager {
 
     public static final ConcurrentHashMap<String, Session> SESSIONS = new ConcurrentHashMap<>();
 
-    public static void sendMessage(Session session, WebSocketMessage message){
+    private static void sendMessage(Session session, String message){
         try {
             if(session != null && session.isOpen()) {
                 synchronized (session) {
-                    session.getBasicRemote().sendText(JSON.toJSONString(message));
+                    session.getBasicRemote().sendText(message);
                 }
             }
         } catch (IOException e) {
             log.error("WebSocket sendMessage error!", e);
         }
+    }
+
+    public static void sendMessage(Session session, WebSocketMessage message){
+        sendMessage(session,JSON.toJSONString(message));
     }
 
     /**
@@ -51,7 +55,8 @@ public class WebSocketManager {
      */
     public static void sendMessageToAll(WebSocketMessage message){
         try {
-            SESSIONS.entrySet().forEach(e->sendMessage(e.getValue(),message));
+            String stringMessage = JSON.toJSONString(message);
+            SESSIONS.entrySet().forEach(e->sendMessage(e.getValue(),stringMessage));
         } catch (Exception e) {
             log.error("WebSocket sendMessageToAll error!", e);
         }
