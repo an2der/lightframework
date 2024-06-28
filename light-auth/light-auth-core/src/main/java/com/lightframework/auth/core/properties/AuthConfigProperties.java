@@ -20,14 +20,29 @@ import java.util.List;
 @Setter
 public class AuthConfigProperties {
 
+    /**
+     * token 键
+     */
     private String tokenKey = "Authorization";
 
+    /**
+     * 秘钥
+     */
     private String secret = "LIGHT123456789ABCDEF";
 
+    /**
+     * token过期时间 单位：分钟
+     */
     private int expireTimeMinute = 43200; //分钟
 
+    /**
+     * 拦截地址设置
+     */
     private InterceptUrl interceptUrl = new InterceptUrl();
 
+    /**
+     * 验证码设置
+     */
     private VerifyCode verifyCode = new VerifyCode();
 
     /**
@@ -36,8 +51,14 @@ public class AuthConfigProperties {
     @Getter
     @Setter
     public static class InterceptUrl{
+        /**
+         * 被拦截的地址
+         */
         private List<String> includes = Arrays.asList("/**");
 
+        /**
+         * 排除的拦截地址
+         */
         private List<String> excludes;
     }
 
@@ -48,8 +69,14 @@ public class AuthConfigProperties {
     @Getter
     @Setter
     public static class VerifyCode{
+        /**
+         * 是否启用验证码功能
+         */
         private boolean enableVerifyCode = false;
 
+        /**
+         * 验证码过期时间
+         */
         private int expireTimeSecond = 0; //过期时间：秒
 
     }

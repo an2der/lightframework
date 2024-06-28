@@ -32,6 +32,9 @@ public class ShiroAuthConfigProperties {
         return configuration;
     }
 
+    /**
+     * 密码加密配置
+     */
     private PasswordCrypto passwordCrypto = new PasswordCrypto();
 
     /**
@@ -40,8 +43,14 @@ public class ShiroAuthConfigProperties {
     @Getter
     @Setter
     public static class PasswordCrypto{
+        /**
+         * hash算法
+         */
         private String hashAlgorithm = "MD5";
 
+        /**
+         * hash次数
+         */
         private int hashIterations = 1;
     }
 }

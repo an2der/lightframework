@@ -11,5 +11,8 @@ import org.springframework.stereotype.Component;
 @Setter
 public class SystemLogProperties {
 
+    /**
+     * 保留日志天数
+     */
     private int reservedDays = 365;
 }

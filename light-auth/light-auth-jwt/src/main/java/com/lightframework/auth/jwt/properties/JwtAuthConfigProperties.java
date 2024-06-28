@@ -32,5 +32,8 @@ public class JwtAuthConfigProperties {
         return configuration;
     }
 
+    /**
+     * token 前缀
+     */
     private String tokenPrefix = "Bearer ";
 }
