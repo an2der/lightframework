@@ -1,11 +1,13 @@
 package com.lightframework.websocket.netty.server;
 
 
+import com.lightframework.util.spring.SpringContextUtil;
 import com.lightframework.websocket.netty.handler.AbstractWebSocketHandler;
 import com.lightframework.websocket.netty.handler.IdleCheckHandler;
 import com.lightframework.websocket.netty.handler.WebSocketInboundHandler;
 import com.lightframework.websocket.netty.properties.WebSocketConfigProperties;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -43,7 +45,7 @@ public class WebSocketServer implements ApplicationRunner, ApplicationListener<C
     private EventLoopGroup workGroup;
 
     @Override
-    public void run(ApplicationArguments args) throws InterruptedException {
+    public void run(ApplicationArguments args) {
         bossGroup = new NioEventLoopGroup(webSocketConfigProperties.getBossThreadCount());
         workGroup = new NioEventLoopGroup(webSocketConfigProperties.getWorkThreadCount());
         ServerBootstrap bootstrap = new ServerBootstrap();
@@ -68,16 +70,18 @@ public class WebSocketServer implements ApplicationRunner, ApplicationListener<C
                 socketChannel.pipeline().addLast(new WebSocketInboundHandler(abstractWebSocketHandler));
             }
         });
-        bootstrap.bind().sync().addListener(future -> {
+        try {
+            ChannelFuture future = bootstrap.bind().sync();
             if (future.isSuccess()) {
                 log.info("WebSocket服务启动成功！");
             } else {
-                log.info("WebSocket服务启动失败！");
-                if(future.cause() != null) {
-                    log.error("WebSocket服务启动时发生异常", future.cause());
-                }
+                throw new Exception(future.cause());
             }
-        });
+        } catch (Exception e) {
+            log.info("WebSocket服务启动失败！");
+            log.error("WebSocket服务启动时发生异常", e);
+            SpringContextUtil.exit();
+        }
 
     }
 
@@ -91,6 +95,7 @@ public class WebSocketServer implements ApplicationRunner, ApplicationListener<C
                 workGroup.shutdownGracefully().sync();
             }
         } catch (InterruptedException e) {
+
         }
     }
 }
