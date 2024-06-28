@@ -16,7 +16,15 @@ import org.springframework.stereotype.Component;
 @Setter
 public class WebSocketConfigProperties {
 
+    /**
+     * websocket端口
+     */
     private int port = 8090;
+
+    /**
+     * websocket路径
+     */
+    private String websocketPath = "/websocket";
 
     /**
      * bossThread的数量设置为1就足够了，因为在一个端口上监听连接请求通常不需要并发处理
@@ -37,8 +45,6 @@ public class WebSocketConfigProperties {
      * 最大连接数， backlog的值即为未连接队列和已连接队列的和
      */
     private int backlog = 1024;
-
-    private String websocketPath = "/websocket";
 
     /**
      * 读空闲检查，超过空闲时间断开连接。0：不检查
