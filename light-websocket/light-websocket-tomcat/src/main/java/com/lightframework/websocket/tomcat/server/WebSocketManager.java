@@ -17,7 +17,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class WebSocketManager {
 
-    public static final ConcurrentHashMap<String, Session> SESSIONS = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Session> SESSIONS = new ConcurrentHashMap<>();
+
+    private WebSocketManager(){}
+
+    public static void putSession(Session session){
+        SESSIONS.put(session.getId(), session);
+    }
+
+    public static void removeSession(Session session){
+        SESSIONS.remove(session.getId());
+    }
 
     private static void sendMessage(Session session, String message){
         try {

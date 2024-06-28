@@ -35,7 +35,7 @@ public class WebSocketServer {
      */
     @OnOpen
     public void onOpen(Session session) {
-        WebSocketManager.SESSIONS.put(session.getId(), session);
+        WebSocketManager.putSession(session);
         try {
             WebSocketManager.sendMessage(session, new WebSocketMessage(WebSocketMsgTypeConstants.SESSION_ID,session.getId()));
             abstractWebSocketHandler.open(session);
@@ -51,7 +51,7 @@ public class WebSocketServer {
     @OnClose
     public void onClose(Session session) {
         try {
-            WebSocketManager.SESSIONS.remove(session.getId());
+            WebSocketManager.removeSession(session);
             abstractWebSocketHandler.close(session);
         } catch (Exception e) {
             log.error("WebSocket Close发生异常 ", e);

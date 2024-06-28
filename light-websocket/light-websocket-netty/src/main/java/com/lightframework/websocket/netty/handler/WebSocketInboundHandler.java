@@ -25,7 +25,7 @@ public class WebSocketInboundHandler extends SimpleChannelInboundHandler<TextWeb
      */
     @Override
     public void channelActive(ChannelHandlerContext context) {
-        WebSocketManager.CHANNELS.put(context.channel().id().asLongText(), context.channel());
+        WebSocketManager.putChannel(context.channel());
         try {
             WebSocketManager.sendMessage(context.channel(), new WebSocketMessage(WebSocketMsgTypeConstants.SESSION_ID,context.channel().id().asLongText()));
             abstractWebSocketHandler.open(context.channel());
@@ -53,7 +53,7 @@ public class WebSocketInboundHandler extends SimpleChannelInboundHandler<TextWeb
     @Override
     public void channelInactive(ChannelHandlerContext context)  {
         try {
-            WebSocketManager.CHANNELS.remove(context.channel().id().asLongText());
+            WebSocketManager.removeChannel(context.channel());
             abstractWebSocketHandler.close(context.channel());
         } catch (Exception e) {
             log.error("WebSocket Close发生异常 ", e);
