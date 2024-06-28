@@ -2,6 +2,7 @@ package com.lightframework.auth.jwt.config;
 
 import com.lightframework.auth.core.properties.AuthConfigProperties;
 import com.lightframework.auth.jwt.filter.JwtAuthenticationFilter;
+import com.lightframework.auth.jwt.handler.AuthenticationHandler;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -63,7 +64,7 @@ public class SecurityConfig {
             }
         }
         return expressionInterceptUrlRegistry.and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-//                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and() //认证失败返回信息
+                .exceptionHandling().authenticationEntryPoint(new AuthenticationHandler()).and() //认证失败返回信息
 //                .exceptionHandling().accessDeniedHandler(accessDeniedHandler).and() //授权失败 没有权限
                 .cors().and()
                 .build();

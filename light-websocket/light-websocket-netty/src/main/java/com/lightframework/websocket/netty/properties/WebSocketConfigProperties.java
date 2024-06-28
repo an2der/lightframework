@@ -32,7 +32,7 @@ public class WebSocketConfigProperties {
     private int bossThreadCount = 1;
 
     /**
-     * 默认使用CPU核心数*2的worker线程数
+     * 0: 默认使用CPU核心数*2的worker线程数
      */
     private int workThreadCount = 0;
 

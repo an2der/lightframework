@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
  * @date 2023/11/6 19:15
  * @version 1.0
  */
-@Component
 public class DefaultShiroRealm extends AuthorizingRealm {
 
     @Autowired
@@ -43,6 +42,8 @@ public class DefaultShiroRealm extends AuthorizingRealm {
         authorizationInfo.setStringPermissions(userInfo.getPermissions());
         return authorizationInfo;
     }
+
+
 
     /**
      * 登录

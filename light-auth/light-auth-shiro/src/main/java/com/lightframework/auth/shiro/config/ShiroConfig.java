@@ -2,12 +2,14 @@ package com.lightframework.auth.shiro.config;
 
 import com.lightframework.auth.core.properties.AuthConfigProperties;
 import com.lightframework.auth.shiro.properties.ShiroAuthConfigProperties;
+import com.lightframework.auth.shiro.realm.DefaultShiroRealm;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,13 +23,15 @@ import java.util.Map;
 public class ShiroConfig {
 
     @Autowired
-    private AuthorizingRealm realm;
-
-    @Autowired
     private ShiroAuthConfigProperties authConfigProperties;
 
     @Bean
-    public SecurityManager securityManager() {
+    public DefaultShiroRealm shiroRealm() {
+        return new DefaultShiroRealm();
+    }
+
+    @Bean
+    public SecurityManager securityManager(AuthorizingRealm realm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(realm);
         securityManager.setSessionManager(defaultWebSessionManager());//配置session管理器
@@ -39,7 +43,7 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 
         //设置安全管理器
-        shiroFilterFactoryBean.setSecurityManager(securityManager());
+        shiroFilterFactoryBean.setSecurityManager(securityManager);
 
         HashMap<String, Filter> myFilters = new HashMap<>();
         myFilters.put("authc", new ShiroAuthFilter());
@@ -80,6 +84,13 @@ public class ShiroConfig {
             defaultWebSessionManager.setGlobalSessionTimeout(-1);//永不过期
         }
         return defaultWebSessionManager;
+    }
+
+    @Bean
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
+        return defaultAdvisorAutoProxyCreator;
     }
 
 }

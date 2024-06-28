@@ -5,6 +5,7 @@ import com.lightframework.common.BusinessResponse;
 import com.lightframework.common.BusinessStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @version 1.0
  */
 @RestControllerAdvice
+@Order(999)
 public class GlobalExceptionHandler {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
