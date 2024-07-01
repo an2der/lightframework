@@ -1,4 +1,4 @@
-package com.lightframework.util.ftp;
+package com.lightframework.comm.ftp;
 
 import java.io.InputStream;
 import java.util.List;

@@ -33,6 +33,8 @@ import java.util.*;
  */
 public class ExcelUtil {
 
+    private ExcelUtil(){}
+
     private static Logger logger = LoggerFactory.getLogger(ExcelUtil.class);
     /**
      * 读取excel数据，默认忽略第一行

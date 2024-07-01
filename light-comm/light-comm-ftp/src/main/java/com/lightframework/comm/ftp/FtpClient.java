@@ -1,4 +1,4 @@
-package com.lightframework.util.ftp;
+package com.lightframework.comm.ftp;
 
 import com.lightframework.common.BusinessException;
 import org.apache.commons.net.ftp.FTPClient;

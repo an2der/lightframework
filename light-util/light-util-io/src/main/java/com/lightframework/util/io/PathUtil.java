@@ -13,6 +13,8 @@ import java.io.IOException;
  */
 public class PathUtil {
 
+    private PathUtil(){}
+
     /**
      * 清除windows文件名中特殊字符
      * @param name

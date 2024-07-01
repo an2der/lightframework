@@ -1,6 +1,8 @@
 package com.lightframework.auth.shiro.config;
 
-import com.lightframework.auth.core.helper.AuthHelper;
+import com.lightframework.common.BusinessResponse;
+import com.lightframework.common.BusinessStatus;
+import com.lightframework.util.spring.SpringServletUtil;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 
 import javax.servlet.ServletRequest;
@@ -18,7 +20,7 @@ public class ShiroAuthFilter extends FormAuthenticationFilter {
      */
     @Override
     protected void redirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
-        AuthHelper.responseUnauthorized(response);
+        SpringServletUtil.responseJSONStr(response,new BusinessResponse(BusinessStatus.UNAUTHORIZED));
     }
 
 }

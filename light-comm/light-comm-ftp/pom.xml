@@ -3,14 +3,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>light-util</artifactId>
+        <artifactId>light-comm</artifactId>
         <groupId>com.lightframework</groupId>
         <version>1.0.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <description>ftp工具</description>
-    <artifactId>light-util-ftp</artifactId>
 
+    <description>FTP通信</description>
+    <artifactId>light-comm-ftp</artifactId>
+
+    <properties>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.lightframework</groupId>

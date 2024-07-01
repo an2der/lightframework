@@ -21,6 +21,8 @@ import java.util.regex.Pattern;
  */
 public class ProjectUtil {
 
+    private ProjectUtil(){}
+
     /**
      * 获取项目根目录
      * @return

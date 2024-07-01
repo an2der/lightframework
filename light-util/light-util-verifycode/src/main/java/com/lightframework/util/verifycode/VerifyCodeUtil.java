@@ -9,6 +9,8 @@ import java.util.Random;
 
 public class VerifyCodeUtil {
 
+    private VerifyCodeUtil(){}
+
     public static final String VERIFY_CODE = "verifyCode";
 
     /**

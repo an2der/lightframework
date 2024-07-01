@@ -7,6 +7,8 @@ package com.lightframework.util.crypto;
  */
 public class CryptoUtil {
 
+    private CryptoUtil(){}
+
     /**
      * 异或加密
      * @param str

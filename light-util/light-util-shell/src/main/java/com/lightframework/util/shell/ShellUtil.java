@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class ShellUtil {
 
+    private ShellUtil(){}
+
     private static Logger log = LoggerFactory.getLogger(ShellUtil.class);
 
     public static void execWindowsScript(String src){
@@ -117,6 +119,9 @@ public class ShellUtil {
         }
     }
     public static class ShellResult{
+
+        private ShellResult(){}
+
         private boolean isSuccess = true;
 
         private String content;

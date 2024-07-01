@@ -16,6 +16,8 @@ import java.util.Enumeration;
 @Slf4j
 public class IPUtil {
 
+    private IPUtil(){}
+
     /**
      * 获取本地ip
      * @return

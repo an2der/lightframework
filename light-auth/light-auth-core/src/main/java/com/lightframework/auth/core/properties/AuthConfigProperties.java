@@ -33,7 +33,7 @@ public class AuthConfigProperties {
     /**
      * token过期时间 单位：分钟
      */
-    private int expireTimeMinute = 43200; //分钟
+    private long expireTimeMinute = 43200; //分钟
 
     /**
      * 拦截地址设置

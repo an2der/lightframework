@@ -1,4 +1,4 @@
-package com.lightframework.util.ftp;
+package com.lightframework.comm.ftp;
 
 
 import com.jcraft.jsch.ChannelSftp;

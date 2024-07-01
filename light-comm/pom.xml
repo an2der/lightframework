@@ -13,6 +13,7 @@
     <description>通信</description>
     <modules>
         <module>light-comm-serial</module>
+        <module>light-comm-ftp</module>
     </modules>
     <artifactId>light-comm</artifactId>
 

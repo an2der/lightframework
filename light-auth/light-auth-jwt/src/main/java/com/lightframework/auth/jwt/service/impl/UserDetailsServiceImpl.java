@@ -30,6 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         JwtUserInfo jwtUserInfo = new JwtUserInfo();
         BeanUtils.copyProperties(userInfo,jwtUserInfo);
+        jwtUserInfo.setPassword(userInfo.password());
         return jwtUserInfo;
     }
 }

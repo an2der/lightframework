@@ -12,6 +12,8 @@ import org.springframework.util.StringValueResolver;
 @Component
 public class SpringPropertyUtil implements EmbeddedValueResolverAware {
 
+    private SpringPropertyUtil(){}
+
     private static StringValueResolver valueResolver = null;
 
     public static String getValue(String key){

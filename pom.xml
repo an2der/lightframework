@@ -119,6 +119,11 @@
                 <artifactId>light-comm-serial</artifactId>
                 <version>1.0.2</version>
             </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-ftp</artifactId>
+                <version>1.0.2</version>
+            </dependency>
 
             <!-- light-common -->
             <dependency>
@@ -179,11 +184,6 @@
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-io</artifactId>
-                <version>1.0.2</version>
-            </dependency>
-            <dependency>
-                <groupId>com.lightframework</groupId>
-                <artifactId>light-util-ftp</artifactId>
                 <version>1.0.2</version>
             </dependency>
             <dependency>

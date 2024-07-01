@@ -13,7 +13,6 @@
         <module>light-util-excel</module>
         <module>light-util-shell</module>
         <module>light-util-verifycode</module>
-        <module>light-util-ftp</module>
         <module>light-util-project</module>
         <module>light-util-io</module>
         <module>light-util-net</module>

@@ -1,10 +1,15 @@
 package com.lightframework.util.spring;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /***
  * @author yg
@@ -13,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SpringServletUtil {
 
+    private SpringServletUtil(){}
+
     public static HttpServletRequest getRequest(){
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
     }
@@ -20,4 +27,18 @@ public class SpringServletUtil {
     public static HttpServletResponse getResponse(){
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
     }
+
+    public static void responseJSONStr(Object o) throws IOException {
+        responseJSONStr(getResponse(),o);
+    }
+
+    public static void responseJSONStr(ServletResponse response, Object o) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.getWriter().write(mapper.writeValueAsString(o));
+        response.getWriter().flush();
+        response.getWriter().close();
+    }
+
 }

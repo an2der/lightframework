@@ -9,6 +9,8 @@ import java.util.Map;
  */
 public class SpringBeanUtil {
 
+    private SpringBeanUtil(){}
+
     public static Object getBean(String beanName){
         if(SpringContextUtil.getContext() != null){
             return SpringContextUtil.getContext().getBean(beanName);

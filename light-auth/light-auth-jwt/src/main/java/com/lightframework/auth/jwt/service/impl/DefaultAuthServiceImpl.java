@@ -1,17 +1,19 @@
-package com.lightframework.auth.shiro.service.impl;
+package com.lightframework.auth.jwt.service.impl;
 
-import com.lightframework.auth.core.model.LoginParam;
 import com.lightframework.auth.common.model.UserInfo;
+import com.lightframework.auth.core.model.LoginParam;
 import com.lightframework.auth.core.service.AuthService;
-import com.lightframework.auth.shiro.properties.ShiroAuthConfigProperties;
+import com.lightframework.auth.jwt.model.JwtUserInfo;
+import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
+import com.lightframework.auth.jwt.util.JwtTokenUtil;
 import com.lightframework.common.BusinessException;
 import com.lightframework.util.verifycode.VerifyCode;
 import com.lightframework.util.verifycode.VerifyCodeUtil;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -23,7 +25,13 @@ import javax.servlet.http.HttpSession;
 public class DefaultAuthServiceImpl extends AuthService {
 
     @Autowired
-    private ShiroAuthConfigProperties authConfigProperties;
+    private JwtAuthConfigProperties authConfigProperties;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Override
     public UserInfo login(LoginParam loginParam) {
@@ -32,31 +40,31 @@ public class DefaultAuthServiceImpl extends AuthService {
             VerifyCode verifyCode = (VerifyCode) request.getSession().getAttribute(VerifyCodeUtil.VERIFY_CODE);
             validateCode(loginParam.getVerifyCode(),verifyCode);
         }
-        UsernamePasswordToken token = new UsernamePasswordToken(loginParam.getUsername(), loginParam.getPassword());
-        token.setRememberMe(loginParam.getRememberMe());
-        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginParam.getUsername(),loginParam.getPassword());
         try {
-            subject.login(token);
-            UserInfo userInfo = (UserInfo) subject.getPrincipal();
+            Authentication authentication = authenticationManager.authenticate(token);
+            if(authentication == null){
+                throw new BusinessException("登录失败");
+            }
+            JwtUserInfo userInfo = (JwtUserInfo) authentication.getPrincipal();
             if(userInfo != null){
                 if(!userInfo.isEnable()){
-                    subject.logout();
                     throw new BusinessException("登录失败，用户已被禁用！");
                 }
-                userInfo.setAccessToken(subject.getSession().getId().toString());
+                userInfo.setAccessToken(authConfigProperties.getTokenPrefix() + jwtTokenUtil.generateToken(userInfo));
+                userInfo.setPassword(null);
                 return userInfo;
             }else {
                 throw new BusinessException("用户不存在！");
             }
-        }catch (AuthenticationException e){
-            throw new BusinessException("用户名或密码不正确");
+        }catch (BadCredentialsException e){
+            throw new BusinessException("密码错误！");
         }
+
     }
 
     @Override
     public boolean logout() {
-        Subject subject = SecurityUtils.getSubject();
-        subject.logout();
         return true;
     }
 
