@@ -7,6 +7,8 @@ package com.lightframework.websocket.common.model;
  */
 public class WebSocketMessage<T> {
 
+    private long seq;//序列号，请求和响应需要一致
+
     private int type;
 
     private T payload;
@@ -30,5 +32,13 @@ public class WebSocketMessage<T> {
 
     public void setPayload(T payload) {
         this.payload = payload;
+    }
+
+    public long getSeq() {
+        return seq;
+    }
+
+    public void setSeq(long seq) {
+        this.seq = seq;
     }
 }
