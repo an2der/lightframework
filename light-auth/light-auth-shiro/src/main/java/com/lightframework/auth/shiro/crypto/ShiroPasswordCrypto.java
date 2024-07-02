@@ -23,6 +23,7 @@ public class ShiroPasswordCrypto implements PasswordCrypto {
      * @param salt 盐
      * @return
      */
+    @Override
     public String encryptPassword(String password,String salt){
         return new SimpleHash(authConfigProperties.getPasswordCrypto().getHashAlgorithm(), password, salt, authConfigProperties.getPasswordCrypto().getHashIterations()).toString();
     }

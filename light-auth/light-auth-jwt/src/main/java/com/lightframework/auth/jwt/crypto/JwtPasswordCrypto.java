@@ -17,6 +17,11 @@ public class JwtPasswordCrypto implements PasswordCrypto {
     private JwtPasswordCrypto authConfigProperties;
 
     @Override
+    public String encryptPassword(String password, String salt) {
+        return encryptPassword(password);
+    }
+
+    @Override
     public String encryptPassword(String password){
         return new BCryptPasswordEncoder().encode(password);
     }
