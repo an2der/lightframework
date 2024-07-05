@@ -1,15 +1,12 @@
 package com.lightframework.core.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lightframework.core.handler.BusinessReturnValueHandler;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +21,10 @@ public class BusinessReturnValueConfigurer implements InitializingBean {
     @Autowired
     private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Override
     public void afterPropertiesSet() {
         List<HandlerMethodReturnValueHandler> returnValueHandlers = new ArrayList<>();
-        returnValueHandlers.add(new BusinessReturnValueHandler(objectMapper));
+        returnValueHandlers.add(new BusinessReturnValueHandler());
         returnValueHandlers.addAll(requestMappingHandlerAdapter.getReturnValueHandlers());
         requestMappingHandlerAdapter.setReturnValueHandlers(returnValueHandlers);
     }

@@ -22,11 +22,17 @@ public class WebSocketManager {
     private WebSocketManager(){}
 
     public static void putSession(Session session){
-        SESSIONS.put(session.getId(), session);
+        if(session != null) {
+            SESSIONS.put(session.getId(), session);
+        }
     }
 
     public static void removeSession(Session session){
         SESSIONS.remove(session.getId());
+    }
+
+    public static Session getSession(String sessionId){
+        return SESSIONS.get(sessionId);
     }
 
     private static void sendMessage(Session session, String message){

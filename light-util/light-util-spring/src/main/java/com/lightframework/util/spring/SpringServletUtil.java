@@ -33,10 +33,9 @@ public class SpringServletUtil {
     }
 
     public static void responseJSONStr(ServletResponse response, Object o) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.getWriter().write(mapper.writeValueAsString(o));
+        response.getWriter().write(SpringJacksonUtil.serialize(o));
         response.getWriter().flush();
         response.getWriter().close();
     }

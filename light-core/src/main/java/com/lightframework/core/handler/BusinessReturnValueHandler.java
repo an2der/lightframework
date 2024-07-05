@@ -1,8 +1,8 @@
 package com.lightframework.core.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lightframework.common.BusinessResponse;
 import com.lightframework.core.annotation.BusinessController;
+import com.lightframework.util.spring.SpringJacksonUtil;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -20,13 +20,6 @@ import java.nio.charset.StandardCharsets;
  */
 public class BusinessReturnValueHandler implements HandlerMethodReturnValueHandler, AsyncHandlerMethodReturnValueHandler {
 
-    private ObjectMapper mapper;
-
-    private BusinessReturnValueHandler(){}
-
-    public BusinessReturnValueHandler(ObjectMapper mapper){
-        this.mapper = mapper;
-    }
 
     @Override
     public boolean isAsyncReturnValue(Object o, MethodParameter methodParameter) {
@@ -48,7 +41,7 @@ public class BusinessReturnValueHandler implements HandlerMethodReturnValueHandl
         }else{
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-            response.getWriter().write(mapper.writeValueAsString(new BusinessResponse(o)));
+            response.getWriter().write(SpringJacksonUtil.serialize(new BusinessResponse(o)));
             response.getWriter().flush();
             response.getWriter().close();
         }

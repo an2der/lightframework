@@ -38,7 +38,7 @@ public class MyBatisPlusGenerator {
                 })
                 .strategyConfig(builder -> {
                     builder.addTablePrefix("t_", "sys")
-                            .addInclude("t_serial_port","t_user")
+                            .addInclude("t_settings")
                             .entityBuilder()
                             .enableLombok(); // 设置过滤表前缀,忽略一些表头，如“sys_user”,填写了sys，就会忽略sys，生成user
                 }).templateConfig(builder -> {

@@ -21,11 +21,17 @@ public class WebSocketManager {
     private WebSocketManager(){}
 
     public static void putChannel(Channel channel){
-        CHANNELS.put(channel.id().asLongText(), channel);
+        if(channel != null) {
+            CHANNELS.put(channel.id().asLongText(), channel);
+        }
     }
 
     public static void removeChannel(Channel channel){
         CHANNELS.remove(channel.id().asLongText());
+    }
+
+    public static Channel getChannel(String channelId){
+        return CHANNELS.get(channelId);
     }
 
     private static void sendMessage(Channel channel, String message){

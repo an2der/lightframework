@@ -68,5 +68,4 @@ public class WebSocketInboundHandler extends SimpleChannelInboundHandler<TextWeb
         abstractWebSocketHandler.error(context.channel(),cause);
         log.error("WebSocket 出现异常：", cause);
     }
-
 }
