@@ -8,6 +8,7 @@ import com.lightframework.websocket.netty.server.WebSocketManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -20,20 +21,6 @@ public class WebSocketInboundHandler extends SimpleChannelInboundHandler<TextWeb
         this.abstractWebSocketHandler = abstractWebSocketHandler;
     }
 
-    /**
-     * 连接建立成功调用的方法
-     */
-    @Override
-    public void channelActive(ChannelHandlerContext context) {
-        WebSocketManager.putChannel(context.channel());
-        try {
-            WebSocketManager.sendMessage(context.channel(), new WebSocketMessage(WebSocketMsgTypeConstants.SESSION_ID,context.channel().id().asLongText()));
-            abstractWebSocketHandler.open(context.channel());
-        }catch (Exception e){
-            log.error("WebSocket Open发生异常 ", e);
-        }
-
-    }
 
     /**
      * * 收到客户端消息后调用的方法
@@ -68,4 +55,21 @@ public class WebSocketInboundHandler extends SimpleChannelInboundHandler<TextWeb
         abstractWebSocketHandler.error(context.channel(),cause);
         log.error("WebSocket 出现异常：", cause);
     }
+
+    /**
+     * 连接建立成功调用的方法
+     */
+    @Override
+    public void userEventTriggered(ChannelHandlerContext context, Object obj) {
+        if (obj instanceof WebSocketServerProtocolHandler.HandshakeComplete) {//netty WebSocket握手成功事件，这时候才算真正的连接成功
+            WebSocketManager.putChannel(context.channel());
+            try {
+                WebSocketManager.sendMessage(context.channel(), new WebSocketMessage(WebSocketMsgTypeConstants.SESSION_ID,context.channel().id().asLongText()));
+                abstractWebSocketHandler.open(context.channel());
+            }catch (Exception e){
+                log.error("WebSocket Open发生异常 ", e);
+            }
+        }
+    }
+
 }
