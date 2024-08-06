@@ -20,6 +20,7 @@
         <module>light-util-toolkit</module>
         <module>light-util-crypto</module>
         <module>light-util-codec</module>
+        <module>light-util-os</module>
     </modules>
     <artifactId>light-util</artifactId>
     <packaging>pom</packaging>

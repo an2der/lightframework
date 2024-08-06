@@ -216,6 +216,11 @@
                 <artifactId>light-util-verifycode</artifactId>
                 <version>1.0.2</version>
             </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-os</artifactId>
+                <version>1.0.2</version>
+            </dependency>
             <!-- light-websocket -->
             <dependency>
                 <groupId>com.lightframework</groupId>
