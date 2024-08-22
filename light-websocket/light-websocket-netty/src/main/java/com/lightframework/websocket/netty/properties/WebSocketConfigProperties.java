@@ -50,4 +50,19 @@ public class WebSocketConfigProperties {
      * 读空闲检查，超过空闲时间断开连接。0：不检查
      */
     private int readerIdleTimeSeconds = 0;
+
+    private SSLConfig ssl = new SSLConfig();
+
+    /**
+     * SSL
+     */
+    @Getter
+    @Setter
+    public static class SSLConfig {
+        private boolean enable = false;
+
+        private String keyStore = "classpath:light_ssl.keystore";
+
+        private String keyPassword = "LIGHT123456789ABCDEF";
+    }
 }

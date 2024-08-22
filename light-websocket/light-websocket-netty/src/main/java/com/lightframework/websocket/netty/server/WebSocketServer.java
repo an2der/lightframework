@@ -6,6 +6,7 @@ import com.lightframework.websocket.netty.handler.AbstractWebSocketHandler;
 import com.lightframework.websocket.netty.handler.IdleCheckHandler;
 import com.lightframework.websocket.netty.handler.WebSocketInboundHandler;
 import com.lightframework.websocket.netty.properties.WebSocketConfigProperties;
+import com.lightframework.websocket.netty.util.SSLUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -17,6 +18,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,9 @@ public class WebSocketServer implements ApplicationRunner, ApplicationListener<C
         .childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel socketChannel) throws Exception {
+                if(webSocketConfigProperties.getSsl().isEnable()){
+                    socketChannel.pipeline().addLast(new SslHandler(SSLUtil.createSSLEngine(webSocketConfigProperties.getSsl().getKeyStore(),webSocketConfigProperties.getSsl().getKeyPassword())));
+                }
                 socketChannel.pipeline().addLast(new IdleCheckHandler(webSocketConfigProperties.getReaderIdleTimeSeconds()));
                 // webSocket协议本身是基于http协议的，所以这边也要使用http编解码器
                 socketChannel.pipeline().addLast(new HttpServerCodec());

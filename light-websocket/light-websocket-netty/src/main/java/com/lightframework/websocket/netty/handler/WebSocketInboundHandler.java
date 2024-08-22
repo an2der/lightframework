@@ -52,6 +52,11 @@ public class WebSocketInboundHandler extends SimpleChannelInboundHandler<TextWeb
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext context, Throwable cause) {
+        //忽略SSL证书不受信错误
+        if(cause.getCause() != null && cause.getCause() instanceof javax.net.ssl.SSLHandshakeException
+                && cause.getCause().getMessage().contains("certificate_unknown")){
+            return;
+        }
         abstractWebSocketHandler.error(context.channel(),cause);
         log.error("WebSocket 出现异常：", cause);
     }
