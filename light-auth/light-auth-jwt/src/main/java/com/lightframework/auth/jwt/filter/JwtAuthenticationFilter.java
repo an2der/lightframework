@@ -1,6 +1,7 @@
 package com.lightframework.auth.jwt.filter;
 
 import com.lightframework.auth.common.model.UserInfo;
+import com.lightframework.auth.jwt.model.JwtUserInfo;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
 import com.lightframework.auth.jwt.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
@@ -12,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,15 +36,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //获取token
         String token = request.getHeader(authConfigProperties.getConfiguration().getTokenKey());
+        if(token == null){ //header不存在从cookie中获取
+            Cookie[] cookies = request.getCookies();
+            if(cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals(authConfigProperties.getConfiguration().getTokenKey())) {
+                        token = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+        }
 
         if(token!=null && token.startsWith(authConfigProperties.getTokenPrefix())) {
 
             Claims claims = jwtTokenUtil.getClaimsFormToken(token.replaceFirst(authConfigProperties.getTokenPrefix(),""));
-            UserInfo userInfo = new UserInfo();
-            userInfo.setUserId(claims.getId());
-            userInfo.setUsername(userInfo.getUsername());
+            JwtUserInfo jwtUserInfo = new JwtUserInfo();
+            jwtUserInfo.setUserId(claims.getId());
+            jwtUserInfo.setUsername(claims.getSubject());
             //存入SecurityContextHolder
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userInfo, null));
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(jwtUserInfo, null,null));
         }
         filterChain.doFilter(request,response);
     }
