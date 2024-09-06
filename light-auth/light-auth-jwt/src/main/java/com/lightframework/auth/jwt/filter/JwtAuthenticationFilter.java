@@ -1,6 +1,5 @@
 package com.lightframework.auth.jwt.filter;
 
-import com.lightframework.auth.common.model.UserInfo;
 import com.lightframework.auth.jwt.model.JwtUserInfo;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
 import com.lightframework.auth.jwt.util.JwtTokenUtil;
@@ -17,6 +16,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /***
  * @author yg
@@ -49,13 +49,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if(token!=null && token.startsWith(authConfigProperties.getTokenPrefix())) {
+            try {
+                Claims claims = jwtTokenUtil.getClaimsFormToken(token.replaceFirst(authConfigProperties.getTokenPrefix(),""));
+                JwtUserInfo jwtUserInfo = new JwtUserInfo();
+                jwtUserInfo.setUserId(claims.getId());
+                jwtUserInfo.setUsername(claims.getSubject());
+                //存入SecurityContextHolder
+                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(jwtUserInfo, null,null));
+            }catch (Exception e){
 
-            Claims claims = jwtTokenUtil.getClaimsFormToken(token.replaceFirst(authConfigProperties.getTokenPrefix(),""));
-            JwtUserInfo jwtUserInfo = new JwtUserInfo();
-            jwtUserInfo.setUserId(claims.getId());
-            jwtUserInfo.setUsername(claims.getSubject());
-            //存入SecurityContextHolder
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(jwtUserInfo, null,null));
+            }
         }
         filterChain.doFilter(request,response);
     }
