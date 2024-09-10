@@ -2,9 +2,11 @@ package com.lightframework.auth.jwt.model;
 
 import com.lightframework.auth.common.model.UserInfo;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /***
  * @author yg
@@ -12,8 +14,12 @@ import java.util.Collection;
  * @version 1.0
  */
 public class JwtUserInfo extends UserInfo implements UserDetails {
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(super.getPermissions() != null){
+            return super.getPermissions().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        }
         return null;
     }
 
