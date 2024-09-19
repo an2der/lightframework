@@ -8,6 +8,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,8 +81,14 @@ public class ShiroConfig {
         DefaultWebSessionManager defaultWebSessionManager = new WebSessionManager(authConfigProperties);
         if(authConfigProperties.getConfiguration().getExpireTimeMinute() > 0) {
             defaultWebSessionManager.setGlobalSessionTimeout(authConfigProperties.getConfiguration().getExpireTimeMinute() * 60 * 1000);//单位ms
+            SimpleCookie simpleCookie = new SimpleCookie(authConfigProperties.getConfiguration().getTokenKey());
+            simpleCookie.setMaxAge((int) (authConfigProperties.getConfiguration().getExpireTimeMinute() * 60));
+            defaultWebSessionManager.setSessionIdCookie(simpleCookie);//自定义COOKIE SESSIONID的KEY
         }else {
             defaultWebSessionManager.setGlobalSessionTimeout(-1);//永不过期
+            SimpleCookie simpleCookie = new SimpleCookie(authConfigProperties.getConfiguration().getTokenKey());
+            simpleCookie.setMaxAge(Integer.MAX_VALUE);
+            defaultWebSessionManager.setSessionIdCookie(simpleCookie);//自定义COOKIE SESSIONID的KEY
         }
         return defaultWebSessionManager;
     }

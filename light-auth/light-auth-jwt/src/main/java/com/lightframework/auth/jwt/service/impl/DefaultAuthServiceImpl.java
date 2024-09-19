@@ -7,6 +7,7 @@ import com.lightframework.auth.jwt.model.JwtUserInfo;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
 import com.lightframework.auth.jwt.util.JwtTokenUtil;
 import com.lightframework.common.BusinessException;
+import com.lightframework.util.spring.SpringServletUtil;
 import com.lightframework.util.verifycode.VerifyCode;
 import com.lightframework.util.verifycode.VerifyCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Service
@@ -51,7 +54,15 @@ public class DefaultAuthServiceImpl extends AuthService {
                 if(!userInfo.isEnable()){
                     throw new BusinessException("登录失败，用户已被禁用！");
                 }
-                userInfo.setAccessToken(authConfigProperties.getTokenPrefix() + jwtTokenUtil.generateToken(userInfo));
+                String accessToken = authConfigProperties.getTokenPrefix() + jwtTokenUtil.generateToken(userInfo);
+                HttpServletResponse response = SpringServletUtil.getResponse();
+                Cookie cookie = new Cookie(authConfigProperties.getConfiguration().getTokenKey(),accessToken);
+                cookie.setMaxAge(authConfigProperties.getConfiguration().getExpireTimeMinute() > 0?
+                        (int)(authConfigProperties.getConfiguration().getExpireTimeMinute() * 60):Integer.MAX_VALUE);
+                cookie.setHttpOnly(true);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+                userInfo.setAccessToken(accessToken);
                 userInfo.setPassword(null);
                 return userInfo;
             }else {
@@ -65,6 +76,12 @@ public class DefaultAuthServiceImpl extends AuthService {
 
     @Override
     public boolean logout() {
+        HttpServletResponse response = SpringServletUtil.getResponse();
+        Cookie cookie = new Cookie(authConfigProperties.getConfiguration().getTokenKey(),"");
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return true;
     }
 
