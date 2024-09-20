@@ -7,6 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @Author yg
+ * @Date 2024-09-20 10:42:09
+ **/
 @Slf4j
 public class SerialPortManager {
     private SerialPort comPort;
@@ -30,14 +34,19 @@ public class SerialPortManager {
         return open(false);
     }
 
-    private boolean open(boolean reconnection){
+    /**
+     *
+     * @param isReconnection 是不是重新连接的方式
+     * @return
+     */
+    private boolean open(boolean isReconnection){
         if (!comPort.isOpen()){
             if(comPort.openPort()) {
                 log.info("串口：{} 开启成功！",serialPortConfig.getSerialPortName());
                 return true;
             } else {
                 log.info("串口：{} 开启失败！",serialPortConfig.getSerialPortName());
-                if(!reconnection) {
+                if(!isReconnection) {
                     reconnection();
                 }
                 return false;
