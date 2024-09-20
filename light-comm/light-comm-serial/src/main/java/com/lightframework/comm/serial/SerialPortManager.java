@@ -18,6 +18,11 @@ public class SerialPortManager {
     public SerialPortManager(SerialPortConfig serialPortConfig){
         this.serialPortConfig = serialPortConfig;
         comPort = SerialPort.getCommPort(serialPortConfig.getSerialPortName());
+        comPort.setBaudRate(serialPortConfig.getBaudRate());//波特率
+        comPort.setNumDataBits(serialPortConfig.getDataBits());//数据位
+        comPort.setNumStopBits(serialPortConfig.getStopBits());//停止位
+        comPort.setParity(serialPortConfig.getParity());//校验位
+        comPort.addDataListener(new SerialPortListener());
     }
 
     public boolean open(){
@@ -27,11 +32,6 @@ public class SerialPortManager {
 
     private boolean open(boolean reconnection){
         if (!comPort.isOpen()){
-            comPort.setBaudRate(serialPortConfig.getBaudRate());//波特率
-            comPort.setNumDataBits(serialPortConfig.getDataBits());//数据位
-            comPort.setNumStopBits(serialPortConfig.getStopBits());//停止位
-            comPort.setParity(serialPortConfig.getParity());//校验位
-            comPort.addDataListener(new SerialPortListener());
             if(comPort.openPort()) {
                 log.info("串口：{} 开启成功！",serialPortConfig.getSerialPortName());
                 return true;
