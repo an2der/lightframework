@@ -6,6 +6,10 @@ public class WindowsUtil {
 
     private WindowsUtil(){}
 
+    /**
+     * 是否登录到系统桌面
+     * @return
+     */
     public static boolean isLoginToDesktop(){
         ShellUtil.ShellResult result = ShellUtil.execWindowsCommandWithResult("tasklist 2>nul | findstr explorer.exe 1>nul 2>nul&&echo 1 || echo 0");
         if (result.isSuccess()) {
