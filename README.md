@@ -1,2 +1,2 @@
-#<span style="color:red">项目配置说明！！！！！！！</span>
-**<span style="color:yellow">将IDEA工具maven的settings.xml文件设置为项目根目录下的settings.xml。</br>（配置文件使用maven默认仓库地址，如果要改变仓库地址就修改IDEA -> maven的Local repository设置）</span>**
+#<span style="color:yellow">项目配置说明！！！！！！！</span>
+**<span style="color:green">将IDEA工具maven的settings.xml文件设置为项目根目录下的settings.xml。</br>（配置文件使用maven默认仓库地址，如果要改变仓库地址就修改IDEA -> maven的Local repository设置）</span>**
