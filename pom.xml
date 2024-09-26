@@ -25,6 +25,7 @@
         <module>light-plugin</module>
         <module>light-parent</module>
         <module>light-comm</module>
+        <module>light-ssl</module>
     </modules>
     <packaging>pom</packaging>
     <description>微框架,用于解决开发过程中重复的工作，提高效率，同时降低出错率，
@@ -124,6 +125,18 @@
                 <artifactId>light-comm-ftp</artifactId>
                 <version>1.0.2</version>
             </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-tcp-server</artifactId>
+                <version>1.0.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-tcp-client</artifactId>
+                <version>1.0.2</version>
+            </dependency>
+
 
             <!-- light-common -->
             <dependency>
@@ -151,6 +164,12 @@
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-database-mybatisplus-dynamic-datasource</artifactId>
+                <version>1.0.2</version>
+            </dependency>
+            <!-- light-ssl -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-ssl</artifactId>
                 <version>1.0.2</version>
             </dependency>
             <!-- light-starter -->

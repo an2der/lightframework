@@ -1,12 +1,10 @@
-package com.lightframework.websocket.netty.handler;
+package com.lightframework.comm.tcp.server;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.concurrent.TimeUnit;
 
 /*** 空闲检查
  * @author yg
