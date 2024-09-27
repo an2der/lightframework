@@ -19,7 +19,7 @@ public class IdleCheckHandler extends IdleStateHandler {
     }
 
     @Override
-    protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) {
+    protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) throws Exception {
         if (evt.state() == IdleState.READER_IDLE) {
             ctx.channel().close();
         }

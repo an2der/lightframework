@@ -81,7 +81,7 @@ public class SerialPortManager {
     }
 
     private void reconnection(){
-        if(!closed && serialPortConfig.isAutoReconnection()){
+        if(!closed && serialPortConfig.getReconnectionInterval() > 0){
             new Thread(){
                 {start();}
                 @Override
