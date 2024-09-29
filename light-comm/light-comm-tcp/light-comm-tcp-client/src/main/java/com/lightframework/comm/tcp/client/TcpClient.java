@@ -43,7 +43,7 @@ public class TcpClient {
     }
 
     public boolean connection(){
-        if(channel != null && !channel.isActive()) {
+        if(channel == null || !channel.isActive()) {
             this.disconnected = false;
             try {
                 ChannelFuture future = bootstrap.connect().sync();
@@ -68,13 +68,18 @@ public class TcpClient {
     }
 
     public void disconnection(){
-        this.disconnected = true;
-        this.channel.close();
+        if(this.channel != null) {
+            this.disconnected = true;
+            this.channel.close();//关闭TCP连接
+        }
     }
 
     public void destroy(){
-        if (group != null) {
-            group.shutdownGracefully();
+        try {
+            if (group != null) {
+                group.shutdownGracefully().sync();
+            }
+        } catch (InterruptedException e) {
         }
     }
 
