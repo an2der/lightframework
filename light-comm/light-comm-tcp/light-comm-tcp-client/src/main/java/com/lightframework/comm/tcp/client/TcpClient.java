@@ -42,7 +42,7 @@ public class TcpClient {
             });
     }
 
-    public boolean connection(){
+    public synchronized boolean connection(){
         if(channel == null || !channel.isActive()) {
             this.disconnected = false;
             try {

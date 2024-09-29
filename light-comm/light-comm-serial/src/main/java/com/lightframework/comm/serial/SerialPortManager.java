@@ -39,7 +39,7 @@ public class SerialPortManager {
      * @param isReconnection 是不是重新连接的方式
      * @return
      */
-    private boolean open(boolean isReconnection){
+    private synchronized boolean open(boolean isReconnection){
         if (!comPort.isOpen()){
             if(comPort.openPort()) {
                 log.info("串口：{} 开启成功！",serialPortConfig.getSerialPortName());
