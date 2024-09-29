@@ -62,11 +62,23 @@ public class ProjectUtil {
         }else {
             File projectPath = new File(baseFile.getParentFile().getParent());
             File pomFile = new File(projectPath,"pom.xml");
+            if(!pomFile.exists()){
+                throw new RuntimeException(pomFile.getAbsolutePath() + " file does not exist!");
+            }
+            FileInputStream fileInputStream = null;
             Model model;
             try {
-                model = new MavenXpp3Reader().read(new FileInputStream(pomFile));
+                fileInputStream = new FileInputStream(pomFile);
+                model = new MavenXpp3Reader().read(fileInputStream);
             } catch (Exception e) {
                 throw new RuntimeException("Parse pom.xml error in " + pomFile.getAbsolutePath(),e);
+            }finally {
+                if(fileInputStream != null){
+                    try {
+                        fileInputStream.close();
+                    } catch (IOException e) {
+                    }
+                }
             }
             String version = (model.getVersion() == null && model.getParent() != null)
                     || (model.getVersion() != null && model.getVersion().equals("${parent.version}"))
@@ -98,8 +110,10 @@ public class ProjectUtil {
         File pomFile = new File(projectPath,"pom.xml");
         Properties properties = new Properties();
         if(pomFile.exists()){
+            FileInputStream fileInputStream = null;
             try {
-                Model model = new MavenXpp3Reader().read(new FileInputStream(pomFile));
+                fileInputStream = new FileInputStream(pomFile);
+                Model model = new MavenXpp3Reader().read(fileInputStream);
                 if(model != null){
                     if(model.getProperties() != null){
                         properties.putAll(model.getProperties());
@@ -112,6 +126,13 @@ public class ProjectUtil {
                 }
             } catch (Exception e) {
                 throw new RuntimeException("Parse pom.xml error in " + pomFile.getAbsolutePath(),e);
+            }finally {
+                if(fileInputStream != null){
+                    try {
+                        fileInputStream.close();
+                    } catch (IOException e) {
+                    }
+                }
             }
         }
         return properties;
