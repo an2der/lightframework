@@ -4,15 +4,15 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
     <servers>
-        <!--誉凌-->
+        <!--   郑州   -->
         <server>
-            <id>YuLing</id>
+            <id>ZhengZhou</id>
             <username>admin</username>
             <password>admin</password>
         </server>
-        <!--   从兴   -->
+        <!--   北京   -->
         <server>
-            <id>CongXing</id>
+            <id>BeiJing</id>
             <username>admin</username>
             <password>admin888</password>
         </server>
@@ -37,45 +37,45 @@
             </properties>
         </profile>
         <profile>
-            <id>NEXUS-YuLing</id>
+            <id>NEXUS-ZhengZhou</id>
             <properties>
                 <!--      nexus.name与settings文件中server的id保持一致          -->
-                <nexus.name>YuLing</nexus.name>
+                <nexus.name>ZhengZhou</nexus.name>
                 <nexus.url>http://192.168.51.9:8081</nexus.url>
             </properties>
             <repositories>
                 <repository>
-                    <id>YuLing-central</id>
-                    <name>YuLing Central</name>
+                    <id>ZhengZhou-central</id>
+                    <name>ZhengZhou Central</name>
                     <url>http://192.168.51.9:8081/repository/maven-public/</url>
                 </repository>
             </repositories>
             <pluginRepositories>
                 <pluginRepository>
-                    <id>YuLing-central</id>
-                    <name>YuLing Central</name>
+                    <id>ZhengZhou-central</id>
+                    <name>ZhengZhou Central</name>
                     <url>http://192.168.51.9:8081/repository/maven-public/</url>
                 </pluginRepository>
             </pluginRepositories>
         </profile>
         <profile>
-            <id>NEXUS-CongXing</id>
+            <id>NEXUS-BeiJing</id>
             <properties>
                 <!--      nexus.name与settings文件中server的id保持一致          -->
-                <nexus.name>CongXing</nexus.name>
+                <nexus.name>BeiJing</nexus.name>
                 <nexus.url>http://192.168.33.21:8081</nexus.url>
             </properties>
             <repositories>
                 <repository>
-                    <id>CongXing-central</id>
-                    <name>CongXing Central</name>
+                    <id>BeiJing-central</id>
+                    <name>BeiJing Central</name>
                     <url>http://192.168.33.21:8081/repository/maven-public/</url>
                 </repository>
             </repositories>
             <pluginRepositories>
                 <pluginRepository>
-                    <id>CongXing-central</id>
-                    <name>CongXing Central</name>
+                    <id>BeiJing-central</id>
+                    <name>BeiJing Central</name>
                     <url>http://192.168.33.21:8081/repository/maven-public/</url>
                 </pluginRepository>
             </pluginRepositories>
