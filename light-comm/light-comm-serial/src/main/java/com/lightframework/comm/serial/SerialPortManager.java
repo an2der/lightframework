@@ -36,18 +36,18 @@ public class SerialPortManager {
 
     /**
      *
-     * @param isReconnection 是不是重新连接的方式
+     * @param isReconnect 是不是重新连接的方式
      * @return
      */
-    private synchronized boolean open(boolean isReconnection){
+    private synchronized boolean open(boolean isReconnect){
         if (!comPort.isOpen()){
             if(comPort.openPort()) {
                 log.info("串口：{} 开启成功！",serialPortConfig.getSerialPortName());
                 return true;
             } else {
                 log.info("串口：{} 开启失败！",serialPortConfig.getSerialPortName());
-                if(!isReconnection) {
-                    reconnection();
+                if(!isReconnect) {
+                    reconnect();
                 }
                 return false;
             }
@@ -80,23 +80,23 @@ public class SerialPortManager {
         }
     }
 
-    private void reconnection(){
-        if(!closed && serialPortConfig.getReconnectionInterval() > 0){
+    private void reconnect(){
+        if(!closed && serialPortConfig.getReconnectInterval() > 0){
             new Thread(){
                 {start();}
                 @Override
                 public void run() {
                     while (!closed && !comPort.isOpen()){
                         try {
-                            TimeUnit.SECONDS.sleep(serialPortConfig.getReconnectionInterval());
+                            TimeUnit.SECONDS.sleep(serialPortConfig.getReconnectInterval());
+                            if(!closed) {
+                                log.info("串口：{} 开始重连...", serialPortConfig.getSerialPortName());
+                                if (open(true)) {
+                                    break;
+                                }
+                            }
                         } catch (InterruptedException e) {
                             log.error("串口："+serialPortConfig.getSerialPortName()+" 重连时发生异常！",e);
-                        }
-                        if(!closed) {
-                            log.info("串口：{} 开始重连...", serialPortConfig.getSerialPortName());
-                            if (open(true)) {
-                                break;
-                            }
                         }
                     }
                 }
@@ -122,7 +122,7 @@ public class SerialPortManager {
             }else if(serialPortEvent.getEventType() == SerialPort.LISTENING_EVENT_PORT_DISCONNECTED){
                 log.info("串口：{} 断开连接！",serialPortConfig.getSerialPortName());
                 comPort.closePort();
-                reconnection();
+                reconnect();
             }
         }
     }

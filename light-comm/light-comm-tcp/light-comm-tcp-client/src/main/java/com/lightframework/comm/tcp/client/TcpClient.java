@@ -42,7 +42,7 @@ public class TcpClient {
             });
     }
 
-    public synchronized boolean connection(){
+    public synchronized boolean connect(){
         if(channel == null || !channel.isActive()) {
             this.disconnected = false;
             try {
@@ -56,7 +56,7 @@ public class TcpClient {
 
             }
             log.info(clientConfig.getName() + "连接服务端失败！");
-            reconnection();
+            reconnect();
         }else {
             log.info(clientConfig.getName() + "客户端已连接，请勿重复连接！");
         }
@@ -67,7 +67,7 @@ public class TcpClient {
         return this.channel;
     }
 
-    public void disconnection(){
+    public void disconnect(){
         if(this.channel != null) {
             this.disconnected = true;
             this.channel.close();//关闭TCP连接
@@ -83,12 +83,12 @@ public class TcpClient {
         }
     }
 
-    private void reconnection(){
-        if(!disconnected && (channel == null || !channel.isActive()) && clientConfig.getReconnectionInterval() >0) {
+    private void reconnect(){
+        if(!disconnected && (channel == null || !channel.isActive()) && clientConfig.getReconnectInterval() >0) {
             group.schedule(() ->{
                 log.info(clientConfig.getName() + "尝试重新连接到服务端！");
-                connection();
-            }, clientConfig.getReconnectionInterval(), TimeUnit.SECONDS);
+                connect();
+            }, clientConfig.getReconnectInterval(), TimeUnit.SECONDS);
         }
     }
 
@@ -97,7 +97,7 @@ public class TcpClient {
         @Override
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
             log.info(clientConfig.getName() + "连接断开！");
-            reconnection();
+            reconnect();
             super.channelInactive(ctx);
         }
 

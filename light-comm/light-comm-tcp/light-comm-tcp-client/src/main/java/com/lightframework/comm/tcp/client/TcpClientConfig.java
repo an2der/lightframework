@@ -38,7 +38,7 @@ public class TcpClientConfig {
     /**
      * 重连时间间隔（秒），大于0自动重连
      */
-    private int reconnectionInterval = 5;
+    private int reconnectInterval = 5;
 
     /**
      * 通道初始化

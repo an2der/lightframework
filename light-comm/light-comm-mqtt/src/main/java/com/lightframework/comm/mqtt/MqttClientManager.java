@@ -1,0 +1,126 @@
+package com.lightframework.comm.mqtt;
+
+import lombok.extern.slf4j.Slf4j;
+import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
+import java.util.concurrent.TimeUnit;
+
+@Slf4j
+public class MqttClientManager {
+
+    private MqttConfig mqttConfig;
+
+    private MqttClient mqttClient;
+
+    private volatile boolean disconnected = false;
+
+    public MqttClientManager(MqttConfig mqttConfig){
+        this.mqttConfig = mqttConfig;
+    }
+
+    public boolean connect(){
+        disconnected = false;
+        return connect(false);
+    }
+
+    private synchronized boolean connect(boolean isReconnect){
+        if(mqttClient == null || !mqttClient.isConnected()) {
+            try {
+                mqttClient = new MqttClient(mqttConfig.getHost(), mqttConfig.getName() + "[" + mqttConfig.getClientId() + "]", new MemoryPersistence());
+            } catch (MqttException e) {
+                throw new RuntimeException(e);
+            }
+            mqttClient.setTimeToWait(mqttConfig.getTimeToWait());//设置客户端发送超时时间，防止无限阻塞。
+            mqttClient.setCallback(new MqttCallback());
+            try {
+                mqttClient.connect(mqttConfig);
+                return true;
+            } catch (MqttException e) {
+                System.out.println(mqttConfig.getName() + "连接失败！" + e.getMessage());
+                if(!isReconnect) {
+                    reconnect();
+                }
+                return false;
+            }
+        }else {
+            log.info(mqttConfig.getName() + "已连接，请勿重复连接！");
+            return true;
+        }
+    }
+
+    private void reconnect(){
+        if(!disconnected && mqttConfig.isAutomaticReconnect()){
+            new Thread(){
+                {start();}
+                @Override
+                public void run() {
+                    while (!disconnected && !mqttClient.isConnected()){
+                        try {
+                            TimeUnit.SECONDS.sleep(mqttConfig.getReconnectInterval());
+                            if(!disconnected) {
+                                log.info(mqttConfig.getName() + "开始重连...");
+                                if (connect(true)) {
+                                    break;
+                                }
+                            }
+                        } catch (Exception e) {
+                            log.error(mqttConfig.getName()+" 重连时发生异常！",e);
+                        }
+                    }
+                }
+            };
+        }
+    }
+
+    public boolean isConnected(){
+        if(mqttClient != null) {
+            return mqttClient.isConnected();
+        }
+        return false;
+    }
+
+    public void disconnect(){
+        try {
+            disconnected = true;
+            if(mqttClient != null) {
+                mqttClient.disconnect();
+                mqttClient.close();
+            }
+        } catch (MqttException e) {
+
+        }
+    }
+
+    private class MqttCallback implements MqttCallbackExtended {
+
+
+        @Override
+        public void connectComplete(boolean reconnect, String serverURI) {
+            System.out.println(mqttConfig.getName() + "连接成功!");
+            try {
+                mqttClient.subscribe(mqttConfig.getTopicFilters());
+                System.out.println(mqttConfig.getName() + "订阅主题成功！");
+            } catch (MqttException e) {
+                System.out.println(mqttConfig.getName() + "订阅主题失败！");
+            }
+        }
+
+        @Override
+        public void connectionLost(Throwable throwable) {
+            System.out.println(mqttConfig.getName() + "断开连接!");
+            reconnect();
+        }
+
+        @Override
+        public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
+
+        }
+
+        @Override
+        public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+
+        }
+    }
+
+}

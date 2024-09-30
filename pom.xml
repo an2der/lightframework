@@ -136,6 +136,11 @@
                 <artifactId>light-comm-tcp-client</artifactId>
                 <version>1.0.3</version>
             </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-mqtt</artifactId>
+                <version>1.0.3</version>
+            </dependency>
 
 
             <!-- light-common -->
