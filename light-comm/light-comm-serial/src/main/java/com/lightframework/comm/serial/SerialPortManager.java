@@ -117,7 +117,11 @@ public class SerialPortManager {
                 byte[] data = new byte[comPort.bytesAvailable()]; // 创建缓冲区，大小为当前可用的字节数
                 comPort.readBytes(data, data.length); // 读取数据
                 if (serialPortConfig.getDataReceiver() != null) {
-                    serialPortConfig.getDataReceiver().receive(data);
+                    try {
+                        serialPortConfig.getDataReceiver().receive(data);
+                    }catch (Exception e){
+                        log.error("串口："+serialPortConfig.getSerialPortName()+" 处理消息数据时发生异常",e);
+                    }
                 }
             }else if(serialPortEvent.getEventType() == SerialPort.LISTENING_EVENT_PORT_DISCONNECTED){
                 log.info("串口：{} 断开连接！",serialPortConfig.getSerialPortName());

@@ -37,7 +37,7 @@ public class MqttClientManager {
                 mqttClient.connect(mqttConfig);
                 return true;
             } catch (MqttException e) {
-                System.out.println(mqttConfig.getName() + "连接失败！" + e.getMessage());
+                log.info(mqttConfig.getName() + "连接失败！" + e.getMessage());
                 if(!isReconnect) {
                     reconnect();
                 }
@@ -97,29 +97,34 @@ public class MqttClientManager {
 
         @Override
         public void connectComplete(boolean reconnect, String serverURI) {
-            System.out.println(mqttConfig.getName() + "连接成功!");
+            log.info(mqttConfig.getName() + "连接成功!");
             try {
                 mqttClient.subscribe(mqttConfig.getTopicFilters());
-                System.out.println(mqttConfig.getName() + "订阅主题成功！");
+                log.info(mqttConfig.getName() + "订阅主题成功！");
             } catch (MqttException e) {
-                System.out.println(mqttConfig.getName() + "订阅主题失败！");
+                log.info(mqttConfig.getName() + "订阅主题失败！");
             }
         }
 
         @Override
         public void connectionLost(Throwable throwable) {
-            System.out.println(mqttConfig.getName() + "断开连接!");
+            log.info(mqttConfig.getName() + "断开连接!");
             reconnect();
         }
 
         @Override
-        public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
+        public void messageArrived(String topic, MqttMessage mqttMessage) {
+            try {
+                mqttConfig.getMqttDataReceiver().receive(topic,mqttMessage.getPayload());
+            }catch (Exception e){
+                log.error(mqttConfig.getName() + "处理消息数据时发生异常",e);
+            }
 
         }
 
         @Override
         public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
+            //发布消息回调
         }
     }
 

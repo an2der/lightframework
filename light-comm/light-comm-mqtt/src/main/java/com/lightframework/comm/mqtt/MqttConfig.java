@@ -27,6 +27,8 @@ public class MqttConfig extends MqttConnectOptions {
     @Setter(AccessLevel.NONE)
     private boolean autoReconnect = false;
 
+    private MqttDataReceiver mqttDataReceiver;
+
     public MqttConfig(){
         super.setMaxInflight(100);//最大并发条数
         super.setAutomaticReconnect(true); //断开自动重连
