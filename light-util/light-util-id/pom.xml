@@ -3,21 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>lightframework</artifactId>
+        <artifactId>light-util</artifactId>
         <groupId>com.lightframework</groupId>
         <version>1.0.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <packaging>pom</packaging>
-    <modules>
-        <module>light-starter-comm-mqtt</module>
-    </modules>
-    <artifactId>light-starter</artifactId>
+
+    <artifactId>light-util-id</artifactId>
+
+    <properties>
+    </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
         </dependency>
     </dependencies>
+
 </project>

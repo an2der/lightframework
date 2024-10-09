@@ -20,5 +20,9 @@
             <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
             <version>1.2.5</version>
         </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-id</artifactId>
+        </dependency>
     </dependencies>
 </project>

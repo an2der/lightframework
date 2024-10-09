@@ -180,7 +180,7 @@
             <!-- light-starter -->
             <dependency>
                 <groupId>com.lightframework</groupId>
-                <artifactId>light-starter</artifactId>
+                <artifactId>light-starter-comm-mqtt</artifactId>
                 <version>1.0.3</version>
             </dependency>
             <!-- light-system-log -->
@@ -243,6 +243,11 @@
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-os</artifactId>
+                <version>1.0.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-id</artifactId>
                 <version>1.0.3</version>
             </dependency>
             <!-- light-websocket -->

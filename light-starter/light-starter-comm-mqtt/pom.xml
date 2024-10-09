@@ -3,26 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>light-auth</artifactId>
+        <artifactId>light-starter</artifactId>
         <groupId>com.lightframework</groupId>
         <version>1.0.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <description>web授权核心</description>
-    <artifactId>light-auth-core</artifactId>
+
+    <description>mqtt springboot启动</description>
+    <artifactId>light-starter-comm-mqtt</artifactId>
+
+    <properties>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.lightframework</groupId>
-            <artifactId>light-auth-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.lightframework</groupId>
-            <artifactId>light-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.lightframework</groupId>
-            <artifactId>light-util-verifycode</artifactId>
+            <artifactId>light-comm-mqtt</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

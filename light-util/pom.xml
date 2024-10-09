@@ -21,6 +21,7 @@
         <module>light-util-crypto</module>
         <module>light-util-codec</module>
         <module>light-util-os</module>
+        <module>light-util-id</module>
     </modules>
     <artifactId>light-util</artifactId>
     <packaging>pom</packaging>
