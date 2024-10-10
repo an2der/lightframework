@@ -219,7 +219,7 @@ public class MqttClientManager {
         public void messageArrived(String topic, MqttMessage mqttMessage) {
             if(mqttConfig.getMqttDataReceiver() != null) {
                 try {
-                    mqttConfig.getMqttDataReceiver().receive(topic, mqttMessage.getPayload());
+                    mqttConfig.getMqttDataReceiver().receive(topic, mqttMessage);
                 } catch (Exception e) {
                     log.error(mqttConfig.getName() + "处理消息数据时发生异常", e);
                 }
