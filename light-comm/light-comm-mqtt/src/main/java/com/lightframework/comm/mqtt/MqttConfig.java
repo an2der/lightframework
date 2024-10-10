@@ -1,10 +1,9 @@
 package com.lightframework.comm.mqtt;
 
+import com.lightframework.util.id.ShortSnowflakeId;
 import lombok.Getter;
 import lombok.Setter;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,7 +13,7 @@ public class MqttConfig extends MqttConnectOptions {
 
     private String name = "MQTT CLIENT";//客户端名称
 
-    private String clientId = UUID.randomUUID().toString();
+    private String clientId = String.valueOf(ShortSnowflakeId.getNextId());
 
     private int timeToWait = 10000;//发布消息超时时间 单位毫秒
 

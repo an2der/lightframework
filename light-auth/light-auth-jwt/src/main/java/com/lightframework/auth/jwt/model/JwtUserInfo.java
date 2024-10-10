@@ -45,6 +45,6 @@ public class JwtUserInfo extends UserInfo implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return super.isEnable();
+        return super.isEnabled();
     }
 }

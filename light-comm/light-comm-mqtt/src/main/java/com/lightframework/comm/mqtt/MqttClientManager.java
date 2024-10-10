@@ -164,7 +164,7 @@ public class MqttClientManager {
      * @return
      */
     public boolean publish(String topic, byte[] payload,int qos, boolean retained){
-        MqttMessage mqttMessage = createMqttMessage(payload,qos, retained);
+        MqttMessage mqttMessage = buildMqttMessage(payload,qos, retained);
         return publish(topic,mqttMessage);
     }
 
@@ -186,7 +186,7 @@ public class MqttClientManager {
      * @param retained 是否保留该主题最后一条消息
      * @return
      */
-    public MqttMessage createMqttMessage(byte[] payload,int qos, boolean retained) {
+    public MqttMessage buildMqttMessage(byte[] payload,int qos, boolean retained) {
         MqttMessage mqttMsg = new MqttMessage();
         mqttMsg.setId(ShortSnowflakeId.getNextId());
         mqttMsg.setQos(qos);

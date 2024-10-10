@@ -51,7 +51,7 @@ public class DefaultAuthServiceImpl extends AuthService {
             }
             JwtUserInfo userInfo = (JwtUserInfo) authentication.getPrincipal();
             if(userInfo != null){
-                if(!userInfo.isEnable()){
+                if(!userInfo.isEnabled()){
                     throw new BusinessException("登录失败，用户已被禁用！");
                 }
                 String accessToken = authConfigProperties.getTokenPrefix() + jwtTokenUtil.generateToken(userInfo);

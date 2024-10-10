@@ -39,7 +39,7 @@ public class DefaultAuthServiceImpl extends AuthService {
             subject.login(token);
             UserInfo userInfo = (UserInfo) subject.getPrincipal();
             if(userInfo != null){
-                if(!userInfo.isEnable()){
+                if(!userInfo.isEnabled()){
                     subject.logout();
                     throw new BusinessException("登录失败，用户已被禁用！");
                 }

@@ -33,7 +33,7 @@ public class UserInfo implements Serializable{
 	private String address;
 	private String headImg;
 	private boolean isAdmin = false;
-	private boolean isEnable = true;
+	private boolean isEnabled = true;
 	private String roleId;
 	private String roleName;
 	private String departmentId;
@@ -137,12 +137,12 @@ public class UserInfo implements Serializable{
 		isAdmin = admin;
 	}
 
-	public boolean isEnable() {
-		return isEnable;
+	public boolean isEnabled() {
+		return isEnabled;
 	}
 
-	public void setEnable(boolean enable) {
-		isEnable = enable;
+	public void setEnabled(boolean enabled) {
+		isEnabled = enabled;
 	}
 
 	public String getRoleId() {
