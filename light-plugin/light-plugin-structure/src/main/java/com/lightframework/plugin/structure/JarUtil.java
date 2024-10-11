@@ -9,7 +9,7 @@ import java.util.jar.JarFile;
 
 public class JarUtil {
     public static void extract(String sourceDir ,String outputDir,boolean overwrite) throws IOException {
-        File pluginFile = ProjectUtil.getProjectBaseFile();
+        File pluginFile = ProjectUtil.getClassBaseFile();
         JarFile jar = null;
         try {
             jar = new JarFile(pluginFile);

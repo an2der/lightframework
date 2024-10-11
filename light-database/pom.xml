@@ -14,6 +14,7 @@
         <module>light-database-mybatisplus</module>
         <module>light-database-mybatisplus-dynamic-datasource</module>
         <module>light-database-mybatisplus-generator</module>
+        <module>light-database-redis</module>
     </modules>
     <artifactId>light-database</artifactId>
     <packaging>pom</packaging>

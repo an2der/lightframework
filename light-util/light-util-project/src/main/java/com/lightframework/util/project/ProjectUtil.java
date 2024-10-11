@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Properties;
 import java.util.jar.JarFile;
@@ -28,24 +29,34 @@ public class ProjectUtil {
      * @return
      */
     public static String getProjectRootPath() {
-        File baseFile = getBaseFile();
+        String enc = "UTF-8";
         try {
-            if(baseFile != null && baseFile.isDirectory()){
-                return URLDecoder.decode(baseFile.getAbsolutePath(),"UTF-8");
-            }else {
-                return URLDecoder.decode(baseFile.getParent(),"UTF-8");
+            URL url = ProjectUtil.class.getClassLoader().getResource("");
+            if (url != null) {
+                return URLDecoder.decode((new File(url.getFile()).getAbsolutePath()),enc);
+            }
+            String userDir = System.getProperty("user.dir");
+            if (userDir != null && !userDir.isEmpty()) {
+                return URLDecoder.decode((new File(userDir).getAbsolutePath()),enc);
             }
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Unsupported Encoding 'UTF-8'",e);
+            throw new RuntimeException("Unsupported Encoding "+enc,e);
+        }
+        File baseFile = classBaseFile();
+        if (baseFile != null && baseFile.isDirectory()) {
+            return baseFile.getAbsolutePath();
+        } else {
+            return baseFile.getParent();
         }
     }
+
 
     /**
      * 获取项目版本
      * @return
      */
     public static String getProjectVersion() {
-        File baseFile = getBaseFile();
+        File baseFile = classBaseFile();
         if(baseFile != null && baseFile.isFile()){
             Manifest manifest;
             try {
@@ -139,7 +150,7 @@ public class ProjectUtil {
     }
 
     public static Manifest getProjectManifest() {
-        File baseFile = getBaseFile();
+        File baseFile = classBaseFile();
         if(baseFile != null && baseFile.isFile()) {
             try {
                 JarFile jarFile = new JarFile(baseFile);
@@ -151,24 +162,27 @@ public class ProjectUtil {
         return null;
     }
 
-    public static File getProjectBaseFile(){
-        return getBaseFile();
+    public static File getClassBaseFile(){
+        return classBaseFile();
     }
 
     /**
-     * 此类只能在本类中的其它方法直接调用使用，否则堆栈信息将获取错误
+     * 此方法只能在本类中的其它方法直接调用使用，否则堆栈信息将获取错误
      * @return
      */
-    private static File getBaseFile(){
+    private static File classBaseFile(){
         try {
             //获取到调用堆栈
             StackTraceElement [] stackTraceElements = new Throwable().getStackTrace();
             //通过调用堆栈反射出调用者类
             Class clazz = Class.forName(stackTraceElements[2].getClassName());
             //通过调用者类文件获取真实绝对路径
-            return new File(clazz.getProtectionDomain().getCodeSource().getLocation().getFile());
+            return new File(URLDecoder.decode(clazz.getProtectionDomain().getCodeSource().getLocation().getFile(),"UTF-8"));
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Class Not Found!",e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Unsupported Encoding UTF-8",e);
         }
     }
+
 }

@@ -52,6 +52,8 @@
         <mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
         <sqlite-jdbc.version>3.44.1.0</sqlite-jdbc.version>
         <netty.version>4.1.110.Final</netty.version>
+        <jedis.version>4.2.3</jedis.version>
+        <protostuff.version>1.6.0</protostuff.version>
     </properties>
 
     <dependencies>
@@ -169,6 +171,11 @@
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-database-mybatisplus-dynamic-datasource</artifactId>
+                <version>1.0.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-database-redis</artifactId>
                 <version>1.0.3</version>
             </dependency>
             <!-- light-ssl -->
@@ -343,6 +350,21 @@
                 <groupId>io.netty</groupId>
                 <artifactId>netty-all</artifactId>
                 <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${jedis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-runtime</artifactId>
+                <version>${protostuff.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

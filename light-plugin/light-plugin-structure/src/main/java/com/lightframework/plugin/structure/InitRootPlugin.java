@@ -32,7 +32,7 @@ public class InitRootPlugin extends AbstractMojo {
             }
             JarUtil.extract("structure/init-root",basedir,false);
         } catch (IOException e) {
-            this.getLog().error(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
