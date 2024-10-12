@@ -42,7 +42,21 @@ public class ProjectUtil {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("Unsupported Encoding "+enc,e);
         }
-        File baseFile = classBaseFile();
+        File baseFile = getClassBaseFile(getClazz());
+        if (baseFile != null && baseFile.isDirectory()) {
+            return baseFile.getAbsolutePath();
+        } else {
+            return baseFile.getParent();
+        }
+    }
+
+    /**
+     * 获取项目根路径
+     * @param startMainClass 项目主启动类
+     * @return
+     */
+    public static String getProjectRootPath(Class startMainClass){
+        File baseFile = getClassBaseFile(startMainClass);
         if (baseFile != null && baseFile.isDirectory()) {
             return baseFile.getAbsolutePath();
         } else {
@@ -52,11 +66,20 @@ public class ProjectUtil {
 
 
     /**
-     * 获取项目版本
+     * 获取项目版本号
      * @return
      */
     public static String getProjectVersion() {
-        File baseFile = classBaseFile();
+        return getProjectVersion(getClazz());
+    }
+
+    /**
+     * 获取项目版本号
+     * @param startMainClass 项目主启动类
+     * @return
+     */
+    public static String getProjectVersion(Class startMainClass) {
+        File baseFile = getClassBaseFile(startMainClass);
         if(baseFile != null && baseFile.isFile()){
             Manifest manifest;
             try {
@@ -150,7 +173,11 @@ public class ProjectUtil {
     }
 
     public static Manifest getProjectManifest() {
-        File baseFile = classBaseFile();
+        return getProjectManifest(getClazz());
+    }
+
+    public static Manifest getProjectManifest(Class startMainClass) {
+        File baseFile = getClassBaseFile(startMainClass);
         if(baseFile != null && baseFile.isFile()) {
             try {
                 JarFile jarFile = new JarFile(baseFile);
@@ -162,26 +189,35 @@ public class ProjectUtil {
         return null;
     }
 
-    public static File getClassBaseFile(){
-        return classBaseFile();
+    /**
+     * 获取调用这个方法的类的文件所在位置
+     * @return
+     */
+    public static File getThisClassBaseFile(){
+        return getClassBaseFile(getClazz());
+    }
+
+    private static File getClassBaseFile(Class clazz){
+        try {
+            //通过调用者类文件获取真实绝对路径
+            return new File(URLDecoder.decode(clazz.getProtectionDomain().getCodeSource().getLocation().getFile(),"UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Unsupported Encoding UTF-8",e);
+        }
     }
 
     /**
      * 此方法只能在本类中的其它方法直接调用使用，否则堆栈信息将获取错误
      * @return
      */
-    private static File classBaseFile(){
+    private static Class getClazz(){
         try {
             //获取到调用堆栈
             StackTraceElement [] stackTraceElements = new Throwable().getStackTrace();
             //通过调用堆栈反射出调用者类
-            Class clazz = Class.forName(stackTraceElements[2].getClassName());
-            //通过调用者类文件获取真实绝对路径
-            return new File(URLDecoder.decode(clazz.getProtectionDomain().getCodeSource().getLocation().getFile(),"UTF-8"));
+            return Class.forName(stackTraceElements[2].getClassName());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Class Not Found!",e);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Unsupported Encoding UTF-8",e);
         }
     }
 
