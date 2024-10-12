@@ -66,10 +66,11 @@ public class ProjectUtil {
 
 
     /**
-     * 获取项目版本号
+     * 获取项目版本号，在MAVEN多模块的项目中是获取的当前模块的
+     * 如果是在非启动模块调用就使用传启动类参数的方法
      * @return
      */
-    public static String getProjectVersion() {
+    public static String getThisProjectVersion() {
         return getProjectVersion(getClazz());
     }
 
@@ -172,7 +173,7 @@ public class ProjectUtil {
         return properties;
     }
 
-    public static Manifest getProjectManifest() {
+    public static Manifest getThisProjectManifest() {
         return getProjectManifest(getClazz());
     }
 
@@ -190,7 +191,7 @@ public class ProjectUtil {
     }
 
     /**
-     * 获取调用这个方法的类的文件所在位置
+     * 获取调用这个方法的类的文件所在位置，在MAVEN多模块的项目中是获取的当前模块的
      * @return
      */
     public static File getThisClassBaseFile(){
