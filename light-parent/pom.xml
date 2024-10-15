@@ -16,6 +16,7 @@
         <skipPackZip>true</skipPackZip>
         <mainClass></mainClass>
         <appName>${project.artifactId}</appName>
+        <manifestClassPath>./</manifestClassPath>
     </properties>
 
     <build>
@@ -55,7 +56,7 @@
                                 <manifestEntries>
                                     <Implementation-Title>${project.artifactId}</Implementation-Title>
                                     <Implementation-Version>${project.version}</Implementation-Version>
-                                    <Class-Path>./</Class-Path>
+                                    <Class-Path>${manifestClassPath}</Class-Path>
                                 </manifestEntries>
                             </archive>
                             <classifier>run</classifier>
