@@ -7,13 +7,13 @@ public class ShortSnowflakeId {
     private static ShortSnowflakeId snowflakeIdWorker = new ShortSnowflakeId();
 
     // 时间戳位数
-    private static final int TIMESTAMP_BITS = 16;
+    private static final int TIMESTAMP_BITS = 19;
     // 数据中心ID位数
     private static final int DATACENTER_ID_BITS = 2;
     // 机器ID位数
     private static final int WORKER_ID_BITS = 2;
     // 序列号位数
-    private static final int SEQUENCE_BITS = 12;
+    private static final int SEQUENCE_BITS = 8;
     // 最大支持的数据中心ID
     private static final int MAX_DATACENTER_ID = ~(-1 << DATACENTER_ID_BITS);
     // 最大支持的机器ID
@@ -58,7 +58,7 @@ public class ShortSnowflakeId {
             sequence = 0;
         }
         lastTimestamp = timestamp;
-        return ((int) (timestamp - TWEPOCH) << TIMESTAMP_LEFT_SHIFT) | (datacenterId << DATACENTER_ID_SHIFT) | (workerId << WORKER_ID_SHIFT) | sequence;
+        return (((int) (timestamp - TWEPOCH) << TIMESTAMP_LEFT_SHIFT) | (datacenterId << DATACENTER_ID_SHIFT) | (workerId << WORKER_ID_SHIFT) | sequence) & Integer.MAX_VALUE;
     }
 
     private long timeGen() {
