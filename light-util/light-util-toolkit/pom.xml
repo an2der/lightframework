@@ -26,5 +26,17 @@
             <groupId>com.lightframework</groupId>
             <artifactId>light-util-io</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-byte</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-crypto</artifactId>
+        </dependency>
     </dependencies>
 </project>
