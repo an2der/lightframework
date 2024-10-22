@@ -22,6 +22,7 @@
         <module>light-util-codec</module>
         <module>light-util-os</module>
         <module>light-util-id</module>
+        <module>light-util-byte</module>
     </modules>
     <artifactId>light-util</artifactId>
     <packaging>pom</packaging>

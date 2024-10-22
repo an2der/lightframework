@@ -257,6 +257,11 @@
                 <artifactId>light-util-id</artifactId>
                 <version>1.0.5</version>
             </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-byte</artifactId>
+                <version>1.0.5</version>
+            </dependency>
             <!-- light-websocket -->
             <dependency>
                 <groupId>com.lightframework</groupId>
