@@ -2,8 +2,7 @@ package com.lightframework.auth.jwt.service.impl;
 
 import com.lightframework.auth.common.model.UserInfo;
 import com.lightframework.auth.common.service.UserInfoService;
-import com.lightframework.util.spring.SpringServletUtil;
-import org.springframework.security.core.Authentication;
+import com.lightframework.util.spring.web.SpringServletUtil;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 

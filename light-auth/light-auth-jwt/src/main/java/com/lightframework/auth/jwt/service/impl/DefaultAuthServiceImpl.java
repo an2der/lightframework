@@ -7,7 +7,7 @@ import com.lightframework.auth.jwt.model.JwtUserInfo;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
 import com.lightframework.auth.jwt.util.JwtTokenUtil;
 import com.lightframework.common.BusinessException;
-import com.lightframework.util.spring.SpringServletUtil;
+import com.lightframework.util.spring.web.SpringServletUtil;
 import com.lightframework.util.verifycode.VerifyCode;
 import com.lightframework.util.verifycode.VerifyCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;

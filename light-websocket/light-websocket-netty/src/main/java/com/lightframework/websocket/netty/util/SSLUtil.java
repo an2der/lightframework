@@ -1,8 +1,6 @@
 package com.lightframework.websocket.netty.util;
 
-import com.lightframework.util.spring.SpringBeanUtil;
 import com.lightframework.util.spring.SpringContextUtil;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ResourceLoader;
 
 import javax.net.ssl.KeyManagerFactory;

@@ -2,7 +2,7 @@ package com.lightframework.auth.jwt.handler;
 
 import com.lightframework.common.BusinessResponse;
 import com.lightframework.common.BusinessStatus;
-import com.lightframework.util.spring.SpringServletUtil;
+import com.lightframework.util.spring.web.SpringServletUtil;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 

@@ -1,6 +1,6 @@
-package com.lightframework.util.spring;
+package com.lightframework.util.spring.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lightframework.util.spring.SpringJacksonUtil;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

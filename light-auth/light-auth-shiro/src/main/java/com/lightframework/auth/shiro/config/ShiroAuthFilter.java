@@ -2,7 +2,7 @@ package com.lightframework.auth.shiro.config;
 
 import com.lightframework.common.BusinessResponse;
 import com.lightframework.common.BusinessStatus;
-import com.lightframework.util.spring.SpringServletUtil;
+import com.lightframework.util.spring.web.SpringServletUtil;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 
 import javax.servlet.ServletRequest;
