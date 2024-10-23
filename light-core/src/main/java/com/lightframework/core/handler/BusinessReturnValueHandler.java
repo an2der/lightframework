@@ -2,7 +2,7 @@ package com.lightframework.core.handler;
 
 import com.lightframework.common.BusinessResponse;
 import com.lightframework.core.annotation.BusinessController;
-import com.lightframework.util.spring.SpringJacksonUtil;
+import com.lightframework.util.spring.web.SpringJacksonUtil;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.NativeWebRequest;

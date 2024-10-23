@@ -1,4 +1,4 @@
-package com.lightframework.util.spring;
+package com.lightframework.util.spring.web;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
