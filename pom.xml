@@ -190,6 +190,11 @@
                 <artifactId>light-starter-comm-mqtt</artifactId>
                 <version>1.0.6</version>
             </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-starter-simple-app</artifactId>
+                <version>1.0.6</version>
+            </dependency>
             <!-- light-system-log -->
             <dependency>
                 <groupId>com.lightframework</groupId>

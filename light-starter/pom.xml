@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>light-starter-comm-mqtt</module>
+        <module>light-starter-simple-app</module>
     </modules>
     <artifactId>light-starter</artifactId>
 
