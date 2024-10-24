@@ -1,6 +1,5 @@
 package com.lightframework.websocket.netty.properties;
 
-import com.lightframework.comm.tcp.server.TcpServerConfig;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
