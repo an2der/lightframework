@@ -35,10 +35,11 @@ public class TcpServer {
             bossGroup = new NioEventLoopGroup(serverConfig.getBossThreadCount());
             workGroup = new NioEventLoopGroup(serverConfig.getWorkThreadCount());
             ServerBootstrap bootstrap = new ServerBootstrap();
+            InetSocketAddress inetSocketAddress = serverConfig.getHost() != null && !serverConfig.getHost().isEmpty()
+                    ?new InetSocketAddress(serverConfig.getHost(), serverConfig.getPort())
+                    :new InetSocketAddress(serverConfig.getPort());
             bootstrap.group(bossGroup, workGroup)
-                    .localAddress(serverConfig.getHost() != null && !serverConfig.getHost().isEmpty()
-                            ?new InetSocketAddress(serverConfig.getHost(), serverConfig.getPort())
-                            :new InetSocketAddress(serverConfig.getPort()))
+                    .localAddress(inetSocketAddress)
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_BACKLOG, serverConfig.getBacklog())
                     .childOption(ChannelOption.SO_KEEPALIVE, serverConfig.isKeepalive())
@@ -52,7 +53,7 @@ public class TcpServer {
                     });
             ChannelFuture future = bootstrap.bind().sync();
             if (future.isSuccess()) {
-                log.info(serverConfig.getName() + "服务启动成功！");
+                log.info("{}服务启动成功！IP:{},PORT:{}",serverConfig.getName(),inetSocketAddress.getAddress().getHostAddress(),serverConfig.getPort());
             } else {
                 throw new Exception(future.cause());
             }

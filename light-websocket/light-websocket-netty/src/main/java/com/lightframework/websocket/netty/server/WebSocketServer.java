@@ -70,6 +70,7 @@ public class WebSocketServer implements ApplicationRunner, ApplicationListener<C
             socketChannel.pipeline().addLast(new WebSocketInboundHandler(abstractWebSocketHandler));
         });
         try {
+            log.info("{}服务请求地址：{}",tcpServerConfig.getName(),webSocketConfigProperties.getWebsocketPath());
             tcpServer = TcpServer.start(tcpServerConfig);
         }catch (Exception e){
             log.error(e.getMessage(),e.getCause());

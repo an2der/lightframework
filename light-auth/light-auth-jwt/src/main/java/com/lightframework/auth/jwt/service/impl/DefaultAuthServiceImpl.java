@@ -49,7 +49,7 @@ public class DefaultAuthServiceImpl extends AuthService {
             if(authentication == null){
                 throw new BusinessException("登录失败");
             }
-            JwtUserInfo userInfo = (JwtUserInfo) authentication.getPrincipal();
+            UserInfo userInfo = (UserInfo) authentication.getPrincipal();
             if(userInfo != null){
                 if(!userInfo.isEnabled()){
                     throw new BusinessException("登录失败，用户已被禁用！");
@@ -62,8 +62,8 @@ public class DefaultAuthServiceImpl extends AuthService {
                 cookie.setHttpOnly(true);
                 cookie.setPath("/");
                 response.addCookie(cookie);
-                userInfo.setAccessToken(accessToken);
                 userInfo.setPassword(null);
+                userInfo.setAccessToken(accessToken);
                 return userInfo;
             }else {
                 throw new BusinessException("用户不存在！");

@@ -49,13 +49,13 @@ public class TcpClient {
                 ChannelFuture future = bootstrap.connect().sync();
                 if (future.isSuccess()) {
                     channel = future.channel();
-                    log.info(clientConfig.getName() + "连接服务端成功！");
+                    log.info("{}连接服务端成功！Remote Server IP:{},PORT:{}",clientConfig.getName(),clientConfig.getServerHost(), clientConfig.getServerPort());
                     return true;
                 }
             } catch (Exception e) {
 
             }
-            log.info(clientConfig.getName() + "连接服务端失败！");
+            log.info("{}连接服务端失败！Remote Server IP:{},PORT:{}",clientConfig.getName(),clientConfig.getServerHost(), clientConfig.getServerPort());
             reconnect();
         }else {
             log.info(clientConfig.getName() + "客户端已连接，请勿重复连接！");
@@ -86,7 +86,7 @@ public class TcpClient {
     private void reconnect(){
         if(!disconnected && (channel == null || !channel.isActive()) && clientConfig.getReconnectInterval() >0) {
             group.schedule(() ->{
-                log.info(clientConfig.getName() + "尝试重新连接到服务端！");
+                log.info("{}尝试重新连接到服务端！Remote Server IP:{},PORT:{}",clientConfig.getName(),clientConfig.getServerHost(), clientConfig.getServerPort());
                 connect();
             }, clientConfig.getReconnectInterval(), TimeUnit.SECONDS);
         }

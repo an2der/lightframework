@@ -1,10 +1,13 @@
 package com.lightframework.auth.jwt.util;
 
 import com.lightframework.auth.common.model.UserInfo;
+import com.lightframework.auth.jwt.model.JwtUserInfo;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
+import com.lightframework.util.spring.web.SpringJacksonUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,21 +21,20 @@ import java.util.*;
 @Component
 public class JwtTokenUtil {
 
-    public static final String PERMISSION = "PERMISSION";
+    public static final String USERINFO = "USERINFO";
 
     @Autowired
     private JwtAuthConfigProperties authConfigProperties;
 
     public String generateToken(UserInfo userInfo) {
         Map<String,Object> claims = new HashMap<>();
-        if(userInfo.getPermissions() != null) {
-            claims.put(PERMISSION, userInfo.getPermissions());
-        }
+        UserInfo copyUser = new UserInfo();
+        BeanUtils.copyProperties(userInfo,copyUser);
+        claims.put(USERINFO, SpringJacksonUtil.serialize(copyUser));
         return Jwts.builder()
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + authConfigProperties.getConfiguration().getExpireTimeMinute() * 60 * 1000))
                 .setId(userInfo.getUserId())
-                .setSubject(userInfo.getUsername())
                 .addClaims(claims)
                 .signWith(SignatureAlgorithm.HS512, authConfigProperties.getConfiguration().getSecret())
                 .compact();
@@ -45,10 +47,10 @@ public class JwtTokenUtil {
                 .getBody();
     }
 
-    public Set<String> getPermission(Claims claims){
-        List<String> permissions = (List<String>) claims.get(PERMISSION);
-        if(permissions != null){
-            return new HashSet(permissions);
+    public JwtUserInfo getUserInfo(Claims claims){
+        String json = String.valueOf(claims.get(USERINFO));
+        if(json != null){
+            return SpringJacksonUtil.deserialize(json,JwtUserInfo.class);
         }
         return null;
     }

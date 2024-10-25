@@ -195,6 +195,16 @@
                 <artifactId>light-starter-simple-app</artifactId>
                 <version>1.0.6</version>
             </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-starter-comm-tcp-client</artifactId>
+                <version>1.0.6</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-starter-comm-tcp-server</artifactId>
+                <version>1.0.6</version>
+            </dependency>
             <!-- light-system-log -->
             <dependency>
                 <groupId>com.lightframework</groupId>

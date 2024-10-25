@@ -4,6 +4,7 @@ import com.lightframework.auth.jwt.model.JwtUserInfo;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
 import com.lightframework.auth.jwt.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,6 +25,7 @@ import java.io.IOException;
  * @version 1.0
  */
 @Component
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -51,12 +53,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if(token!=null && token.startsWith(authConfigProperties.getTokenPrefix())) {
             try {
                 Claims claims = jwtTokenUtil.getClaimsFormToken(token.replaceFirst(authConfigProperties.getTokenPrefix(),""));
-                JwtUserInfo jwtUserInfo = new JwtUserInfo();
-                jwtUserInfo.setUserId(claims.getId());
-                jwtUserInfo.setUsername(claims.getSubject());
-                jwtUserInfo.setPermissions(jwtTokenUtil.getPermission(claims));
-                //存入SecurityContextHolder
-                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(jwtUserInfo, null, jwtUserInfo.getAuthorities()));
+                try {
+                    JwtUserInfo jwtUserInfo = jwtTokenUtil.getUserInfo(claims);
+                    //存入SecurityContextHolder
+                    SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(jwtUserInfo, null, jwtUserInfo.getAuthorities()));
+                }catch (Exception e){
+                    log.error("JWT检查用户登录状态时发生异常",e);
+                }
             }catch (Exception e){
 
             }

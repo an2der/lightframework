@@ -12,13 +12,9 @@
     <modules>
         <module>light-starter-comm-mqtt</module>
         <module>light-starter-simple-app</module>
+        <module>light-starter-comm-tcp-client</module>
+        <module>light-starter-comm-tcp-server</module>
     </modules>
     <artifactId>light-starter</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-    </dependencies>
 </project>
