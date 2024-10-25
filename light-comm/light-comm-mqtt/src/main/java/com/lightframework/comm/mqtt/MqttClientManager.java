@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -200,7 +199,7 @@ public class MqttClientManager {
 
         @Override
         public void connectComplete(boolean reconnect, String serverURI) {
-            log.info(mqttConfig.getName() + "连接成功!");
+            log.info(mqttConfig.getName() + "连接成功！");
             try {
                 mqttClient.subscribe(mqttConfig.getTopicFilters());
                 log.info(mqttConfig.getName() + "订阅主题成功！");
@@ -211,7 +210,7 @@ public class MqttClientManager {
 
         @Override
         public void connectionLost(Throwable throwable) {
-            log.info(mqttConfig.getName() + "断开连接!");
+            log.info(mqttConfig.getName() + "断开连接！");
             reconnect();
         }
 
