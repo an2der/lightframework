@@ -14,6 +14,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -46,14 +47,8 @@ public class WebSocketServer implements ApplicationRunner, ApplicationListener<C
     @Override
     public void run(ApplicationArguments args) {
         TcpServerConfig tcpServerConfig = new TcpServerConfig();
+        BeanUtils.copyProperties(webSocketConfigProperties,tcpServerConfig);
         tcpServerConfig.setName("WebSocket");
-        tcpServerConfig.setHost(webSocketConfigProperties.getHost());
-        tcpServerConfig.setPort(webSocketConfigProperties.getPort());
-        tcpServerConfig.setBossThreadCount(webSocketConfigProperties.getBossThreadCount());
-        tcpServerConfig.setWorkThreadCount(webSocketConfigProperties.getWorkThreadCount());
-        tcpServerConfig.setKeepalive(webSocketConfigProperties.isKeepalive());
-        tcpServerConfig.setBacklog(webSocketConfigProperties.getBacklog());
-        tcpServerConfig.setReaderIdleTimeSeconds(webSocketConfigProperties.getReaderIdleTimeSeconds());
         tcpServerConfig.setInitializationHandler(socketChannel -> {
             if(serverProperties.getSsl() != null && serverProperties.getSsl().isEnabled()){
                 socketChannel.pipeline().addLast(new SslHandler(SSLUtil.createSSLEngine(serverProperties.getSsl().getKeyStore(),serverProperties.getSsl().getKeyPassword())));

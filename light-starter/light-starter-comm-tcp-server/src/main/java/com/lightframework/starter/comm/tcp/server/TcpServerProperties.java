@@ -1,22 +1,58 @@
 package com.lightframework.starter.comm.tcp.server;
 
-import com.lightframework.comm.tcp.server.TcpServerConfig;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "tcp-server")
-public class TcpServerProperties extends TcpServerConfig {
+@Getter
+@Setter
+public class TcpServerProperties {
     /**
      * 是否开启tcp server
      */
     private boolean enabled = true;
 
-    public boolean isEnabled() {
-        return enabled;
-    }
+    /**
+     * TcpServer名称
+     */
+    private String name = "TCP SERVER";
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+    /**
+     * 绑定host
+     */
+    private String host;
+
+    /**
+     * 端口
+     */
+    private int port = 8070;
+
+    /**
+     * bossThread的数量设置为1就足够了，因为在一个端口上监听连接请求通常不需要并发处理
+     */
+    private int bossThreadCount = 1;
+
+    /**
+     * 0: 默认使用CPU核心数*2的worker线程数
+     */
+    private int workThreadCount = 0;
+
+    /**
+     * 设置为true时，TCP会尝试检测连接的活跃性,一般如果两个小时内没有数据的通信时,TCP会自动发送一个活动探测数据报文
+     */
+    private boolean keepalive = true;
+
+    /**
+     * 最大连接数， backlog的值即为未连接队列和已连接队列的和
+     */
+    private int backlog = 1024;
+
+    /**
+     * 读空闲检查，超过空闲时间断开连接。0：不检查
+     */
+    private int readerIdleTimeSeconds = 0;
+
 }
