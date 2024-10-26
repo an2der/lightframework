@@ -1,6 +1,6 @@
 package com.lightframework.database.redis.queue;
 
-import com.lightframework.database.redis.util.serialize.SerializeUtil;
+import com.lightframework.util.serialize.SerializeUtil;
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.BinaryJedisPubSub;
 
@@ -37,7 +37,7 @@ public abstract class ObjectJedisPubSub<T> extends BinaryJedisPubSub {
     public void onMessage(byte[] channel, byte[] message) {
         log.debug("ObjectJedisPubSub 订阅消息到达 channel={} message={}",new String(channel),message);
         String topic = new String(channel, Charset.forName("UTF-8"));
-        T object = SerializeUtil.deserialize(message, getClazz());
+        T object = SerializeUtil.protostuffDeserialize(message, getClazz());
         this.onMessage(topic, object);
     }
 

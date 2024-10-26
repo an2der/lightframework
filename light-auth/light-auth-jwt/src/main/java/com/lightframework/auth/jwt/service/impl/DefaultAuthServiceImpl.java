@@ -54,6 +54,7 @@ public class DefaultAuthServiceImpl extends AuthService {
                 if(!userInfo.isEnabled()){
                     throw new BusinessException("登录失败，用户已被禁用！");
                 }
+                userInfo.setPassword(null);
                 String accessToken = authConfigProperties.getTokenPrefix() + jwtTokenUtil.generateToken(userInfo);
                 HttpServletResponse response = SpringServletUtil.getResponse();
                 Cookie cookie = new Cookie(authConfigProperties.getConfiguration().getTokenKey(),accessToken);
@@ -62,7 +63,6 @@ public class DefaultAuthServiceImpl extends AuthService {
                 cookie.setHttpOnly(true);
                 cookie.setPath("/");
                 response.addCookie(cookie);
-                userInfo.setPassword(null);
                 userInfo.setAccessToken(accessToken);
                 return userInfo;
             }else {

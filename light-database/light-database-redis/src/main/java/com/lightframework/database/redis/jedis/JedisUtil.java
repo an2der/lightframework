@@ -6,7 +6,7 @@ import com.lightframework.database.redis.config.JedisConfig;
 import com.lightframework.database.redis.config.RedisPoolManager;
 import com.lightframework.database.redis.queue.RedisKeyListener;
 import com.lightframework.database.redis.util.JacksonUtil;
-import com.lightframework.database.redis.util.serialize.SerializeUtil;
+import com.lightframework.util.serialize.SerializeUtil;
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.StreamEntryID;
@@ -1597,7 +1597,7 @@ public class JedisUtil {
         Long res = -1L;
         try{
             if( jedis != null ){
-                byte[] obj = SerializeUtil.serialize(t);
+                byte[] obj = SerializeUtil.protostuffSerialize(t);
                 res = jedis.hset(key.getBytes(StandardCharsets.UTF_8),field.getBytes(StandardCharsets.UTF_8),obj);
             }
         }catch (Exception e){
@@ -1612,7 +1612,7 @@ public class JedisUtil {
         Long res = -1L;
         try{
             if( jedis != null ){
-                byte[] obj = SerializeUtil.serialize(t);
+                byte[] obj = SerializeUtil.protostuffSerialize(t);
                 res = jedis.hset(key.getBytes(StandardCharsets.UTF_8),ByteBuffer.allocate(4).putInt(field).array(),obj);
             }
         }catch (Exception e){
@@ -1693,7 +1693,7 @@ public class JedisUtil {
         try{
             if( jedis != null ){
                 byte[] bytes = jedis.hget(key.getBytes(StandardCharsets.UTF_8),field.getBytes(StandardCharsets.UTF_8));
-                if (bytes != null && bytes.length > 0) object = SerializeUtil.deserialize(bytes, clazz);
+                if (bytes != null && bytes.length > 0) object = SerializeUtil.protostuffDeserialize(bytes, clazz);
             }
         }catch (Exception e){
             log.error("Jedis操作数据 异常 " + key + " , " + field+ " , " + clazz, e);
@@ -1715,7 +1715,7 @@ public class JedisUtil {
         try{
             if( jedis != null ){
                 byte[] bytes = jedis.hget(key.getBytes(StandardCharsets.UTF_8),ByteBuffer.allocate(4).putInt(field).array());
-                if (bytes != null && bytes.length > 0) object = SerializeUtil.deserialize(bytes, clazz);
+                if (bytes != null && bytes.length > 0) object = SerializeUtil.protostuffDeserialize(bytes, clazz);
             }
         }catch (Exception e){
             log.error("Jedis操作数据 异常 " + key + " , " + field+ " , " + clazz, e);
@@ -1961,7 +1961,7 @@ public class JedisUtil {
         try{
             if( jedis != null ){
                 Map<byte[],byte[]> valueMap = new HashMap<>();
-                map.forEach((k,v)-> valueMap.put(ByteBuffer.allocate(4).putInt(k).array(),SerializeUtil.serialize(v)));
+                map.forEach((k,v)-> valueMap.put(ByteBuffer.allocate(4).putInt(k).array(),SerializeUtil.protostuffSerialize(v)));
                 res = jedis.hset(key.getBytes(StandardCharsets.UTF_8),valueMap);
             }
         }catch (Exception e){
@@ -2040,7 +2040,7 @@ public class JedisUtil {
                 Map<byte[], byte[]> map = jedis.hgetAll(key.getBytes(StandardCharsets.UTF_8));
                 if(map == null) return null;
                 ConcurrentHashMap<Integer,T> resultMap = new ConcurrentHashMap<>();
-                map.forEach((k,v)-> resultMap.put(ByteBuffer.wrap(k).getInt(),SerializeUtil.deserialize(v,clazz)));
+                map.forEach((k,v)-> resultMap.put(ByteBuffer.wrap(k).getInt(),SerializeUtil.protostuffDeserialize(v,clazz)));
                 resMap = resultMap;
             }
         }catch (Exception e){
@@ -2747,7 +2747,7 @@ public class JedisUtil {
         Jedis jedis = redisPool.getConnection();//获取连接,自动重连
         try{
             if( jedis != null ){
-                byte[] bytes = SerializeUtil.serialize(t);
+                byte[] bytes = SerializeUtil.protostuffSerialize(t);
                 res = jedis.set(key.getBytes(StandardCharsets.UTF_8), bytes);
             }
         }catch (Exception e){
@@ -2770,7 +2770,7 @@ public class JedisUtil {
         try{
             if( jedis != null ){
                 byte[] bytes = jedis.get(key.getBytes(StandardCharsets.UTF_8));
-                res = SerializeUtil.deserialize(bytes, clazz);
+                res = SerializeUtil.protostuffDeserialize(bytes, clazz);
             }
         }catch (Exception e){
             log.error("Jedis操作数据 异常 " + key + " , " + clazz, e);

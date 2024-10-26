@@ -3,14 +3,14 @@ package com.lightframework.auth.jwt.util;
 import com.lightframework.auth.common.model.UserInfo;
 import com.lightframework.auth.jwt.model.JwtUserInfo;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
-import com.lightframework.util.spring.web.SpringJacksonUtil;
+import com.lightframework.util.serialize.SerializeUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /***
@@ -28,9 +28,8 @@ public class JwtTokenUtil {
 
     public String generateToken(UserInfo userInfo) {
         Map<String,Object> claims = new HashMap<>();
-        UserInfo copyUser = new UserInfo();
-        BeanUtils.copyProperties(userInfo,copyUser);
-        claims.put(USERINFO, SpringJacksonUtil.serialize(copyUser));
+        byte[] bytes = SerializeUtil.protostuffSerialize(userInfo);
+        claims.put(USERINFO, new String(bytes, StandardCharsets.ISO_8859_1));
         return Jwts.builder()
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + authConfigProperties.getConfiguration().getExpireTimeMinute() * 60 * 1000))
@@ -48,9 +47,9 @@ public class JwtTokenUtil {
     }
 
     public JwtUserInfo getUserInfo(Claims claims){
-        String json = String.valueOf(claims.get(USERINFO));
-        if(json != null){
-            return SpringJacksonUtil.deserialize(json,JwtUserInfo.class);
+        String userinfo = String.valueOf(claims.get(USERINFO));
+        if(userinfo != null){
+            return SerializeUtil.protostuffDeserialize(userinfo.getBytes(StandardCharsets.ISO_8859_1),JwtUserInfo.class);
         }
         return null;
     }

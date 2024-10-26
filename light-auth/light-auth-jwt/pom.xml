@@ -5,7 +5,7 @@
     <parent>
         <artifactId>light-auth</artifactId>
         <groupId>com.lightframework</groupId>
-        <version>1.0.6</version>
+        <version>1.0.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <description>web授权实现-jwt</description>
@@ -28,6 +28,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-serialize</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

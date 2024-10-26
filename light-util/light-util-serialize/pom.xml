@@ -8,30 +8,26 @@
         <version>1.0.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <description>excel实用工具</description>
-    <artifactId>light-util-excel</artifactId>
+
+    <artifactId>light-util-serialize</artifactId>
 
     <properties>
-        <poi.version>4.1.2</poi.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>com.lightframework</groupId>
-            <artifactId>light-common</artifactId>
+            <groupId>io.protostuff</groupId>
+            <artifactId>protostuff-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.protostuff</groupId>
+            <artifactId>protostuff-runtime</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>${poi.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
     </dependencies>
+
 </project>

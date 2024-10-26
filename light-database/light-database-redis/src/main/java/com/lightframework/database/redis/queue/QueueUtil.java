@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.lightframework.database.redis.config.RedisPoolManager;
 import com.lightframework.database.redis.jedis.JedisUtil;
 import com.lightframework.database.redis.jedis.RedisPool;
-import com.lightframework.database.redis.util.serialize.SerializeUtil;
+import com.lightframework.util.serialize.SerializeUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.resps.StreamEntry;
@@ -80,7 +80,7 @@ public class QueueUtil {
     public <T>Long publish(String channel, T object) {
         Jedis jedis = redisPool.getConnection();//获取连接,自动重连
         try{
-            byte[] message = SerializeUtil.serialize(object);
+            byte[] message = SerializeUtil.protostuffSerialize(object);
             return jedis.publish(channel.getBytes(),message);
         }finally {
             redisPool.close(jedis);
@@ -310,7 +310,7 @@ public class QueueUtil {
         byte[] destinationKey = destination.getBytes(StandardCharsets.UTF_8);
         int timeout = 0;//阻塞等待超时时间毫秒数,0无限等待
         byte[] bytes = JedisUtil.use(redisName).brpoplpush(sourceKey,destinationKey,timeout);
-        return SerializeUtil.deserialize(bytes, clazz);
+        return SerializeUtil.protostuffDeserialize(bytes, clazz);
     }
 
     /**
