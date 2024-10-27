@@ -3,7 +3,6 @@ package com.lightframework.auth.jwt.service.impl;
 import com.lightframework.auth.common.model.UserInfo;
 import com.lightframework.auth.core.model.LoginParam;
 import com.lightframework.auth.core.service.AuthService;
-import com.lightframework.auth.jwt.model.JwtUserInfo;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
 import com.lightframework.auth.jwt.util.JwtTokenUtil;
 import com.lightframework.common.BusinessException;
@@ -11,6 +10,7 @@ import com.lightframework.util.spring.web.SpringServletUtil;
 import com.lightframework.util.verifycode.VerifyCode;
 import com.lightframework.util.verifycode.VerifyCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Service
+@ConditionalOnMissingBean(AuthService.class)
 public class DefaultAuthServiceImpl extends AuthService {
 
     @Autowired

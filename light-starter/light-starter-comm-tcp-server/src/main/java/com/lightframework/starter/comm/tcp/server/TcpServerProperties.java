@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "tcp-server")
+@ConfigurationProperties(prefix = "tcp.server")
 @Getter
 @Setter
 public class TcpServerProperties {

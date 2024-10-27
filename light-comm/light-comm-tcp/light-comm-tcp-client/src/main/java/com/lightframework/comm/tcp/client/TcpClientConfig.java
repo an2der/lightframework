@@ -1,5 +1,6 @@
 package com.lightframework.comm.tcp.client;
 
+import com.lightframework.comm.tcp.common.handler.ChannelInitializationHandler;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

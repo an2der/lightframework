@@ -1,9 +1,9 @@
 package com.lightframework.starter.comm.tcp.client;
 
-import com.lightframework.comm.tcp.client.ChannelInitializationHandler;
 import com.lightframework.comm.tcp.client.HeartBeatBuilder;
 import com.lightframework.comm.tcp.client.TcpClient;
 import com.lightframework.comm.tcp.client.TcpClientConfig;
+import com.lightframework.comm.tcp.common.handler.ChannelInitializationHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(prefix = "tcp-client",name = "enabled",havingValue = "true",matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tcp.client",name = "enabled",havingValue = "true",matchIfMissing = true)
 public class TcpClientBuilder {
 
     @Autowired

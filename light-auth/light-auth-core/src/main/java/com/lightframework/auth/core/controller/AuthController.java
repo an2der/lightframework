@@ -8,6 +8,7 @@ import com.lightframework.common.annotation.SystemLogger;
 import com.lightframework.core.annotation.BusinessController;
 import com.lightframework.util.verifycode.VerifyCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,7 @@ import java.io.IOException;
 public class AuthController {
 
     @Autowired
+    @Lazy
     private AuthService authService;
 
     @PostMapping("/login")

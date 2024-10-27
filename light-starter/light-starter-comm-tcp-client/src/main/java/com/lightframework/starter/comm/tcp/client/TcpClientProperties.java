@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "tcp-client")
+@ConfigurationProperties(prefix = "tcp.client")
 @Getter
 @Setter
 public class TcpClientProperties {
@@ -71,4 +71,5 @@ public class TcpClientProperties {
         private boolean fixedCycleSend = false;
 
     }
+
 }

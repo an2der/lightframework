@@ -9,8 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <description>TCP SERVER</description>
-    <artifactId>light-comm-tcp-server</artifactId>
+    <artifactId>light-comm-tcp-common</artifactId>
 
     <properties>
     </properties>
@@ -18,8 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>com.lightframework</groupId>
-            <artifactId>light-comm-tcp-common</artifactId>
-            <version>1.0.7</version>
+            <artifactId>light-util-serialize</artifactId>
         </dependency>
     </dependencies>
 </project>

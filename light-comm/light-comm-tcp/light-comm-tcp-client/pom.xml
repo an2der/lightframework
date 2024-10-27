@@ -14,5 +14,11 @@
 
     <properties>
     </properties>
-
+    <dependencies>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-comm-tcp-common</artifactId>
+            <version>1.0.7</version>
+        </dependency>
+    </dependencies>
 </project>

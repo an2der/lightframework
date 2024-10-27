@@ -18,6 +18,8 @@ public class TcpServer {
 
     private TcpServerConfig serverConfig;
 
+    private TcpServerManager tcpServerManager;
+
     private EventLoopGroup bossGroup;//处理连接请求
     private EventLoopGroup workGroup;//处理收发数据
 
@@ -26,6 +28,7 @@ public class TcpServer {
     public static TcpServer start(TcpServerConfig tcpServerConfig) {
         TcpServer tcpServer = new TcpServer();
         tcpServer.serverConfig = tcpServerConfig;
+        tcpServer.tcpServerManager = new TcpServerManager();
         tcpServer.start();
         return tcpServer;
     }
@@ -74,6 +77,10 @@ public class TcpServer {
         } catch (InterruptedException e) {
 
         }
+    }
+
+    public TcpServerManager getTcpServerManager(){
+        return tcpServerManager;
     }
 
     private class TcpServerHandler extends ChannelInboundHandlerAdapter {

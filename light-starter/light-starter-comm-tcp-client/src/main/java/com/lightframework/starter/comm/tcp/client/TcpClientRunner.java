@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnProperty(prefix = "tcp-client",name = "enabled",havingValue = "true",matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tcp.client",name = "enabled",havingValue = "true",matchIfMissing = true)
 public class TcpClientRunner implements CommandLineRunner {
 
     @Autowired

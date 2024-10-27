@@ -140,6 +140,11 @@
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-tcp-common</artifactId>
+                <version>1.0.7</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
                 <artifactId>light-comm-mqtt</artifactId>
                 <version>1.0.7</version>
             </dependency>
@@ -203,6 +208,11 @@
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-starter-comm-tcp-server</artifactId>
+                <version>1.0.7</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-starter-comm-tcp-common</artifactId>
                 <version>1.0.7</version>
             </dependency>
             <!-- light-system-log -->

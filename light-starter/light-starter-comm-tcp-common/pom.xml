@@ -9,10 +9,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>light-starter-comm-tcp-server</artifactId>
+    <artifactId>light-starter-comm-tcp-common</artifactId>
 
     <properties>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -20,15 +21,7 @@
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
-            <artifactId>light-comm-tcp-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.lightframework</groupId>
-            <artifactId>light-util-spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.lightframework</groupId>
-            <artifactId>light-starter-comm-tcp-common</artifactId>
+            <artifactId>light-comm-tcp-common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

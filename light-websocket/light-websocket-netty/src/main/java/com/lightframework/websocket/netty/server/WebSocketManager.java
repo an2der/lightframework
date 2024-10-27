@@ -1,8 +1,10 @@
 package com.lightframework.websocket.netty.server;
 
 import com.alibaba.fastjson2.JSON;
+import com.lightframework.comm.tcp.server.TcpServerManager;
 import com.lightframework.websocket.common.model.WebSocketMessage;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,32 +18,33 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class WebSocketManager {
 
-    private static final ConcurrentHashMap<String, Channel> CHANNELS = new ConcurrentHashMap<>();
+    static TcpServerManager tcpServerManager;
 
     private WebSocketManager(){}
 
     public static void putChannel(Channel channel){
         if(channel != null) {
-            CHANNELS.put(channel.id().asLongText(), channel);
+            tcpServerManager.putChannel(channel.id().asLongText(), channel);
         }
     }
 
     public static void removeChannel(Channel channel){
-        CHANNELS.remove(channel.id().asLongText());
+        tcpServerManager.removeChannel(channel.id().asLongText());
     }
 
     public static Channel getChannel(String channelId){
-        return CHANNELS.get(channelId);
+        return tcpServerManager.getChannel(channelId);
     }
 
-    private static void sendMessage(Channel channel, String message){
-        if(channel != null && channel.isOpen()) {
-            channel.writeAndFlush(new TextWebSocketFrame(message));
+    private static ChannelFuture sendMessage(Channel channel, String message){
+        if(channel != null) {
+            return channel.writeAndFlush(new TextWebSocketFrame(message));
         }
+        return null;
     }
 
-    public static void sendMessage(Channel channel, WebSocketMessage message){
-        sendMessage(channel,JSON.toJSONString(message));
+    public static ChannelFuture sendMessage(Channel channel, WebSocketMessage message){
+        return sendMessage(channel,JSON.toJSONString(message));
     }
 
     /**
@@ -50,9 +53,9 @@ public class WebSocketManager {
      * @param clientId
      * @param message
      */
-    public static void sendMessage(String clientId, WebSocketMessage message) {
-        Channel channel = CHANNELS.get(clientId);
-        sendMessage(channel, message);
+    public static ChannelFuture sendMessage(String clientId, WebSocketMessage message) {
+        Channel channel = tcpServerManager.getChannel(clientId);
+        return sendMessage(channel, message);
     }
 
     /**
@@ -60,7 +63,11 @@ public class WebSocketManager {
      */
     public static void sendMessageToAll(WebSocketMessage message){
         String stringMessage = JSON.toJSONString(message);
-        CHANNELS.entrySet().forEach(e->sendMessage(e.getValue(),stringMessage));
+        tcpServerManager.getAllChannel().entrySet().forEach(e->sendMessage(e.getValue(),stringMessage));
+    }
+
+    public static ConcurrentHashMap<String, Channel> getAllChannel(){
+        return tcpServerManager.getAllChannel();
     }
 
 }

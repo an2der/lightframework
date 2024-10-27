@@ -14,6 +14,7 @@
         <module>light-starter-simple-app</module>
         <module>light-starter-comm-tcp-client</module>
         <module>light-starter-comm-tcp-server</module>
+        <module>light-starter-comm-tcp-common</module>
     </modules>
     <artifactId>light-starter</artifactId>
 

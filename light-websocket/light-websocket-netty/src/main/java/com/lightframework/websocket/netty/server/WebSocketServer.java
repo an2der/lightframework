@@ -67,6 +67,7 @@ public class WebSocketServer implements ApplicationRunner, ApplicationListener<C
         try {
             log.info("{}服务请求地址：{}",tcpServerConfig.getName(),webSocketConfigProperties.getWebsocketPath());
             tcpServer = TcpServer.start(tcpServerConfig);
+            WebSocketManager.tcpServerManager = tcpServer.getTcpServerManager();
         }catch (Exception e){
             log.error(e.getMessage(),e.getCause());
             SpringContextUtil.exit();
