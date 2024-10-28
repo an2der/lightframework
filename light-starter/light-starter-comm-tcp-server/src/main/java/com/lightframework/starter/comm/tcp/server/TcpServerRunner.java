@@ -32,7 +32,7 @@ public class TcpServerRunner implements CommandLineRunner {
             BeanUtils.copyProperties(tcpServerProperties,tcpServerConfig);
             tcpServerConfig.setInitializationHandler(channelInitializationHandler);
             tcpServer = TcpServer.start(tcpServerConfig);
-            SpringBeanUtil.registerBean("tcpServerManager",tcpServer.getTcpServerManager());
+            SpringBeanUtil.registerBean(TcpServerManagerHolder.TCP_SERVER_MANAGER_NAME,tcpServer.getTcpServerManager());
         }catch (Exception e){
             log.error(e.getMessage(),e.getCause());
             SpringContextUtil.exit();
