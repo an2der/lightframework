@@ -37,10 +37,7 @@ public class WebSocketManager {
     }
 
     private static ChannelFuture sendMessage(Channel channel, String message){
-        if(channel != null) {
-            return channel.writeAndFlush(new TextWebSocketFrame(message));
-        }
-        return null;
+        return tcpServerManager.sendMessage(channel,new TextWebSocketFrame(message));
     }
 
     public static ChannelFuture sendMessage(Channel channel, WebSocketMessage message){
@@ -63,11 +60,11 @@ public class WebSocketManager {
      */
     public static void sendMessageToAll(WebSocketMessage message){
         String stringMessage = JSON.toJSONString(message);
-        tcpServerManager.getAllChannel().entrySet().forEach(e->sendMessage(e.getValue(),stringMessage));
+        tcpServerManager.channels().entrySet().forEach(e->sendMessage(e.getValue(),stringMessage));
     }
 
-    public static ConcurrentHashMap<String, Channel> getAllChannel(){
-        return tcpServerManager.getAllChannel();
+    public static ConcurrentHashMap<String, Channel> channels(){
+        return tcpServerManager.channels();
     }
 
 }

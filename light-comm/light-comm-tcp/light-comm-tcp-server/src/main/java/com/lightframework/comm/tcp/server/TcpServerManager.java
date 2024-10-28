@@ -1,9 +1,12 @@
 package com.lightframework.comm.tcp.server;
 
+import com.lightframework.comm.tcp.common.handler.FailMessageHandler;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /*** 
@@ -16,6 +19,12 @@ public class TcpServerManager {
 
     private final ConcurrentHashMap<String, Channel> CHANNELS = new ConcurrentHashMap<>();
 
+    private FailMessageHandler failMessageHandler;
+
+    TcpServerManager(TcpServerConfig tcpServerConfig){
+        this.failMessageHandler = new FailMessageHandler(tcpServerConfig.getName());
+    }
+
     public void putChannel(String id,Channel channel){
         if(channel != null) {
             CHANNELS.put(id, channel);
@@ -26,6 +35,17 @@ public class TcpServerManager {
         CHANNELS.remove(id);
     }
 
+    public void removeChannel(Channel channel){
+        Iterator<Map.Entry<String, Channel>> iterator = CHANNELS.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry<String, Channel> next = iterator.next();
+            if(next.getValue() == channel){
+                iterator.remove();
+                break;
+            }
+        }
+    }
+
     public Channel getChannel(String id){
         return CHANNELS.get(id);
     }
@@ -34,7 +54,9 @@ public class TcpServerManager {
         if(channel == null){
             return null;
         }
-        return channel.writeAndFlush(message);
+        ChannelFuture channelFuture = channel.writeAndFlush(message);
+        channelFuture.addListener(failMessageHandler);
+        return channelFuture;
     }
 
     /**
@@ -48,7 +70,7 @@ public class TcpServerManager {
         return sendMessage(channel, message);
     }
 
-    public ConcurrentHashMap<String, Channel> getAllChannel(){
+    public ConcurrentHashMap<String, Channel> channels(){
         return CHANNELS;
     }
 

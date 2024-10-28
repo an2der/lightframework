@@ -1,5 +1,6 @@
 package com.lightframework.comm.tcp.client;
 
+import com.lightframework.comm.tcp.common.handler.FailMessageHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -21,11 +22,14 @@ public class TcpClient {
 
     private TcpClientConfig clientConfig;
 
+    private FailMessageHandler failMessageHandler;
+
     private volatile boolean disconnected = false;
 
     public TcpClient(TcpClientConfig tcpClientConfig){
         this.group = new NioEventLoopGroup(tcpClientConfig.getThreadCount());
         this.clientConfig = tcpClientConfig;
+        this.failMessageHandler = new FailMessageHandler(tcpClientConfig.getName());
         this.bootstrap = new Bootstrap();
         this.bootstrap.group(group)
             .channel(NioSocketChannel.class)
@@ -66,6 +70,16 @@ public class TcpClient {
     public Channel getChannel(){
         return this.channel;
     }
+
+    public ChannelFuture sendMessage(Object message){
+        if(this.channel == null){
+            return null;
+        }
+        ChannelFuture channelFuture = this.channel.writeAndFlush(message);
+        channelFuture.addListener(failMessageHandler);
+        return channelFuture;
+    }
+
 
     public void disconnect(){
         if(this.channel != null) {

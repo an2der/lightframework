@@ -28,7 +28,7 @@ public class TcpServer {
     public static TcpServer start(TcpServerConfig tcpServerConfig) {
         TcpServer tcpServer = new TcpServer();
         tcpServer.serverConfig = tcpServerConfig;
-        tcpServer.tcpServerManager = new TcpServerManager();
+        tcpServer.tcpServerManager = new TcpServerManager(tcpServerConfig);
         tcpServer.start();
         return tcpServer;
     }
@@ -76,6 +76,8 @@ public class TcpServer {
             }
         } catch (InterruptedException e) {
 
+        }finally {
+            tcpServerManager.channels().clear();
         }
     }
 
@@ -88,7 +90,10 @@ public class TcpServer {
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
             if(!((cause instanceof IOException) && cause.getMessage().equals("远程主机强迫关闭了一个现有的连接。"))) {
-                log.error(serverConfig.getName() + "捕获异常：" + cause.getMessage(), cause);
+                InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
+                String ip = socketAddress.getAddress().getHostAddress();
+                int port = socketAddress.getPort();
+                log.error(serverConfig.getName() + "捕获异常，address：["+ip+":"+port+"]，cause：" + cause.getMessage(), cause);
             }
             ctx.channel().close();
         }
