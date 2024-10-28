@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <description>FTP通信</description>
+    <description>FTP</description>
     <artifactId>light-comm-ftp</artifactId>
 
     <properties>

@@ -54,6 +54,8 @@
         <netty.version>4.1.110.Final</netty.version>
         <jedis.version>4.2.3</jedis.version>
         <protostuff.version>1.8.0</protostuff.version>
+        <svnkit.version>1.10.11</svnkit.version>
+        <reflections.version>0.10.2</reflections.version>
     </properties>
 
     <dependencies>
@@ -148,7 +150,11 @@
                 <artifactId>light-comm-mqtt</artifactId>
                 <version>1.0.7</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-svn</artifactId>
+                <version>1.0.7</version>
+            </dependency>
 
             <!-- light-common -->
             <dependency>
@@ -405,6 +411,16 @@
                 <groupId>io.protostuff</groupId>
                 <artifactId>protostuff-runtime</artifactId>
                 <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.tmatesoft.svnkit</groupId>
+                <artifactId>svnkit</artifactId>
+                <version>${svnkit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -17,5 +17,9 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-os</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -1,5 +1,6 @@
 package com.lightframework.util.io;
 
+import com.lightframework.util.os.OSUtil;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -39,7 +40,7 @@ public class PathUtil {
      * @return
      */
     public static boolean isAbsolutePath(String path) {
-        if ((System.getProperty("os.name").toLowerCase().contains("windows") && path.indexOf(":") > 0) || (System.getProperty("os.name").toLowerCase().contains("linux") && path.startsWith("/"))) {
+        if ((OSUtil.isWindows() && path.indexOf(":") > 0) || path.startsWith("/")) {
             return true;
         }
         return false;
