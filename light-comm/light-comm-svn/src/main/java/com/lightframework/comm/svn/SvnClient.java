@@ -1,5 +1,6 @@
 package com.lightframework.comm.svn;
 
+import cn.hutool.core.io.unit.DataSizeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tmatesoft.svn.core.*;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -41,7 +43,7 @@ public class SvnClient {
 
     private SvnClient(){}
 
-    public SvnClient(String svnUrl, String localPath, String userName, String password) throws SVNException {
+    public SvnClient(String svnUrl, String localPath, String userName, String password){
         this.svnUrl = svnUrl;
         this.localPath = localPath;
         initClientAuthSvn(svnUrl,userName,password);
@@ -60,11 +62,15 @@ public class SvnClient {
     /**
      * 验证登录svn返回SVN客户端管理类
      */
-    private void initClientAuthSvn(String svnUrl, String userName, String password) throws SVNException {
+    private void initClientAuthSvn(String svnUrl, String userName, String password) {
         // 初始化版本库
         setupLibrary();
         // 创建库连接
-        svnRepository = SVNRepositoryFactory.create(SVNURL.parseURIEncoded(svnUrl));
+        try {
+            svnRepository = SVNRepositoryFactory.create(SVNURL.parseURIEncoded(svnUrl));
+        } catch (SVNException e) {
+            throw new RuntimeException(e);
+        }
         // 身份验证
         ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(userName, password.toCharArray());
         // 创建身份验证管理器
@@ -369,13 +375,99 @@ public class SvnClient {
     }
 
     /**
+     * 预提交,并返回提交列表
+     *
+     * @param filePath 待提交文件目录相对路径
+     * @return 提交结果
+     * @throws SVNException svn异常
+     */
+    public List<SvnNode> preCommitAll(List<String> filePath) throws SVNException {
+        if (DoUpdateStatus) {
+            throw new RuntimeException("正在执行其它任务!");
+        }
+        try {
+            List<SvnNode> allList = new ArrayList<>();
+            if (filePath != null && filePath.size() > 0) {
+                DoUpdateStatus = true;
+                for (String path : filePath) {
+                    File file = new File(localPath,path);
+                    clientManager.getStatusClient().doStatus(file, SVNRevision.WORKING, SVNDepth.INFINITY, false, false, false, true, new ISVNStatusHandler() {
+                        @Override
+                        public void handleStatus(SVNStatus status) throws SVNException {
+                            SVNStatusType mynodeStatus = status.getNodeStatus();
+                            File file = status.getFile();
+                            SvnNode svnNode = new SvnNode();
+                            svnNode.setPath(file.getAbsolutePath());
+                            svnNode.setName(file.getName());
+                            svnNode.setParentPath(file.getParent());
+                            svnNode.setSize(file.length());
+                            svnNode.setSizeStr(DataSizeUtil.format(svnNode.getSize()));
+                            svnNode.setDate(new Date(file.lastModified()));
+                            svnNode.setDir(mynodeStatus == SVNStatusType.STATUS_UNVERSIONED?file.isDirectory():status.getKind() != null && status.getKind() == SVNNodeKind.DIR);
+                            //如果是删除
+                            if (mynodeStatus.equals(SVNStatusType.STATUS_MISSING)){
+                                svnNode.setStatus(SvnNode.STATUS_DELETE);
+                                clientManager.getWCClient().doDelete(status.getFile(), true, false, false);
+                            }else if(mynodeStatus.equals(SVNStatusType.STATUS_DELETED)) {
+                                svnNode.setStatus(SvnNode.STATUS_DELETE);
+                            } else if (mynodeStatus.equals(SVNStatusType.STATUS_UNVERSIONED)) {
+                                svnNode.setStatus(SvnNode.STATUS_UNVERSIONED);
+                                clientManager.getWCClient().doAdd(status.getFile(), true, false, false, SVNDepth.INFINITY, false, false);
+                                if(svnNode.isDir()){
+                                    addUnversionDirChildFiles(allList,file);
+                                }
+                            } else if (mynodeStatus.equals(SVNStatusType.STATUS_ADDED)) {//如果新增是新增
+                                svnNode.setStatus(SvnNode.STATUS_ADD);
+                            } else if (mynodeStatus.equals(SVNStatusType.STATUS_MODIFIED)) {//如果是修改
+                                svnNode.setStatus(SvnNode.STATUS_MODIFY);
+                            } else if (mynodeStatus.equals(SVNStatusType.STATUS_CONFLICTED)) {//如果是冲突
+                                svnNode.setStatus(SvnNode.STATUS_CONFLICTED);
+                            } else {
+                                return;
+                            }
+                            allList.add(svnNode);
+                        }
+                    }, null);
+                }
+            }
+            return allList;
+        }finally {
+            clientManager.getWCClient().getOperationsFactory().dispose();
+            clientManager.getStatusClient().getOperationsFactory().dispose();
+            clientManager.dispose();
+            DoUpdateStatus = false;
+        }
+    }
+
+    private void addUnversionDirChildFiles(List<SvnNode> list, File dir){
+        File [] files = dir.listFiles();
+        if(files.length > 0){
+            for (File file : files) {
+                SvnNode svnNode = new SvnNode();
+                svnNode.setPath(file.getAbsolutePath());
+                svnNode.setName(file.getName());
+                svnNode.setParentPath(file.getParent());
+                svnNode.setSize(file.length());
+                svnNode.setSizeStr(DataSizeUtil.format(svnNode.getSize()));
+                svnNode.setDate(new Date(file.lastModified()));
+                svnNode.setDir(file.isDirectory());
+                svnNode.setStatus(SvnNode.STATUS_UNVERSIONED);
+                list.add(svnNode);
+                if(svnNode.isDir()){
+                    addUnversionDirChildFiles(list,file);
+                }
+            }
+        }
+    }
+
+    /**
      * 提交指定文件，配合preCommitAll()方法使用
      *
      * @param filePath 提交文件路径
      * @return 提交结果
      * @throws SVNException svn异常
      */
-    public void doCommitFiles(File [] filePath, ISVNEventHandler handler) throws SVNException {
+    public SVNCommitInfo doCommitFiles(File [] filePath,String commitMessage, ISVNEventHandler handler) throws SVNException {
         if (DoUpdateStatus) {
             throw new RuntimeException("正在执行其它任务!");
         }
@@ -383,13 +475,14 @@ public class SvnClient {
             if (filePath != null && filePath.length > 0) {
                 DoUpdateStatus = true;
                 clientManager.getCommitClient().setEventHandler(handler);
-                clientManager.getCommitClient().doCommit(filePath, false, "", null, null, false, true, SVNDepth.EMPTY);
+                return clientManager.getCommitClient().doCommit(filePath, false, commitMessage, null, null, false, true, SVNDepth.EMPTY);
             }
         }finally {
             clientManager.getCommitClient().getOperationsFactory().dispose();
             clientManager.dispose();
             DoUpdateStatus = false;
         }
+        return null;
     }
 
     /**
@@ -399,7 +492,7 @@ public class SvnClient {
      * @return 提交结果
      * @throws SVNException svn异常
      */
-    public boolean doCommitAll(List<String> filePath, ISVNEventHandler handler) throws SVNException {
+    public SVNCommitInfo doCommitAll(List<String> filePath,String commitMessage, ISVNEventHandler handler) throws SVNException {
         if (DoUpdateStatus) {
             throw new RuntimeException("正在执行其它任务!");
         }
@@ -425,7 +518,7 @@ public class SvnClient {
                     }, null);
                 }
                 if(atomicBoolean.get())
-                    clientManager.getCommitClient().doCommit(files, false, "", null, null, false, true, SVNDepth.INFINITY);
+                    return clientManager.getCommitClient().doCommit(files, false, commitMessage, null, null, false, true, SVNDepth.INFINITY);
             }
         }finally {
             clientManager.getWCClient().getOperationsFactory().dispose();
@@ -434,7 +527,7 @@ public class SvnClient {
             clientManager.dispose();
             DoUpdateStatus = false;
         }
-        return true;
+        return null;
     }
 
     /**
@@ -586,6 +679,45 @@ public class SvnClient {
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
 
+    public void doMkDir(List<String> path,String commitMessage) throws SVNException {
+        if (DoUpdateStatus) {
+            throw new RuntimeException("正在执行其它任务!");
+        }
+        try {
+            if (path != null && path.size() > 0) {
+                DoUpdateStatus = true;
+                SVNURL [] svnurls = new SVNURL[path.size()];
+                for (int i = 0; i < path.size(); i++) {
+                    svnurls[i] = SVNURL.parseURIEncoded(svnUrl + "/" + path.get(i));
+                }
+                clientManager.getCommitClient().doMkDir(svnurls,commitMessage,new SVNProperties(),true);
+            }
+        }finally {
+            clientManager.getCommitClient().getOperationsFactory().dispose();
+            clientManager.dispose();
+            DoUpdateStatus = false;
+        }
+    }
+
+    public void doDel(List<String> path,String commitMessage) throws SVNException {
+        if (DoUpdateStatus) {
+            throw new RuntimeException("正在执行其它任务!");
+        }
+        try {
+            if (path != null && path.size() > 0) {
+                DoUpdateStatus = true;
+                SVNURL [] svnurls = new SVNURL[path.size()];
+                for (int i = 0; i < path.size(); i++) {
+                    svnurls[i] = SVNURL.parseURIEncoded(svnUrl + "/" + path.get(i));
+                }
+                clientManager.getCommitClient().doDelete(svnurls,commitMessage);
+            }
+        }finally {
+            clientManager.getCommitClient().getOperationsFactory().dispose();
+            clientManager.dispose();
+            DoUpdateStatus = false;
+        }
+    }
 }
 
 
