@@ -2,10 +2,13 @@ package com.lightframework.auth.core.controller;
 
 import com.lightframework.auth.core.model.LoginParam;
 import com.lightframework.auth.common.model.UserInfo;
+import com.lightframework.auth.core.properties.AuthConfigProperties;
 import com.lightframework.auth.core.service.AuthService;
+import com.lightframework.common.BusinessException;
 import com.lightframework.common.BusinessType;
 import com.lightframework.common.annotation.SystemLogger;
 import com.lightframework.core.annotation.BusinessController;
+import com.lightframework.util.verifycode.VerifyCode;
 import com.lightframework.util.verifycode.VerifyCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -30,9 +33,15 @@ public class AuthController {
     @Lazy
     private AuthService authService;
 
+    @Autowired
+    private AuthConfigProperties authConfigProperties;
+
     @PostMapping("/login")
     @SystemLogger(moduleKey = "AUTH", moduleName = "授权",operationDesc = "登录",businessType = BusinessType.LOGIN)
     public UserInfo login(@RequestBody LoginParam loginParam){
+        if(authConfigProperties.getVerifyCode().isEnableVerifyCode()){
+            validateCode(loginParam.getVerifyCode());
+        }
         return authService.login(loginParam);
     }
 
@@ -45,7 +54,18 @@ public class AuthController {
     @GetMapping("/verifyImage")
     public void fetchVerifyImage(HttpServletResponse response) throws IOException {
         String verifyCode = authService.generateVerifyCode();
-        VerifyCodeUtil.createVCodeImage(response,verifyCode);
+        VerifyCodeUtil.writeImage(verifyCode,response);
     }
-
+    private void validateCode(String code){
+        VerifyCode verifyCode = authService.getVerifyCode();
+        if(verifyCode == null){
+            throw new BusinessException("验证码无效");
+        }else if(code == null || code.length() == 0){
+            throw new BusinessException("请输入验证码");
+        }else if(!verifyCode.getCode().equals(code)){
+            throw new BusinessException("验证码输入错误");
+        }else if(verifyCode.isExpired()){
+            throw new BusinessException("验证码已过期");
+        }
+    }
 }

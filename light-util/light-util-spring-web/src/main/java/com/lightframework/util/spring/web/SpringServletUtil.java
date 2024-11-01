@@ -5,6 +5,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,6 +38,18 @@ public class SpringServletUtil {
         response.getWriter().write(SpringJacksonUtil.serialize(o));
         response.getWriter().flush();
         response.getWriter().close();
+    }
+
+    public static String getCookie(String key){
+        Cookie[] cookies = getRequest().getCookies();
+        if(cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(key)) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 
 }

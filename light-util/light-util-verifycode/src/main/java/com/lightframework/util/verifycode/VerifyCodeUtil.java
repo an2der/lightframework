@@ -4,7 +4,11 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Base64;
 import java.util.Random;
 
 public class VerifyCodeUtil {
@@ -59,10 +63,21 @@ public class VerifyCodeUtil {
      * @param response
      * @throws IOException
      */
-    public static void createVCodeImage(HttpServletResponse response,String verifyCode) throws IOException {
+    public static void writeImage(String verifyCode,HttpServletResponse response) throws IOException {
         response.setHeader("Pragma", "No-cache");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
+        writeImage(verifyCode, response.getOutputStream());
+    }
+
+    public static String createBase64Image(String verifyCode) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        writeImage(verifyCode,byteArrayOutputStream);
+        String image = Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
+        return "data:image/png;base64,"+image;
+    }
+
+    public static void writeImage(String verifyCode, OutputStream outputStream) throws IOException {
         int width = 120, height = 38;
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         String[] fontTypes = {"\u5b8b\u4f53", "\u65b0\u5b8b\u4f53",
@@ -88,6 +103,7 @@ public class VerifyCodeUtil {
             g.drawString(rand[i] + "", 25 * i + 12, 25);
         }
         g.dispose();
-        ImageIO.write(image, "JPEG", response.getOutputStream());
+        ImageIO.write(image, "PNG", outputStream);
     }
+
 }

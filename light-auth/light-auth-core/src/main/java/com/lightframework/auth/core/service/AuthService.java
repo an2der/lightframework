@@ -31,16 +31,10 @@ public abstract class AuthService {
      */
     public abstract String generateVerifyCode();
 
-    protected void validateCode(String code, VerifyCode verifyCode){
-        if(verifyCode == null){
-            throw new BusinessException("验证码无效");
-        }else if(code == null || code.length() == 0){
-            throw new BusinessException("请输入验证码");
-        }else if(!verifyCode.getCode().equals(code)){
-            throw new BusinessException("验证码输入错误");
-        }else if(verifyCode.isExpired()){
-            throw new BusinessException("验证码已过期");
-        }
-    }
+    /**
+     * 获取验证码
+     * @return
+     */
+    public abstract VerifyCode getVerifyCode();
 
 }

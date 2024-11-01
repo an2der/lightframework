@@ -77,7 +77,7 @@ public class AuthConfigProperties {
         /**
          * 验证码过期时间
          */
-        private int expireTimeSecond = 0; //过期时间：秒
+        private int expireTimeSecond = 60; //过期时间：秒
 
     }
 

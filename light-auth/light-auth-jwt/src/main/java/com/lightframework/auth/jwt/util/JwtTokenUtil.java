@@ -28,8 +28,7 @@ public class JwtTokenUtil {
 
     public String generateToken(UserInfo userInfo) {
         Map<String,Object> claims = new HashMap<>();
-        byte[] bytes = SerializeUtil.protostuffSerialize(userInfo);
-        claims.put(USERINFO, new String(bytes, StandardCharsets.ISO_8859_1));
+        claims.put(USERINFO, new String(SerializeUtil.protostuffSerialize(userInfo), StandardCharsets.ISO_8859_1));
         return Jwts.builder()
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + authConfigProperties.getConfiguration().getExpireTimeMinute() * 60 * 1000))

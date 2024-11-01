@@ -3,6 +3,7 @@ package com.lightframework.auth.jwt.filter;
 import com.lightframework.auth.jwt.model.JwtUserInfo;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
 import com.lightframework.auth.jwt.util.JwtTokenUtil;
+import com.lightframework.util.spring.web.SpringServletUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,15 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         //获取token
         String token = request.getHeader(authConfigProperties.getConfiguration().getTokenKey());
         if(token == null){ //header不存在从cookie中获取
-            Cookie[] cookies = request.getCookies();
-            if(cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals(authConfigProperties.getConfiguration().getTokenKey())) {
-                        token = cookie.getValue();
-                        break;
-                    }
-                }
-            }
+            token = SpringServletUtil.getCookie(authConfigProperties.getConfiguration().getTokenKey());
         }
 
         if(token!=null && token.startsWith(authConfigProperties.getTokenPrefix())) {

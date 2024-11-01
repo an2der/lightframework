@@ -29,11 +29,6 @@ public class DefaultAuthServiceImpl extends AuthService {
 
     @Override
     public UserInfo login(LoginParam loginParam) {
-        if(authConfigProperties.getConfiguration().getVerifyCode().isEnableVerifyCode()){
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-            VerifyCode verifyCode = (VerifyCode) request.getSession().getAttribute(VerifyCodeUtil.VERIFY_CODE);
-            validateCode(loginParam.getVerifyCode(),verifyCode);
-        }
         UsernamePasswordToken token = new UsernamePasswordToken(loginParam.getUsername(), loginParam.getPassword());
         token.setRememberMe(loginParam.getRememberMe());
         Subject subject = SecurityUtils.getSubject();
@@ -69,5 +64,11 @@ public class DefaultAuthServiceImpl extends AuthService {
         HttpSession httpSession = request.getSession();
         httpSession.setAttribute(VerifyCodeUtil.VERIFY_CODE,verifyCode);
         return verifyCode.getCode();
+    }
+
+    @Override
+    public VerifyCode getVerifyCode() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        return  (VerifyCode) request.getSession().getAttribute(VerifyCodeUtil.VERIFY_CODE);
     }
 }

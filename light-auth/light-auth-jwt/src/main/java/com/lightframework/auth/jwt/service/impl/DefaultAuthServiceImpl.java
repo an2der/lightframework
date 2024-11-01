@@ -6,6 +6,7 @@ import com.lightframework.auth.core.service.AuthService;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
 import com.lightframework.auth.jwt.util.JwtTokenUtil;
 import com.lightframework.common.BusinessException;
+import com.lightframework.util.serialize.SerializeUtil;
 import com.lightframework.util.spring.web.SpringServletUtil;
 import com.lightframework.util.verifycode.VerifyCode;
 import com.lightframework.util.verifycode.VerifyCodeUtil;
@@ -16,13 +17,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import java.nio.charset.StandardCharsets;
 
 @Service
 @ConditionalOnMissingBean(AuthService.class)
@@ -39,11 +37,6 @@ public class DefaultAuthServiceImpl extends AuthService {
 
     @Override
     public UserInfo login(LoginParam loginParam) {
-        if(authConfigProperties.getConfiguration().getVerifyCode().isEnableVerifyCode()){
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-            VerifyCode verifyCode = (VerifyCode) request.getSession().getAttribute(VerifyCodeUtil.VERIFY_CODE);
-            validateCode(loginParam.getVerifyCode(),verifyCode);
-        }
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginParam.getUsername(),loginParam.getPassword());
         try {
             Authentication authentication = authenticationManager.authenticate(token);
@@ -88,10 +81,20 @@ public class DefaultAuthServiceImpl extends AuthService {
 
     @Override
     public String generateVerifyCode() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         VerifyCode verifyCode = VerifyCodeUtil.createRandom(false,4,authConfigProperties.getConfiguration().getVerifyCode().getExpireTimeSecond());
-        HttpSession httpSession = request.getSession();
-        httpSession.setAttribute(VerifyCodeUtil.VERIFY_CODE,verifyCode);
+        HttpServletResponse response = SpringServletUtil.getResponse();
+        Cookie cookie = new Cookie(VerifyCodeUtil.VERIFY_CODE,new String(SerializeUtil.protostuffSerialize(verifyCode), StandardCharsets.ISO_8859_1));
+        cookie.setMaxAge(authConfigProperties.getConfiguration().getVerifyCode().getExpireTimeSecond() > 0?
+                authConfigProperties.getConfiguration().getVerifyCode().getExpireTimeSecond():Integer.MAX_VALUE);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return verifyCode.getCode();
+    }
+
+    @Override
+    public VerifyCode getVerifyCode() {
+        String code = SpringServletUtil.getCookie(VerifyCodeUtil.VERIFY_CODE);
+        return code == null?null:SerializeUtil.protostuffDeserialize(code.getBytes(StandardCharsets.ISO_8859_1), VerifyCode.class);
     }
 }
