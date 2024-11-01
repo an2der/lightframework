@@ -35,7 +35,6 @@ public class CommandExecutor {
         Process process = null;
         CommandResult result = new CommandResult();
         try {
-            log.info("开始执行命令["+command+"]");
             process = Runtime.getRuntime().exec(command.getCommand());
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), charset));
             StringBuilder stringBuilder = new StringBuilder();
@@ -68,10 +67,9 @@ public class CommandExecutor {
             }
             result.setExitVal(process.exitValue());
             result.setContent(stringBuilder.toString());
-            log.info("执行命令结束["+command+"]");
         } catch (Exception e) {
             result.setSuccess(false);
-            log.error("执行命令失败", e);
+            throw new RuntimeException(e);
         } finally {
             if (process != null) {
                 process.destroy();
