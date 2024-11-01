@@ -3,6 +3,8 @@ package com.lightframework.comm.tcp.server;
 import com.lightframework.comm.tcp.common.handler.FailMessageHandler;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
@@ -19,6 +21,8 @@ public class TcpServerManager {
 
     private final ConcurrentHashMap<String, Channel> CHANNELS = new ConcurrentHashMap<>();
 
+    private final String CLIENT_ID = "CLIENT_ID";
+
     private FailMessageHandler failMessageHandler;
 
     TcpServerManager(TcpServerConfig tcpServerConfig){
@@ -27,6 +31,7 @@ public class TcpServerManager {
 
     public void putChannel(String id,Channel channel){
         if(channel != null) {
+            channel.attr(AttributeKey.valueOf(CLIENT_ID)).set(id);
             CHANNELS.put(id, channel);
         }
     }
@@ -48,6 +53,11 @@ public class TcpServerManager {
 
     public Channel getChannel(String id){
         return CHANNELS.get(id);
+    }
+
+    public String getId(Channel channel){
+        Attribute<Object> attr = channel.attr(AttributeKey.valueOf(CLIENT_ID));
+        return attr == null?null:(String)attr.get();
     }
 
     public ChannelFuture sendMessage(Channel channel, Object message){

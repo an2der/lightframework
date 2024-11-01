@@ -23,7 +23,7 @@ public class TcpClientBuilder {
     @Autowired(required = false)
     private HeartBeatBuilder heartBeatBuilder;
 
-    @Bean
+    @Bean(TcpClientHolder.TCP_CLIENT_NAME)
     public TcpClient buildTcpClient(){
         TcpClientConfig tcpClientConfig = new TcpClientConfig();
         BeanUtils.copyProperties(tcpClientProperties,tcpClientConfig);

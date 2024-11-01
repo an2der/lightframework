@@ -5,13 +5,13 @@
     <parent>
         <artifactId>lightframework</artifactId>
         <groupId>com.lightframework</groupId>
-        <version>1.0.7</version>
+        <version>1.0.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <description>web实用工具</description>
     <modules>
         <module>light-util-excel</module>
-        <module>light-util-shell</module>
+        <module>light-util-command</module>
         <module>light-util-verifycode</module>
         <module>light-util-project</module>
         <module>light-util-io</module>
