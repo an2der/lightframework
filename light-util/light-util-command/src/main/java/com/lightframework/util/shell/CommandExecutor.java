@@ -23,11 +23,11 @@ public class CommandExecutor {
         return exec(command,Charset.forName("GBK"),0);
     }
 
-    public static CommandResult execWaitFor(CommandLine command, Charset charset){
+    public static CommandResult exec(CommandLine command, Charset charset){
         return exec(command,charset,0);
     }
 
-    public static CommandResult execWaitFor(CommandLine command, long waitTimeSeconds){
+    public static CommandResult exec(CommandLine command, long waitTimeSeconds){
         return exec(command,Charset.forName("GBK"),waitTimeSeconds);
     }
 
