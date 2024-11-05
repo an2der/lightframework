@@ -1,7 +1,5 @@
 package com.lightframework.util.net;
 
-import lombok.extern.slf4j.Slf4j;
-
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -13,7 +11,6 @@ import java.util.Enumeration;
  * @date 2022/6/14 13:31
  * @version 1.0
  */
-@Slf4j
 public class IPUtil {
 
     private IPUtil(){}
@@ -52,9 +49,8 @@ public class IPUtil {
             // 如果出去loopback回环地之外无其它地址了，那就回退到原始方案吧
             return candidateAddress == null ? InetAddress.getLocalHost() : candidateAddress;
         } catch (Exception e) {
-            log.error("获取本地IP发生异常",e);
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     /**
@@ -90,11 +86,11 @@ public class IPUtil {
             if (ipAddress.equals("127.0.0.1")
                     || ipAddress.equals("0:0:0:0:0:0:0:1")) {
                 // 根据网卡取本机配置的IP
-                InetAddress inet = null;
+                InetAddress inet;
                 try {
                     inet = InetAddress.getLocalHost();
                 } catch (UnknownHostException e) {
-                    log.error("获取远程IP发生异常",e);
+                    throw new RuntimeException(e);
                 }
                 ipAddress = inet.getHostAddress();
             }
@@ -108,4 +104,28 @@ public class IPUtil {
         }
         return ipAddress;
     }
+
+    public static String getMACAddress() {
+        try {
+            return getMACAddress(InetAddress.getLocalHost());
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String getMACAddress(InetAddress inetAddress) {
+        try {
+            NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
+            byte[] mac = networkInterface.getHardwareAddress();
+
+            StringBuilder macAddress = new StringBuilder();
+            for (int i = 0; i < mac.length; i++) {
+                macAddress.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+            }
+            return macAddress.toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

@@ -14,14 +14,10 @@ import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.*;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class SvnClient {
@@ -343,19 +339,19 @@ public class SvnClient {
     /**
      * 将文件导入并提交到svn 同路径文件要是已经存在将会报错
      *
-     * @param svnURL      远程根路径
-     * @param dirPath     文件所在文件夹的路径
+     * @param svnPath      远程根路径
+     * @param srcPath     文件所在文件夹的路径
      * @param isRecursive 是否递归
      * @throws SVNException svn异常
      */
-    public void doImport(String svnURL, String dirPath, boolean isRecursive, String commitMessage) throws SVNException {
+    public void doImport(String svnPath, String srcPath, boolean isRecursive, String commitMessage) throws SVNException {
         if (!lock.tryLock()) {
             throw new RuntimeException("正在执行其它任务!");
         }
         try {
-            SVNURL repositoryURL = SVNURL.parseURIEncoded(svnURL);
+            SVNURL repositoryURL = SVNURL.parseURIEncoded(svnUrl +(svnPath == null || svnPath.isEmpty()?"":(svnPath.startsWith("/")?"":"/")+ svnPath));
             // 要把此目录中的内容导入到版本库
-            File impDir = new File(dirPath);
+            File impDir = new File(srcPath);
             // 执行导入操作
             clientManager.getCommitClient().doImport(impDir, repositoryURL,
                     commitMessage, null,
@@ -365,6 +361,35 @@ public class SvnClient {
             clientManager.getCommitClient().getOperationsFactory().dispose();
             clientManager.dispose();
             lock.unlock();
+        }
+    }
+
+    public void doExport(String svnPath, String targetPath,long reversion) throws SVNException {
+        if (!lock.tryLock()) {
+            throw new RuntimeException("正在执行其它任务!");
+        }
+        try {
+            SVNURL repositoryURL = SVNURL.parseURIEncoded(svnUrl +(svnPath == null || svnPath.isEmpty()?"":(svnPath.startsWith("/")?"":"/")+ svnPath));
+            // 要把此目录中的内容导入到版本库
+            File targetFile = new File(targetPath);
+            clientManager.getUpdateClient().doExport(repositoryURL,targetFile,SVNRevision.create(reversion),SVNRevision.create(reversion),null,true,SVNDepth.INFINITY);
+        }finally {
+            clientManager.getUpdateClient().getOperationsFactory().dispose();
+            clientManager.dispose();
+            lock.unlock();
+        }
+    }
+
+    public boolean checkDirExist(String svnUrl,long revision) throws SVNException {
+        try {
+            Collection collection = svnRepository.getDir(svnUrl,revision,null,(Collection) null);
+            return true;
+        } catch (SVNException e) {
+            if(e.getErrorMessage().getErrorCode().getCode() == SVNErrorCode.FS_NOT_FOUND.getCode()
+                    ||e.getErrorMessage().getErrorCode().getCode() == SVNErrorCode.FS_NOT_DIRECTORY.getCode()){
+                return false;
+            }
+            throw e;
         }
     }
 
@@ -687,7 +712,7 @@ public class SvnClient {
             try {
                 SVNURL[] svnurls = new SVNURL[path.size()];
                 for (int i = 0; i < path.size(); i++) {
-                    svnurls[i] = SVNURL.parseURIEncoded(svnUrl + "/" + path.get(i));
+                    svnurls[i] = SVNURL.parseURIEncoded(svnUrl + (path.get(i).startsWith("/")?"":"/") + path.get(i));
                 }
                 clientManager.getCommitClient().doMkDir(svnurls, commitMessage, new SVNProperties(), true);
             } finally {
@@ -706,7 +731,7 @@ public class SvnClient {
             try {
                 SVNURL[] svnurls = new SVNURL[path.size()];
                 for (int i = 0; i < path.size(); i++) {
-                    svnurls[i] = SVNURL.parseURIEncoded(svnUrl + "/" + path.get(i));
+                    svnurls[i] = SVNURL.parseURIEncoded(svnUrl + (path.get(i).startsWith("/")?"":"/") + path.get(i));
                 }
                 clientManager.getCommitClient().doDelete(svnurls, commitMessage);
             } finally {
@@ -716,6 +741,7 @@ public class SvnClient {
             }
         }
     }
+
 }
 
 
