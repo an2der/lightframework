@@ -200,7 +200,7 @@ public class SvnClient {
                 List<File> allList = new ArrayList<>();
                 for (String path : filePath) {
                     File file = new File(localPath, path);
-                    clientManager.getStatusClient().doStatus(file, SVNRevision.WORKING, SVNDepth.INFINITY, false, false, false, true, new ISVNStatusHandler() {
+                    clientManager.getStatusClient().doStatus(file, SVNRevision.WORKING, SVNDepth.INFINITY, false, false, false, false, new ISVNStatusHandler() {
                         @Override
                         public void handleStatus(SVNStatus status) throws SVNException {
                             if (status.getNodeStatus() == SVNStatusType.STATUS_CONFLICTED || (ignores == null || Arrays.stream(ignores).noneMatch(s -> status.getFile().getPath().length() > rootPath.length() && status.getFile().getPath().substring(rootPath.length()).toLowerCase().indexOf(s.toLowerCase()) == 0))) {
@@ -409,7 +409,7 @@ public class SvnClient {
             try {
                 for (String path : filePath) {
                     File file = new File(localPath, path);
-                    clientManager.getStatusClient().doStatus(file, SVNRevision.WORKING, SVNDepth.INFINITY, false, false, false, true, new ISVNStatusHandler() {
+                    clientManager.getStatusClient().doStatus(file, SVNRevision.WORKING, SVNDepth.INFINITY, false, false, false, false, new ISVNStatusHandler() {
                         @Override
                         public void handleStatus(SVNStatus status) throws SVNException {
                             SVNStatusType mynodeStatus = status.getNodeStatus();
@@ -429,6 +429,13 @@ public class SvnClient {
                             } else if (mynodeStatus.equals(SVNStatusType.STATUS_DELETED)) {
                                 svnNode.setStatus(SvnNode.STATUS_DELETE);
                             } else if (mynodeStatus.equals(SVNStatusType.STATUS_UNVERSIONED)) {
+                                try {
+                                    if(!file.getPath().equals(file.getCanonicalPath())){
+                                        return;
+                                    }
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 svnNode.setStatus(SvnNode.STATUS_UNVERSIONED);
                                 clientManager.getWCClient().doAdd(status.getFile(), true, false, false, SVNDepth.INFINITY, false, false);
                                 if (svnNode.isDir()) {
@@ -519,11 +526,18 @@ public class SvnClient {
                 clientManager.getCommitClient().setEventHandler(handler);
                 File[] files = filePath.stream().map(s -> new File(localPath, s)).toArray(File[]::new);
                 for (File file : files) {
-                    clientManager.getStatusClient().doStatus(file, SVNRevision.WORKING, SVNDepth.INFINITY, false, false, false, true, new ISVNStatusHandler() {
+                    clientManager.getStatusClient().doStatus(file, SVNRevision.WORKING, SVNDepth.INFINITY, false, false, false, false, new ISVNStatusHandler() {
                         @Override
                         public void handleStatus(SVNStatus status) throws SVNException {
                             SVNStatusType mynodeStatus = status.getNodeStatus();
                             if (mynodeStatus.equals(SVNStatusType.STATUS_UNVERSIONED)) {
+                                try {
+                                    if(!status.getFile().getPath().equals(status.getFile().getCanonicalPath())){
+                                        return;
+                                    }
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 clientManager.getWCClient().doAdd(status.getFile(), true, false, false, SVNDepth.INFINITY, false, false);
                             } else if (mynodeStatus.equals(SVNStatusType.STATUS_MISSING)) {
                                 clientManager.getWCClient().doDelete(status.getFile(), true, false, false);
@@ -560,7 +574,7 @@ public class SvnClient {
         try {
             String rootPath = new File(localPath,File.separator).getPath();
             File localFilePath = new File(localPath);
-            clientManager.getStatusClient().doStatus(localFilePath, SVNRevision.WORKING, SVNDepth.INFINITY, false, false, false, true, new ISVNStatusHandler() {
+            clientManager.getStatusClient().doStatus(localFilePath, SVNRevision.WORKING, SVNDepth.INFINITY, false, false, false, false, new ISVNStatusHandler() {
                 @Override
                 public void handleStatus(SVNStatus status) {
                     if(status.getNodeStatus() == SVNStatusType.STATUS_CONFLICTED ||(ignores == null || Arrays.stream(ignores).noneMatch(s->status.getFile().getPath().length() > rootPath.length() && status.getFile().getPath().substring(rootPath.length()).toLowerCase().indexOf(s.toLowerCase()) == 0))) {
@@ -586,7 +600,7 @@ public class SvnClient {
             }
             try {
                 File file = new File(filePath);
-                clientManager.getStatusClient().doStatus(file.getParentFile(), SVNRevision.WORKING, SVNDepth.FILES, false, false, false, true, new ISVNStatusHandler() {
+                clientManager.getStatusClient().doStatus(file.getParentFile(), SVNRevision.WORKING, SVNDepth.FILES, false, false, false, false, new ISVNStatusHandler() {
                     @Override
                     public void handleStatus(SVNStatus status) {
                         if (status.getNodeStatus() == SVNStatusType.STATUS_NORMAL) {
@@ -641,7 +655,7 @@ public class SvnClient {
         AtomicInteger result = new AtomicInteger(0);
         try {
             File repoPath = new File(localPath);
-            clientManager.getStatusClient().doStatus(repoPath, SVNRevision.HEAD, SVNDepth.IMMEDIATES, true, true, false, true, new ISVNStatusHandler() {
+            clientManager.getStatusClient().doStatus(repoPath, SVNRevision.HEAD, SVNDepth.IMMEDIATES, true, true, false, false, new ISVNStatusHandler() {
                 @Override
                 public void handleStatus(SVNStatus status) {
                     try {

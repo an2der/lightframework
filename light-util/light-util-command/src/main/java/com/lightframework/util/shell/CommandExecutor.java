@@ -1,5 +1,6 @@
 package com.lightframework.util.shell;
 
+import cn.hutool.core.thread.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,7 @@ public class CommandExecutor {
             process = Runtime.getRuntime().exec(command.getCommand());
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), charset));
             StringBuilder stringBuilder = new StringBuilder();
-            new Thread(()->{
+            ThreadUtil.execute(()->{
                 String line;
                 try {
                     while ((line = bufferedReader.readLine()) != null) {
@@ -47,9 +48,9 @@ public class CommandExecutor {
                 }catch (Exception e){
                     log.error("执行命令是读取标准输入流发生异常",e);
                 }
-            }).start();
+            });
             BufferedReader errorBufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream(), charset));
-            new Thread(()->{
+            ThreadUtil.execute(()->{
                 String line;
                 try {
                     while ((line = errorBufferedReader.readLine()) != null){
@@ -59,7 +60,7 @@ public class CommandExecutor {
                 }catch (Exception e){
                     log.error("执行命令是读取标准异常流发生异常",e);
                 }
-            }).start();
+            });
             if(waitTimeSeconds > 0) {
                 process.waitFor(waitTimeSeconds, TimeUnit.SECONDS);
             }else {

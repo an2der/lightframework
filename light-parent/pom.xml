@@ -19,6 +19,13 @@
         <manifestClassPath>./</manifestClassPath>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-toolkit</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

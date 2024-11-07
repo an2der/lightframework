@@ -1,5 +1,6 @@
 package com.lightframework.comm.mqtt;
 
+import cn.hutool.core.thread.ThreadUtil;
 import com.lightframework.util.id.ShortSnowflakeId;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
@@ -52,25 +53,21 @@ public class MqttClientManager {
 
     private void reconnect(){
         if(!disconnected && mqttConfig.getReconnectInterval() > 0){
-            new Thread(){
-                {start();}
-                @Override
-                public void run() {
-                    while (!disconnected && !mqttClient.isConnected()){
-                        try {
-                            TimeUnit.SECONDS.sleep(mqttConfig.getReconnectInterval());
-                            if(!disconnected) {
-                                log.info(mqttConfig.getName() + "开始重连...");
-                                if (connect(true)) {
-                                    break;
-                                }
+            ThreadUtil.execute(() -> {
+                while (!disconnected && !mqttClient.isConnected()){
+                    try {
+                        TimeUnit.SECONDS.sleep(mqttConfig.getReconnectInterval());
+                        if(!disconnected) {
+                            log.info(mqttConfig.getName() + "开始重连...");
+                            if (connect(true)) {
+                                break;
                             }
-                        } catch (Exception e) {
-                            log.error(mqttConfig.getName()+" 重连时发生异常！",e);
                         }
+                    } catch (Exception e) {
+                        log.error(mqttConfig.getName()+" 重连时发生异常！",e);
                     }
                 }
-            };
+            });
         }
     }
 

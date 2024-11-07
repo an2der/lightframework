@@ -1,5 +1,6 @@
 package com.lightframework.comm.serial;
 
+import cn.hutool.core.thread.ThreadUtil;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
@@ -82,25 +83,21 @@ public class SerialPortManager {
 
     private void reconnect(){
         if(!closed && serialPortConfig.getReconnectInterval() > 0){
-            new Thread(){
-                {start();}
-                @Override
-                public void run() {
-                    while (!closed && !comPort.isOpen()){
-                        try {
-                            TimeUnit.SECONDS.sleep(serialPortConfig.getReconnectInterval());
-                            if(!closed) {
-                                log.info("串口：{} 开始重连...", serialPortConfig.getSerialPortName());
-                                if (open(true)) {
-                                    break;
-                                }
+            ThreadUtil.execute(() -> {
+                while (!closed && !comPort.isOpen()){
+                    try {
+                        TimeUnit.SECONDS.sleep(serialPortConfig.getReconnectInterval());
+                        if(!closed) {
+                            log.info("串口：{} 开始重连...", serialPortConfig.getSerialPortName());
+                            if (open(true)) {
+                                break;
                             }
-                        } catch (InterruptedException e) {
-                            log.error("串口："+serialPortConfig.getSerialPortName()+" 重连时发生异常！",e);
                         }
+                    } catch (InterruptedException e) {
+                        log.error("串口："+serialPortConfig.getSerialPortName()+" 重连时发生异常！",e);
                     }
                 }
-            };
+            });
         }
     }
 
