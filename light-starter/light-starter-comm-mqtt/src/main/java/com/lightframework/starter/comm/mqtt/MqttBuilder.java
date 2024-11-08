@@ -17,7 +17,7 @@ public class MqttBuilder {
     @Autowired(required = false)
     private MqttDataReceiver mqttDataReceiver;
 
-    @Bean
+    @Bean(MqttClientManagerHolder.MQTT_CLIENT_MANAGER_NAME)
     public MqttClientManager buildMqttClientManager(){
         properties.setMqttDataReceiver(mqttDataReceiver);
         return new MqttClientManager(properties);
