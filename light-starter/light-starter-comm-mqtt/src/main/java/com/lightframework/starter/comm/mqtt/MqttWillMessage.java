@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class WillMessage {
+public class MqttWillMessage {
     private String topic;
     private byte[] payload;
     private int qos;
