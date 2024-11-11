@@ -1,5 +1,6 @@
 package com.lightframework.comm.svn;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -380,6 +381,32 @@ public class SvnClient {
         }
     }
 
+    public SVNCommitInfo doRollback(long reversion) throws SVNException {
+        if (!lock.tryLock()) {
+            throw new RuntimeException("正在执行其它任务!");
+        }
+        try {
+            if(!isWorkingCopy()) {
+                throw new RuntimeException(localPath+" is not workingCopy!");
+            }
+            cleanLocalRepository(new File(localPath));
+            doExport("", localPath, reversion);
+            return doCommitAll(Arrays.asList(""), "rollback to revision: " + reversion, null);
+        }finally {
+            lock.unlock();
+        }
+    }
+
+    private void cleanLocalRepository(File repositoryFile){
+        //清空本地程序目录
+        for (File listFile : repositoryFile.listFiles()) {
+            if(listFile.getName().equals(".svn") && listFile.isDirectory()){
+                continue;
+            }
+            FileUtil.del(listFile);
+        }
+    }
+
     public boolean checkDirExist(String svnUrl,long revision) throws SVNException {
         try {
             Collection collection = svnRepository.getDir(svnUrl,revision,null,(Collection) null);
@@ -560,6 +587,7 @@ public class SvnClient {
         }
         return null;
     }
+
 
     /**
      * 本地是否有变更
