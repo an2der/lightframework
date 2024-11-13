@@ -206,8 +206,10 @@ public class SvnClient {
                         public void handleStatus(SVNStatus status) throws SVNException {
                             if (status.getNodeStatus() == SVNStatusType.STATUS_CONFLICTED || (ignores == null || Arrays.stream(ignores).noneMatch(s -> status.getFile().getPath().length() > rootPath.length() && status.getFile().getPath().substring(rootPath.length()).toLowerCase().indexOf(s.toLowerCase()) == 0))) {
                                 SVNStatusType mynodeStatus = status.getNodeStatus();
-                                if (deleteAddFile && mynodeStatus.equals(SVNStatusType.STATUS_UNVERSIONED)) {
-                                    delete(status.getFile(), rootPath, ignores, handler);
+                                if (mynodeStatus.equals(SVNStatusType.STATUS_UNVERSIONED)) {
+                                    if(deleteAddFile) {
+                                        delete(status.getFile(), rootPath, ignores, handler);
+                                    }
                                 } else if (mynodeStatus.equals(SVNStatusType.STATUS_ADDED)) {
                                     clientManager.getWCClient().doDelete(status.getFile(), true, true, false);
                                 } else {

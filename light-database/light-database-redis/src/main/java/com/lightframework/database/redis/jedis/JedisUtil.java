@@ -1550,7 +1550,7 @@ public class JedisUtil {
      * @param v
      * @return
      */
-    public Long hset(String key, String k, String v) {
+    public Long hsetStringValue(String key, String k, String v) {
         Jedis jedis = redisPool.getConnection();//获取连接,自动重连
         Long res = -1L;
         try{
@@ -1701,6 +1701,26 @@ public class JedisUtil {
             redisPool.close(jedis);
         }
         return object;
+    }
+
+    /**
+     * 取出 hash类型的一个对象
+     * @params  key 键
+     * @params  field 字段
+     * @returns 一个字符串
+     */
+    public String hgetStringValue(String key,String field){
+        Jedis jedis = redisPool.getConnection();//获取连接,自动重连
+        try{
+            if( jedis != null ){
+                return jedis.hget(key,field);
+            }
+        }catch (Exception e){
+            log.error("Jedis操作数据 异常 " + key + " , " + field, e);
+        }finally {
+            redisPool.close(jedis);
+        }
+        return null;
     }
     /**
      * 取出 hash类型的一个对象
