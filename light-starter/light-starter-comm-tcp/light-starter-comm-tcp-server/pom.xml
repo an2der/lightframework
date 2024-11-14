@@ -3,29 +3,32 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>light-starter</artifactId>
+        <artifactId>light-starter-comm-tcp</artifactId>
         <groupId>com.lightframework</groupId>
         <version>1.0.9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>light-starter-comm-tcp-client</artifactId>
+    <artifactId>light-starter-comm-tcp-server</artifactId>
 
     <properties>
     </properties>
-
     <dependencies>
         <dependency>
-            <groupId>com.lightframework</groupId>
-            <artifactId>light-comm-tcp-client</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
-            <artifactId>light-starter-comm-tcp-common</artifactId>
+            <artifactId>light-comm-tcp-server</artifactId>
         </dependency>
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-util-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-starter-comm-tcp-common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

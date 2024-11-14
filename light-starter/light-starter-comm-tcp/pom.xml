@@ -3,17 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>lightframework</artifactId>
+        <artifactId>light-starter</artifactId>
         <groupId>com.lightframework</groupId>
         <version>1.0.9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>light-starter-comm-tcp</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>light-starter-comm-mqtt</module>
-        <module>light-starter-simple-app</module>
-        <module>light-starter-comm-tcp</module>
+        <module>light-starter-comm-tcp-client</module>
+        <module>light-starter-comm-tcp-server</module>
+        <module>light-starter-comm-tcp-common</module>
     </modules>
-    <artifactId>light-starter</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
 
 </project>

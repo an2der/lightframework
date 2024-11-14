@@ -105,27 +105,21 @@ public class IPUtil {
         return ipAddress;
     }
 
-    public static String getMACAddress() {
-        try {
-            return getMACAddress(InetAddress.getLocalHost());
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static String getMACAddress(InetAddress inetAddress) {
         try {
             NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
             byte[] mac = networkInterface.getHardwareAddress();
-
-            StringBuilder macAddress = new StringBuilder();
-            for (int i = 0; i < mac.length; i++) {
-                macAddress.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+            if(mac != null && mac.length > 0) {
+                StringBuilder macAddress = new StringBuilder();
+                for (int i = 0; i < mac.length; i++) {
+                    macAddress.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+                }
+                return macAddress.toString();
             }
-            return macAddress.toString();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
 
 }
