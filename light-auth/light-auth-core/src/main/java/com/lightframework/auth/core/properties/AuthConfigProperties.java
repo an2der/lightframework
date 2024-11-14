@@ -75,7 +75,7 @@ public class AuthConfigProperties {
         private boolean enableVerifyCode = false;
 
         /**
-         * 验证码过期时间
+         * 验证码过期时间 单位：秒
          */
         private int expireTimeSecond = 60; //过期时间：秒
 
