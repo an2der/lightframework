@@ -28,7 +28,7 @@ public class TcpClientProperties {
     private int serverPort = 8070;
 
     /**
-     * 0: 默认使用CPU核心数*2的worker线程数
+     * 默认值0：使用CPU核心数*2的worker线程数
      */
     private int threadCount = 0;
 

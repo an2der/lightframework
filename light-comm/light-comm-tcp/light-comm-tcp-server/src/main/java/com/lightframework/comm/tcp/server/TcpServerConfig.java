@@ -29,7 +29,7 @@ public class TcpServerConfig {
     private int bossThreadCount = 1;
 
     /**
-     * 0: 默认使用CPU核心数*2的worker线程数
+     * 默认值0：使用CPU核心数*2的worker线程数
      */
     private int workThreadCount = 0;
 
