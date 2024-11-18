@@ -138,7 +138,7 @@ public class SvnClient {
      * @return 检出结果
      * @throws SVNException svn处理异常
      */
-    public void checkout(ISVNEventHandler handler,boolean allowUnversionedObstructions) throws SVNException {
+    public void checkout(long revision,ISVNEventHandler handler,boolean allowUnversionedObstructions) throws SVNException {
         try {
             lock.lock();
             // 相关变量赋值
@@ -150,9 +150,58 @@ public class SvnClient {
             updateClient.setIgnoreExternals(false);
             // 执行check out 操作，返回工作副本的版本号。
             updateClient.setEventHandler(handler);
-            updateClient.doCheckout(repositoryURL, wcDir, SVNRevision.HEAD, SVNRevision.HEAD, SVNDepth.INFINITY, allowUnversionedObstructions);
+            updateClient.doCheckout(repositoryURL, wcDir, SVNRevision.create(revision), SVNRevision.create(revision), SVNDepth.INFINITY, allowUnversionedObstructions);
         } finally {
             clientManager.getUpdateClient().getOperationsFactory().dispose();
+            clientManager.dispose();
+            lock.unlock();
+        }
+    }
+
+    /**
+     * 获取两个版本差异
+     * @param filePath 文件相对路径
+     * @param fromVersion
+     * @param toVersion
+     * @return
+     * @throws SVNException
+     */
+    public List<SvnNode> doCompareRevision(String filePath,long fromVersion,long toVersion) throws SVNException {
+        if (!lock.tryLock()) {
+            throw new RuntimeException("正在执行其它任务!");
+        }
+        try {
+            File repoPath = new File(localPath,filePath);
+            String parentPath = repoPath.getParent();
+            if(filePath.length() == 0 || filePath.equals(File.separator)){
+                parentPath = repoPath.getPath();
+            }
+            File parent = new File(parentPath);
+            List<SvnNode> svnTrees = new ArrayList<>();
+            clientManager.getDiffClient().doDiffStatus(repoPath, SVNRevision.create(fromVersion), repoPath, SVNRevision.create(toVersion), SVNDepth.INFINITY, false, new ISVNDiffStatusHandler() {
+                @Override
+                public void handleDiffStatus(SVNDiffStatus svnDiffStatus) throws SVNException {
+                    File file = new File(parent,svnDiffStatus.getPath());
+                    SvnNode svnNode = new SvnNode();
+                    svnNode.setPath(file.getPath());
+                    svnNode.setName(file.getName());
+                    svnNode.setParentPath(file.getParent());
+                    svnNode.setDir(svnDiffStatus.getKind() == SVNNodeKind.DIR);
+                    if (svnDiffStatus.getModificationType() == SVNStatusType.STATUS_DELETED) {
+                        svnNode.setStatus(SvnNode.STATUS_DELETE);
+                    }else if (svnDiffStatus.getModificationType() == SVNStatusType.STATUS_ADDED) {//如果新增是新增
+                        svnNode.setStatus(SvnNode.STATUS_ADD);
+                    }else if (svnDiffStatus.getModificationType() == SVNStatusType.STATUS_MODIFIED) {//如果是修改
+                        svnNode.setStatus(SvnNode.STATUS_MODIFY);
+                    }else{
+                        return;
+                    }
+                    svnTrees.add(svnNode);
+                }
+            });
+            return svnTrees;
+        } finally {
+            clientManager.getDiffClient().getOperationsFactory().dispose();
             clientManager.dispose();
             lock.unlock();
         }
@@ -629,7 +678,7 @@ public class SvnClient {
                 throw new RuntimeException("正在执行其它任务!");
             }
             try {
-                File file = new File(filePath);
+                File file = new File(localPath,filePath);
                 clientManager.getStatusClient().doStatus(file.getParentFile(), SVNRevision.WORKING, SVNDepth.FILES, false, false, false, false, new ISVNStatusHandler() {
                     @Override
                     public void handleStatus(SVNStatus status) {
@@ -660,17 +709,20 @@ public class SvnClient {
      * @return 执行结果
      */
     public SVNInfo doInfo(String filePath, SVNRevision revision) throws SVNException {
-        SVNInfo info = null;
+        if (!lock.tryLock()) {
+            throw new RuntimeException("正在执行其它任务!");
+        }
         try {
             File wcDir = new File(localPath,filePath);
             if (wcDir.exists()) {
-                info = clientManager.getWCClient().doInfo(wcDir, revision);
+                return clientManager.getWCClient().doInfo(wcDir, revision);
             }
         } finally {
             clientManager.getWCClient().getOperationsFactory().dispose();
             clientManager.dispose();
+            lock.unlock();
         }
-        return info;
+        return null;
     }
 
     /**
@@ -786,6 +838,200 @@ public class SvnClient {
         }
     }
 
+    /**
+     * 获取本地变更列表
+     * @param filePath
+     * @param ignores
+     * @return
+     * @throws SVNException
+     */
+    public List<SvnNode> getLocalStatus(List<String> filePath,String [] ignores) throws SVNException {
+        if (filePath != null && filePath.size() > 0) {
+            if (!lock.tryLock()) {
+                throw new RuntimeException("正在执行其它任务!");
+            }
+            try {
+                String rootPath = new File(localPath, File.separator).getPath();
+                // 获取此文件的状态（是文件做了修改还是新添加的文件？）
+                List<SvnNode> allList = new ArrayList<>();
+                for (String path : filePath) {
+                    File file = new File(localPath, path);
+                    clientManager.getStatusClient().doStatus(file, SVNRevision.WORKING, SVNDepth.INFINITY, false, false, false, true, new ISVNStatusHandler() {
+                        @Override
+                        public void handleStatus(SVNStatus status) {
+                            if (status.getNodeStatus() == SVNStatusType.STATUS_NORMAL) {
+                                return;
+                            }
+                            //排除掉文件冲突后生成的文件
+                            if (status.getNodeStatus() == SVNStatusType.STATUS_CONFLICTED || ((ignores == null || Arrays.stream(ignores).noneMatch(s -> status.getFile().getPath().length() > rootPath.length() && status.getFile().getPath().substring(rootPath.length()).toLowerCase().indexOf(s.toLowerCase()) == 0))
+                                    && (!status.getNodeStatus().equals(SVNStatusType.STATUS_UNVERSIONED) || allList.stream().noneMatch(v -> v.getStatus().equals(SvnNode.STATUS_CONFLICTED) && status.getFile().getName().contains(v.getName() + "."))))) {
+                                File file = status.getFile();
+                                SvnNode svnNode = new SvnNode();
+                                svnNode.setPath(file.getAbsolutePath());
+                                svnNode.setName(file.getName());
+                                svnNode.setParentPath(file.getParent());
+                                svnNode.setSize(file.length());
+                                svnNode.setSizeStr(DataSizeUtil.format(svnNode.getSize()));
+                                svnNode.setDate(new Date(file.lastModified()));
+                                SVNStatusType mynodeStatus = status.getNodeStatus();
+                                svnNode.setDir(mynodeStatus == SVNStatusType.STATUS_UNVERSIONED ? file.isDirectory() : status.getKind() != null && status.getKind() == SVNNodeKind.DIR);
+                                //如果是删除
+                                if (mynodeStatus.equals(SVNStatusType.STATUS_MISSING) || mynodeStatus.equals(SVNStatusType.STATUS_DELETED)) {
+                                    svnNode.setStatus(SvnNode.STATUS_DELETE);
+                                } else if (mynodeStatus.equals(SVNStatusType.STATUS_UNVERSIONED)) {
+                                    svnNode.setStatus(SvnNode.STATUS_UNVERSIONED);
+                                } else if (mynodeStatus.equals(SVNStatusType.STATUS_ADDED)) {//如果新增是新增
+                                    svnNode.setStatus(SvnNode.STATUS_ADD);
+                                } else if (mynodeStatus.equals(SVNStatusType.STATUS_MODIFIED)) {//如果是修改
+                                    svnNode.setStatus(SvnNode.STATUS_MODIFY);
+                                } else if (mynodeStatus.equals(SVNStatusType.STATUS_CONFLICTED)) {//如果是冲突
+                                    svnNode.setStatus(SvnNode.STATUS_CONFLICTED);
+                                } else {
+                                    return;
+                                }
+                                allList.add(svnNode);
+                            }
+                        }
+                    }, null);
+                }
+                return allList;
+            } finally {
+                clientManager.getStatusClient().getOperationsFactory().dispose();
+                clientManager.dispose();
+                lock.unlock();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取本地更新
+     * @return 树形结构
+     */
+    public List<SvnNode> getLocalModify(String relativePath) throws SVNException {
+        String svnPath = new File(localPath,relativePath).getPath();
+        List<SvnNode> localStatus = getLocalStatus(Arrays.asList(relativePath),null);
+        List<SvnNode> svnTrees = new ArrayList<>();
+        Map<String,SvnNode> searchMap = new HashMap<>(); //利用map数据结构以及搜索的优势快速查找定位指定路径SvnTree对象
+        SortedMap<String,List<SvnNode>> mergeMap = new TreeMap<>(new Comparator<String>() {//合并为TreeMap对象，保证路径最短最先处理
+            @Override
+            public int compare(String o1, String o2) {
+                int r = o1.length() - o2.length();
+                if(r == 0){
+                    return o1.compareTo(o2);
+                }
+                return r;
+            }
+        });
+        this.mergeMap(mergeMap,localStatus,svnPath);
+        for(Map.Entry<String,List<SvnNode>> entry:mergeMap.entrySet()){ //遍历本地变更的内容，创建父级SvnTree并维护树状结构
+            String path = entry.getKey();
+            List<SvnNode> child = entry.getValue();
+            for(SvnNode tree:child){
+                if(tree.isDir()){
+                    searchMap.put(("".equals(path)?"":path + File.separator) + tree.getName(),tree);
+                }
+            }
+            if("".equals(path)){
+                svnTrees = child;
+                continue;
+            }
+            SvnNode svnNode;
+            while (true) {
+                if ((svnNode = searchMap.get(path)) == null) { //文件路径反向遍历
+                    File file = new File(svnPath, path);
+                    svnNode = new SvnNode();
+                    svnNode.setName(file.getName());
+                    svnNode.setDir(file.isDirectory());
+                    svnNode.setPath(file.getAbsolutePath());
+                    svnNode.setSize(file.length());
+                    svnNode.setSizeStr(DataSizeUtil.format(svnNode.getSize()));
+                    svnNode.setDate(new Date(file.lastModified()));
+                    svnNode.setStatus(SvnNode.STATUS_MODIFY);
+                    svnNode.setChild(child);
+                    searchMap.put(path, svnNode);
+                    int sepIndex = path.lastIndexOf(File.separator);
+                    if (sepIndex > 0) {
+                        child = new ArrayList<>();
+                        child.add(svnNode);
+                        path = path.substring(0, sepIndex);
+                    } else {
+                        svnTrees.add(svnNode);
+                        break;
+                    }
+                } else {
+                    if (svnNode.getChild() == null) {
+                        svnNode.setChild(child);
+                    } else {
+                        svnNode.getChild().addAll(child);
+                    }
+                    break;
+                }
+            }
+        }
+        SvnNode.sort(svnTrees);
+        return svnTrees;
+    }
+
+    /**
+     * 将本地修改的文件创建为SvnTree对象，并合并路径
+     * @param map
+     * @param list
+     */
+    private void mergeMap(SortedMap<String,List<SvnNode>> map,List<SvnNode> list,String svnPath){
+        if(list != null && !list.isEmpty()) {
+            File localFile = new File(svnPath);
+            int rootIndex = localFile.getAbsolutePath().length() + 1;
+            list.forEach(file -> {
+                String path = file.getPath();
+                if(!file.equals(localFile.getAbsolutePath())) {
+                    int sepIndex = path.lastIndexOf(File.separator);
+                    String key = sepIndex > rootIndex ? path.substring(rootIndex, sepIndex) : "";
+                    if(file.getStatus().equals(SvnNode.STATUS_UNVERSIONED)){
+                        file.setStatus(SvnNode.STATUS_ADD);
+                        if(file.isDir()){
+                            file.setChild(getFileTree(new File(path),SvnNode.STATUS_ADD));
+                        }
+                    }
+                    List<SvnNode> svnFiles;
+                    if ((svnFiles = map.get(key)) == null) {
+                        svnFiles = new ArrayList<>();
+                        map.put(key, svnFiles);
+                    }
+                    svnFiles.add(file);
+                }
+            });
+        }
+    }
+
+    public List<SvnNode> getFileTree(File file) {
+        return this.getFileTree(file,null);
+    }
+
+    public List<SvnNode> getFileTree(File file,String status) {
+        List<SvnNode> baseTreeNodes = new ArrayList<>();
+        File[] childFiles = file.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return !".svn".equalsIgnoreCase(name);
+            }
+        });
+        if (childFiles != null) {
+            for (File listFile : childFiles) {
+                SvnNode svnNode = new SvnNode();
+                svnNode.setName(listFile.getName());
+                svnNode.setDir(listFile.isDirectory());
+                svnNode.setPath(listFile.getAbsolutePath());
+                svnNode.setSize(listFile.length());
+                svnNode.setSizeStr(DataSizeUtil.format(svnNode.getSize()));
+                svnNode.setDate(new Date(listFile.lastModified()));
+                svnNode.setStatus(status);
+                svnNode.setChild(getFileTree(listFile,status));
+                baseTreeNodes.add(svnNode);
+            }
+        }
+        return baseTreeNodes;
+    }
 }
 
 
