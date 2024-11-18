@@ -131,6 +131,9 @@ public class SvnClient {
         return result;
     }
 
+    public void checkout(ISVNEventHandler handler,boolean allowUnversionedObstructions) throws SVNException {
+        checkout(SVNRevision.HEAD,handler,allowUnversionedObstructions);
+    }
 
     /**
      * svn检出
@@ -138,7 +141,7 @@ public class SvnClient {
      * @return 检出结果
      * @throws SVNException svn处理异常
      */
-    public void checkout(long revision,ISVNEventHandler handler,boolean allowUnversionedObstructions) throws SVNException {
+    public void checkout(SVNRevision revision,ISVNEventHandler handler,boolean allowUnversionedObstructions) throws SVNException {
         try {
             lock.lock();
             // 相关变量赋值
@@ -150,7 +153,7 @@ public class SvnClient {
             updateClient.setIgnoreExternals(false);
             // 执行check out 操作，返回工作副本的版本号。
             updateClient.setEventHandler(handler);
-            updateClient.doCheckout(repositoryURL, wcDir, SVNRevision.create(revision), SVNRevision.create(revision), SVNDepth.INFINITY, allowUnversionedObstructions);
+            updateClient.doCheckout(repositoryURL, wcDir, revision, revision, SVNDepth.INFINITY, allowUnversionedObstructions);
         } finally {
             clientManager.getUpdateClient().getOperationsFactory().dispose();
             clientManager.dispose();
