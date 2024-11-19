@@ -1,7 +1,7 @@
 package com.lightframework.starter.comm.mqtt;
 
 import com.lightframework.comm.mqtt.MqttClientManager;
-import com.lightframework.util.spring.SpringBeanUtil;
+import com.lightframework.util.spring.SpringContextUtil;
 
 public class MqttClientManagerHolder {
 
@@ -11,7 +11,7 @@ public class MqttClientManagerHolder {
 
     public static MqttClientManager getMqttClientManager(){
         if(mqttClientManager == null){
-            mqttClientManager = (MqttClientManager) SpringBeanUtil.getBean(MQTT_CLIENT_MANAGER_NAME);
+            mqttClientManager = (MqttClientManager) SpringContextUtil.getBean(MQTT_CLIENT_MANAGER_NAME);
         }
         return mqttClientManager;
     }

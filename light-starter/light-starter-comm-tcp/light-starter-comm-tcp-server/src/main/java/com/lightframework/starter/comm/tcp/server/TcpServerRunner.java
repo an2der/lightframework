@@ -3,7 +3,7 @@ package com.lightframework.starter.comm.tcp.server;
 import com.lightframework.comm.tcp.common.handler.ChannelInitializationHandler;
 import com.lightframework.comm.tcp.server.TcpServer;
 import com.lightframework.comm.tcp.server.TcpServerConfig;
-import com.lightframework.util.spring.SpringBeanUtil;
+import com.lightframework.util.spring.SpringContextUtil;
 import com.lightframework.util.spring.SpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -32,7 +32,7 @@ public class TcpServerRunner implements CommandLineRunner {
             BeanUtils.copyProperties(tcpServerProperties,tcpServerConfig);
             tcpServerConfig.setInitializationHandler(channelInitializationHandler);
             tcpServer = TcpServer.start(tcpServerConfig);
-            SpringBeanUtil.registerBean(TcpServerManagerHolder.TCP_SERVER_MANAGER_NAME,tcpServer.getTcpServerManager());
+            SpringContextUtil.registerBean(TcpServerManagerHolder.TCP_SERVER_MANAGER_NAME,tcpServer.getTcpServerManager());
         }catch (Exception e){
             log.error(e.getMessage(),e.getCause());
             SpringContextUtil.exit();

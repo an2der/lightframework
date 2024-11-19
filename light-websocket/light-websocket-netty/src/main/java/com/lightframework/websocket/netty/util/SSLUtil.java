@@ -14,7 +14,7 @@ public class SSLUtil {
     public static SSLEngine createSSLEngine(String keystore,String password) throws Exception {
         InputStream ksInputStream = null;
         try {
-            ResourceLoader resourceLoader = SpringContextUtil.getContext();
+            ResourceLoader resourceLoader = SpringContextUtil.getApplicationContext();
             ksInputStream = resourceLoader.getResource(keystore).getInputStream();
             KeyStore ks = KeyStore.getInstance("JKS");
             ks.load(ksInputStream, password.toCharArray());
