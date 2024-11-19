@@ -17,6 +17,7 @@ spring:
 #    map-underscore-to-camel-case: true
 #logging:
 #  level:
+#    root: debug #开启debug日志
 #    com.lightframework.dao: debug #打印这个包下sql日志
 auth:
   intercept-url:

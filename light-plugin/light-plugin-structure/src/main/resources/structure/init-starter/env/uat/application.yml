@@ -15,9 +15,6 @@ spring:
 #  mapper-scan-package: ${daoPackage} #数据库mapper包路径，多个以逗号分割或使用通配符*
 #  configuration:
 #    map-underscore-to-camel-case: true
-#logging:
-#  level:
-#    com.lightframework.dao: debug #打印这个包下sql日志
 auth:
   intercept-url:
     includes:
