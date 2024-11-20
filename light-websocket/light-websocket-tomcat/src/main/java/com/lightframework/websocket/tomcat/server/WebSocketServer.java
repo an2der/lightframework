@@ -1,6 +1,6 @@
 package com.lightframework.websocket.tomcat.server;
 
-import com.alibaba.fastjson2.JSON;
+import cn.hutool.json.JSONUtil;
 import com.lightframework.websocket.common.constant.WebSocketMsgTypeConstants;
 import com.lightframework.websocket.common.model.TextWebSocketMessage;
 import com.lightframework.websocket.common.model.WebSocketMessage;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
 
 
 /** websocket Server
@@ -64,7 +63,7 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(String message, Session session) {
         try {
-            abstractWebSocketHandler.receive(session,JSON.parseObject(message,TextWebSocketMessage.class));
+            abstractWebSocketHandler.receive(session,JSONUtil.toBean(message,TextWebSocketMessage.class));
         }catch (Exception e){
             log.error("WebSocket Message发生异常 ", e);
         }

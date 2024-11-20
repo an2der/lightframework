@@ -1,6 +1,6 @@
 package com.lightframework.websocket.netty.server;
 
-import com.alibaba.fastjson2.JSON;
+import cn.hutool.json.JSONUtil;
 import com.lightframework.comm.tcp.server.TcpServerManager;
 import com.lightframework.websocket.common.model.WebSocketMessage;
 import io.netty.channel.Channel;
@@ -41,7 +41,7 @@ public class WebSocketManager {
     }
 
     public static ChannelFuture sendMessage(Channel channel, WebSocketMessage message){
-        return sendMessage(channel,JSON.toJSONString(message));
+        return sendMessage(channel,JSONUtil.toJsonStr(message));
     }
 
     /**
@@ -59,7 +59,7 @@ public class WebSocketManager {
      * 群发自定义消息
      */
     public static void sendMessageToAll(WebSocketMessage message){
-        String stringMessage = JSON.toJSONString(message);
+        String stringMessage = JSONUtil.toJsonStr(message);
         tcpServerManager.channels().entrySet().forEach(e->sendMessage(e.getValue(),stringMessage));
     }
 

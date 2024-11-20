@@ -1,7 +1,6 @@
 package com.lightframework.websocket.tomcat.server;
 
-import com.alibaba.fastjson2.JSON;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import cn.hutool.json.JSONUtil;
 import com.lightframework.websocket.common.model.WebSocketMessage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,7 +47,7 @@ public class WebSocketManager {
     }
 
     public static void sendMessage(Session session, WebSocketMessage message){
-        sendMessage(session,JSON.toJSONString(message));
+        sendMessage(session, JSONUtil.toJsonStr(message));
     }
 
     /**
@@ -71,7 +70,7 @@ public class WebSocketManager {
      */
     public static void sendMessageToAll(WebSocketMessage message){
         try {
-            String stringMessage = JSON.toJSONString(message);
+            String stringMessage = JSONUtil.toJsonStr(message);
             SESSIONS.entrySet().forEach(e->sendMessage(e.getValue(),stringMessage));
         } catch (Exception e) {
             log.error("WebSocket sendMessageToAll error!", e);
