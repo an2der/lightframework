@@ -56,4 +56,9 @@ public class WebSocketConfigProperties {
      */
     private int readerIdleTimeSeconds = 0;
 
+    /**
+     * 设置单次请求内容最大大小，默认64K
+     */
+    private int maxContentLength = 1024 * 64;
+
 }
