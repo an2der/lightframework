@@ -6,10 +6,14 @@ import com.lightframework.util.spring.SpringContextUtil;
 
 public class SecurityUtil {
 
+    private static UserInfoService userInfoService;
+
     private SecurityUtil(){}
 
     public static UserInfo getUserInfo(){
-        UserInfoService userInfoService = SpringContextUtil.getBean(UserInfoService.class);
+        if(userInfoService == null) {
+            userInfoService = SpringContextUtil.getBean(UserInfoService.class);
+        }
         return userInfoService != null?userInfoService.getUserInfo():null;
     }
 }
