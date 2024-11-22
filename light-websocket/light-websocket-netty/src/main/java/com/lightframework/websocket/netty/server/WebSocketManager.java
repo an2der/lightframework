@@ -2,6 +2,7 @@ package com.lightframework.websocket.netty.server;
 
 import cn.hutool.json.JSONUtil;
 import com.lightframework.comm.tcp.server.TcpServerManager;
+import com.lightframework.util.spring.web.SpringJacksonUtil;
 import com.lightframework.websocket.common.model.WebSocketMessage;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -19,6 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketManager {
 
     static TcpServerManager tcpServerManager;
+
+    static SpringJacksonUtil springJacksonUtil;
 
     private WebSocketManager(){}
 
@@ -41,7 +44,7 @@ public class WebSocketManager {
     }
 
     public static ChannelFuture sendMessage(Channel channel, WebSocketMessage message){
-        return sendMessage(channel,JSONUtil.toJsonStr(message));
+        return sendMessage(channel,springJacksonUtil.serialize(message));
     }
 
     /**
@@ -59,7 +62,7 @@ public class WebSocketManager {
      * 群发自定义消息
      */
     public static void sendMessageToAll(WebSocketMessage message){
-        String stringMessage = JSONUtil.toJsonStr(message);
+        String stringMessage = springJacksonUtil.serialize(message);
         tcpServerManager.channels().entrySet().forEach(e->sendMessage(e.getValue(),stringMessage));
     }
 

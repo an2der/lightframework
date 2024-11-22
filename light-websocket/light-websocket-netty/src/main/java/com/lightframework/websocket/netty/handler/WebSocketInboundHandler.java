@@ -1,6 +1,7 @@
 package com.lightframework.websocket.netty.handler;
 
 import cn.hutool.json.JSONUtil;
+import com.lightframework.util.spring.web.SpringJacksonUtil;
 import com.lightframework.websocket.common.constant.WebSocketMsgTypeConstants;
 import com.lightframework.websocket.common.model.TextWebSocketMessage;
 import com.lightframework.websocket.common.model.WebSocketMessage;
@@ -17,8 +18,11 @@ public class WebSocketInboundHandler extends SimpleChannelInboundHandler<TextWeb
 
     private AbstractWebSocketHandler abstractWebSocketHandler;
 
-    public WebSocketInboundHandler(AbstractWebSocketHandler abstractWebSocketHandler) {
+    private SpringJacksonUtil springJacksonUtil;
+
+    public WebSocketInboundHandler(AbstractWebSocketHandler abstractWebSocketHandler,SpringJacksonUtil springJacksonUtil) {
         this.abstractWebSocketHandler = abstractWebSocketHandler;
+        this.springJacksonUtil = springJacksonUtil;
     }
 
 
@@ -28,7 +32,7 @@ public class WebSocketInboundHandler extends SimpleChannelInboundHandler<TextWeb
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame textWebSocketFrame)  {
         try {
-            abstractWebSocketHandler.receive(ctx.channel(), JSONUtil.toBean(textWebSocketFrame.text(), TextWebSocketMessage.class));
+            abstractWebSocketHandler.receive(ctx.channel(), springJacksonUtil.deserialize(textWebSocketFrame.text(), TextWebSocketMessage.class));
         }catch (Exception e){
             log.error("WebSocket Message发生异常 ", e);
         }

@@ -1,6 +1,7 @@
 package com.lightframework.websocket.tomcat.server;
 
 import cn.hutool.json.JSONUtil;
+import com.lightframework.util.spring.web.SpringJacksonUtil;
 import com.lightframework.websocket.common.model.WebSocketMessage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,6 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketManager {
 
     private static final ConcurrentHashMap<String, Session> SESSIONS = new ConcurrentHashMap<>();
+
+    static SpringJacksonUtil springJacksonUtil;
 
     private WebSocketManager(){}
 
@@ -47,7 +50,7 @@ public class WebSocketManager {
     }
 
     public static void sendMessage(Session session, WebSocketMessage message){
-        sendMessage(session, JSONUtil.toJsonStr(message));
+        sendMessage(session, springJacksonUtil.serialize(message));
     }
 
     /**
@@ -70,7 +73,7 @@ public class WebSocketManager {
      */
     public static void sendMessageToAll(WebSocketMessage message){
         try {
-            String stringMessage = JSONUtil.toJsonStr(message);
+            String stringMessage = springJacksonUtil.serialize(message);
             SESSIONS.entrySet().forEach(e->sendMessage(e.getValue(),stringMessage));
         } catch (Exception e) {
             log.error("WebSocket sendMessageToAll error!", e);

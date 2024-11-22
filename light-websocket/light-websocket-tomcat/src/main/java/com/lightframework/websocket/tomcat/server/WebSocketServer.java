@@ -1,6 +1,7 @@
 package com.lightframework.websocket.tomcat.server;
 
 import cn.hutool.json.JSONUtil;
+import com.lightframework.util.spring.web.SpringJacksonUtil;
 import com.lightframework.websocket.common.constant.WebSocketMsgTypeConstants;
 import com.lightframework.websocket.common.model.TextWebSocketMessage;
 import com.lightframework.websocket.common.model.WebSocketMessage;
@@ -25,8 +26,13 @@ public class WebSocketServer {
     private static AbstractWebSocketHandler abstractWebSocketHandler;
 
     @Autowired
-    public void setAbstractWebSocketHandler(AbstractWebSocketHandler abstractWebSocketHandler) {
+    private void setAbstractWebSocketHandler(AbstractWebSocketHandler abstractWebSocketHandler) {
         WebSocketServer.abstractWebSocketHandler = abstractWebSocketHandler;
+    }
+
+    @Autowired
+    private void setSpringJacksonUtil(SpringJacksonUtil springJacksonUtil){
+        WebSocketManager.springJacksonUtil = springJacksonUtil;
     }
 
     /**
@@ -63,7 +69,7 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(String message, Session session) {
         try {
-            abstractWebSocketHandler.receive(session,JSONUtil.toBean(message,TextWebSocketMessage.class));
+            abstractWebSocketHandler.receive(session,WebSocketManager.springJacksonUtil.deserialize(message,TextWebSocketMessage.class));
         }catch (Exception e){
             log.error("WebSocket Message发生异常 ", e);
         }

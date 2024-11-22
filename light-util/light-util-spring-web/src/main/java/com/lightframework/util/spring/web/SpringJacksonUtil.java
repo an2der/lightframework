@@ -16,7 +16,7 @@ public class SpringJacksonUtil {
     private static ObjectMapper objectMapper;
 
     @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper){
+    private void setObjectMapper(ObjectMapper objectMapper){
         SpringJacksonUtil.objectMapper = objectMapper;
     }
 

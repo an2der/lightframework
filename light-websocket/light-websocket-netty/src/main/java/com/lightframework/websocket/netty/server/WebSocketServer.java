@@ -4,6 +4,7 @@ package com.lightframework.websocket.netty.server;
 import com.lightframework.comm.tcp.server.TcpServer;
 import com.lightframework.comm.tcp.server.TcpServerConfig;
 import com.lightframework.util.spring.SpringContextUtil;
+import com.lightframework.util.spring.web.SpringJacksonUtil;
 import com.lightframework.websocket.netty.handler.AbstractWebSocketHandler;
 import com.lightframework.websocket.netty.handler.WebSocketInboundHandler;
 import com.lightframework.websocket.netty.properties.WebSocketConfigProperties;
@@ -41,6 +42,9 @@ public class WebSocketServer implements ApplicationRunner, ApplicationListener<C
     @Autowired
     private ServerProperties serverProperties;
 
+    @Autowired
+    private SpringJacksonUtil springJacksonUtil;
+
     private TcpServer tcpServer;
 
 
@@ -62,12 +66,13 @@ public class WebSocketServer implements ApplicationRunner, ApplicationListener<C
             // websocket服务器处理的协议，用于指定给客户端连接访问的路由
             socketChannel.pipeline().addLast(new WebSocketServerProtocolHandler(webSocketConfigProperties.getWebsocketPath()));
             // 业务事件处理
-            socketChannel.pipeline().addLast(new WebSocketInboundHandler(abstractWebSocketHandler));
+            socketChannel.pipeline().addLast(new WebSocketInboundHandler(abstractWebSocketHandler,springJacksonUtil));
         });
         try {
             log.info("{}服务请求地址：{}",tcpServerConfig.getName(),webSocketConfigProperties.getWebsocketPath());
             tcpServer = TcpServer.start(tcpServerConfig);
             WebSocketManager.tcpServerManager = tcpServer.getTcpServerManager();
+            WebSocketManager.springJacksonUtil = springJacksonUtil;
         }catch (Exception e){
             log.error(e.getMessage(),e.getCause());
             SpringContextUtil.exit();

@@ -13,6 +13,8 @@ public class WebSocketMessage<T> {
 
     private T payload;
 
+    public WebSocketMessage(){}
+
     public WebSocketMessage(long seq,int type, T payload) {
         this.seq = seq;
         this.type = type;
