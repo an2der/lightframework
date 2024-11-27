@@ -8,7 +8,7 @@ public class SerializeUtil {
 
     private SerializeUtil(){}
 
-    public static <T> byte[] protostuffSerialize(T obj){
+    public static byte[] protostuffSerialize(Object obj){
         return ProtostuffUtil.serialize(obj);
     }
 
