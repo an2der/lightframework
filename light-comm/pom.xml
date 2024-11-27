@@ -17,6 +17,7 @@
         <module>light-comm-tcp</module>
         <module>light-comm-mqtt</module>
         <module>light-comm-svn</module>
+        <module>light-comm-udp</module>
     </modules>
     <artifactId>light-comm</artifactId>
 

@@ -13,6 +13,7 @@
         <module>light-starter-comm-mqtt</module>
         <module>light-starter-simple-app</module>
         <module>light-starter-comm-tcp</module>
+        <module>light-starter-comm-udp</module>
     </modules>
     <artifactId>light-starter</artifactId>
 

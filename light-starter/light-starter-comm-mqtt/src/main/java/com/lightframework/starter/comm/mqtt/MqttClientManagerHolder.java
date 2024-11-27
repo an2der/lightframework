@@ -11,7 +11,7 @@ public class MqttClientManagerHolder {
 
     public static MqttClientManager getMqttClientManager(){
         if(mqttClientManager == null){
-            mqttClientManager = (MqttClientManager) SpringContextUtil.getBean(MQTT_CLIENT_MANAGER_NAME);
+            mqttClientManager = SpringContextUtil.getBean(MQTT_CLIENT_MANAGER_NAME);
         }
         return mqttClientManager;
     }

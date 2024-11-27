@@ -11,7 +11,7 @@ public class TcpServerManagerHolder {
 
     public static TcpServerManager getTcpServerManager(){
         if(tcpServerManager == null){
-            tcpServerManager = (TcpServerManager) SpringContextUtil.getBean(TCP_SERVER_MANAGER_NAME);
+            tcpServerManager = SpringContextUtil.getBean(TCP_SERVER_MANAGER_NAME);
         }
         return tcpServerManager;
     }

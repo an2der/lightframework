@@ -1693,7 +1693,7 @@ public class JedisUtil {
         try{
             if( jedis != null ){
                 byte[] bytes = jedis.hget(key.getBytes(StandardCharsets.UTF_8),field.getBytes(StandardCharsets.UTF_8));
-                if (bytes != null && bytes.length > 0) object = SerializeUtil.protostuffDeserialize(bytes, clazz);
+                if (bytes != null && bytes.length > 0) object = SerializeUtil.protostuffDeserialize(bytes);
             }
         }catch (Exception e){
             log.error("Jedis操作数据 异常 " + key + " , " + field+ " , " + clazz, e);
@@ -1735,7 +1735,7 @@ public class JedisUtil {
         try{
             if( jedis != null ){
                 byte[] bytes = jedis.hget(key.getBytes(StandardCharsets.UTF_8),ByteBuffer.allocate(4).putInt(field).array());
-                if (bytes != null && bytes.length > 0) object = SerializeUtil.protostuffDeserialize(bytes, clazz);
+                if (bytes != null && bytes.length > 0) object = SerializeUtil.protostuffDeserialize(bytes);
             }
         }catch (Exception e){
             log.error("Jedis操作数据 异常 " + key + " , " + field+ " , " + clazz, e);
@@ -1835,6 +1835,27 @@ public class JedisUtil {
                 byte[] bk = key.getBytes(StandardCharsets.UTF_8);//redis的key
                 Map<byte[],byte[]> valueMap = new HashMap<>();
                 map.forEach((k,v)-> valueMap.put(k.getBytes(StandardCharsets.UTF_8), JacksonUtil.serialize(v)));
+                res = jedis.hmset(bk,valueMap);
+                if( "OK".equals(res) && seconds > 0L ){//存入成功
+                    jedis.expire(bk, seconds);//设置有效时间
+                }
+            }
+        }catch (Exception e){
+            log.error("Jedis操作数据 异常 " + key + " , " + map, e);
+        }finally {
+            redisPool.close(jedis);
+        }
+        return res;
+    }
+
+    public <T>String hmsetStringFieldSerializeValue(String key, Map<String,T> map,final long seconds){
+        String res = "FAIL";
+        Jedis jedis = redisPool.getConnection();//获取连接,自动重连
+        try{
+            if( jedis != null ){
+                byte[] bk = key.getBytes(StandardCharsets.UTF_8);//redis的key
+                Map<byte[],byte[]> valueMap = new HashMap<>();
+                map.forEach((k,v)-> valueMap.put(k.getBytes(StandardCharsets.UTF_8), SerializeUtil.protostuffSerialize(v)));
                 res = jedis.hmset(bk,valueMap);
                 if( "OK".equals(res) && seconds > 0L ){//存入成功
                     jedis.expire(bk, seconds);//设置有效时间
@@ -2045,6 +2066,25 @@ public class JedisUtil {
         }
         return resMap;
     }
+
+    public <T> ConcurrentHashMap<String,T> hgetStringFieldSerializeValue(String key, Class<T> clazz) {
+        ConcurrentHashMap<String,T> resMap = null;
+        Jedis jedis = redisPool.getConnection();//获取连接,自动重连
+        try {
+            if( jedis != null ){
+                Map<byte[], byte[]> map = jedis.hgetAll(key.getBytes(StandardCharsets.UTF_8));
+                if (map == null) return null;
+                ConcurrentHashMap<String, T> resultMap = new ConcurrentHashMap<>();
+                map.forEach((k, v) -> resultMap.put(new String(k, StandardCharsets.UTF_8), SerializeUtil.protostuffDeserialize(v)));
+                resMap = resultMap;
+            }
+        }catch (Exception e){
+            log.error("Jedis操作数据 异常 " + key + " , " + clazz, e);
+        }finally {
+            redisPool.close(jedis);
+        }
+        return resMap;
+    }
     /**
      * 取出 hash类型的 对象集合
      * @params  key 键
@@ -2060,7 +2100,7 @@ public class JedisUtil {
                 Map<byte[], byte[]> map = jedis.hgetAll(key.getBytes(StandardCharsets.UTF_8));
                 if(map == null) return null;
                 ConcurrentHashMap<Integer,T> resultMap = new ConcurrentHashMap<>();
-                map.forEach((k,v)-> resultMap.put(ByteBuffer.wrap(k).getInt(),SerializeUtil.protostuffDeserialize(v,clazz)));
+                map.forEach((k,v)-> resultMap.put(ByteBuffer.wrap(k).getInt(),SerializeUtil.protostuffDeserialize(v)));
                 resMap = resultMap;
             }
         }catch (Exception e){
@@ -2790,7 +2830,7 @@ public class JedisUtil {
         try{
             if( jedis != null ){
                 byte[] bytes = jedis.get(key.getBytes(StandardCharsets.UTF_8));
-                res = SerializeUtil.protostuffDeserialize(bytes, clazz);
+                res = SerializeUtil.protostuffDeserialize(bytes);
             }
         }catch (Exception e){
             log.error("Jedis操作数据 异常 " + key + " , " + clazz, e);

@@ -159,6 +159,11 @@
                 <artifactId>light-comm-svn</artifactId>
                 <version>1.0.12</version>
             </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-udp</artifactId>
+                <version>1.0.12</version>
+            </dependency>
 
             <!-- light-common -->
             <dependency>
@@ -223,6 +228,11 @@
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-starter-comm-tcp-common</artifactId>
+                <version>1.0.12</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-starter-comm-udp</artifactId>
                 <version>1.0.12</version>
             </dependency>
             <!-- light-system-log -->

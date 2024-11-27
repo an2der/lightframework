@@ -17,14 +17,11 @@ public class MqttBuilder {
     @Autowired(required = false)
     private MqttDataReceiver mqttDataReceiver;
 
-    @Autowired(required = false)
-    private MqttWillMessage mqttWillMessage;
-
     @Bean(MqttClientManagerHolder.MQTT_CLIENT_MANAGER_NAME)
     public MqttClientManager buildMqttClientManager(){
         properties.setMqttDataReceiver(mqttDataReceiver);
-        if(mqttWillMessage != null) {
-            properties.setWill(mqttWillMessage.getTopic(), mqttWillMessage.getPayload(), mqttWillMessage.getQos(), mqttWillMessage.isRetained());
+        if(properties.getWillMsg() != null) {
+            properties.setWill(properties.getWillMsg().getTopic(), properties.getWillMsg().getPayload().getBytes(), properties.getWillMsg().getQos(), properties.getWillMsg().isRetained());
         }
         return new MqttClientManager(properties);
     }

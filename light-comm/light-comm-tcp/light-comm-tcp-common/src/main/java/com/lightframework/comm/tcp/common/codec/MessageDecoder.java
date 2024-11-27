@@ -17,7 +17,8 @@ public class MessageDecoder extends ByteToMessageDecoder {
         try {
             byte[] body = new byte[in.readableBytes()];
             in.readBytes(body);
-            list.add(ProtostuffUtil.deserialize(body, Message.class));
+            Message message = ProtostuffUtil.deserialize(body);
+            list.add(message);
         } catch (Exception e) {
             log.error("netty消息解码器发生异常",e);
         }

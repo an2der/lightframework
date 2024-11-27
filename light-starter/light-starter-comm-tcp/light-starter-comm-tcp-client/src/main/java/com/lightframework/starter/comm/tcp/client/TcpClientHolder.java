@@ -11,7 +11,7 @@ public class TcpClientHolder {
 
     public static TcpClient getTcpClient(){
         if(tcpClient == null){
-            tcpClient = (TcpClient) SpringContextUtil.getBean(TCP_CLIENT_NAME);
+            tcpClient = SpringContextUtil.getBean(TCP_CLIENT_NAME);
         }
         return tcpClient;
     }

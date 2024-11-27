@@ -95,6 +95,6 @@ public class DefaultAuthServiceImpl extends AuthService {
     @Override
     public VerifyCode getVerifyCode() {
         String code = SpringServletUtil.getCookie(VerifyCodeUtil.VERIFY_CODE);
-        return code == null?null:SerializeUtil.protostuffDeserialize(code.getBytes(StandardCharsets.ISO_8859_1), VerifyCode.class);
+        return code == null?null:SerializeUtil.protostuffDeserialize(code.getBytes(StandardCharsets.ISO_8859_1));
     }
 }

@@ -310,7 +310,7 @@ public class QueueUtil {
         byte[] destinationKey = destination.getBytes(StandardCharsets.UTF_8);
         int timeout = 0;//阻塞等待超时时间毫秒数,0无限等待
         byte[] bytes = JedisUtil.use(redisName).brpoplpush(sourceKey,destinationKey,timeout);
-        return SerializeUtil.protostuffDeserialize(bytes, clazz);
+        return SerializeUtil.protostuffDeserialize(bytes);
     }
 
     /**

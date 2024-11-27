@@ -37,7 +37,7 @@ public abstract class ObjectJedisPubSub<T> extends BinaryJedisPubSub {
     public void onMessage(byte[] channel, byte[] message) {
         log.debug("ObjectJedisPubSub 订阅消息到达 channel={} message={}",new String(channel),message);
         String topic = new String(channel, Charset.forName("UTF-8"));
-        T object = SerializeUtil.protostuffDeserialize(message, getClazz());
+        T object = SerializeUtil.protostuffDeserialize(message);
         this.onMessage(topic, object);
     }
 

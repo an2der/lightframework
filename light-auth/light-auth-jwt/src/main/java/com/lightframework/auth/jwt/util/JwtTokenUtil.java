@@ -48,7 +48,7 @@ public class JwtTokenUtil {
     public JwtUserInfo getUserInfo(Claims claims){
         String userinfo = String.valueOf(claims.get(USERINFO));
         if(userinfo != null){
-            return SerializeUtil.protostuffDeserialize(userinfo.getBytes(StandardCharsets.ISO_8859_1),JwtUserInfo.class);
+            return SerializeUtil.protostuffDeserialize(userinfo.getBytes(StandardCharsets.ISO_8859_1));
         }
         return null;
     }

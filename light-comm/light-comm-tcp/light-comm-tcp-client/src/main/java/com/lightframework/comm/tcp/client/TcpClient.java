@@ -9,6 +9,8 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -53,7 +55,8 @@ public class TcpClient {
                 ChannelFuture future = bootstrap.connect().sync();
                 if (future.isSuccess()) {
                     channel = future.channel();
-                    log.info("{}连接服务端成功！Remote Server IP:{},PORT:{}",clientConfig.getName(),clientConfig.getServerHost(), clientConfig.getServerPort());
+                    InetSocketAddress socketAddress = (InetSocketAddress) channel.localAddress();
+                    log.info("{}连接服务端成功！LocalPort:{};Remote Server IP:{},PORT:{}",clientConfig.getName(),socketAddress.getPort(),clientConfig.getServerHost(), clientConfig.getServerPort());
                     return true;
                 }
             } catch (Exception e) {
@@ -73,7 +76,7 @@ public class TcpClient {
 
     public ChannelFuture sendMessage(Object message){
         if(this.channel == null){
-            return null;
+            throw new RuntimeException(clientConfig.getName()+"服务没有启动！");
         }
         ChannelFuture channelFuture = this.channel.writeAndFlush(message);
         channelFuture.addListener(failMessageHandler);
@@ -85,6 +88,7 @@ public class TcpClient {
         if(this.channel != null) {
             this.disconnected = true;
             this.channel.close();//关闭TCP连接
+            this.channel = null;
         }
     }
 

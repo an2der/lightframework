@@ -12,8 +12,8 @@ public class SerializeUtil {
         return ProtostuffUtil.serialize(obj);
     }
 
-    public static <T> T protostuffDeserialize(byte[] data, Class<T> clazz) {
-        return ProtostuffUtil.deserialize(data, clazz);
+    public static <T> T protostuffDeserialize(byte[] data) {
+        return ProtostuffUtil.deserialize(data);
     }
 
     public static byte[] javaSerialize(Serializable obj){
