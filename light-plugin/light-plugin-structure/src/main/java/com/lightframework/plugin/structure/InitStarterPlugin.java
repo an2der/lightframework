@@ -1,5 +1,6 @@
 package com.lightframework.plugin.structure;
 
+import com.lightframework.common.LightException;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -38,14 +39,14 @@ public class InitStarterPlugin extends AbstractMojo {
             JarUtil.extract("structure/init-starter",new File(basedir,"src/main").getAbsolutePath(),false);
             addDependency();
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new LightException(e.getMessage());
         }
     }
 
     private void addDependency(){
         File pomFile = new File(basedir,"pom.xml");
         if(!pomFile.exists()){
-            throw new RuntimeException(pomFile.getAbsolutePath() + " file does not exist!");
+            throw new LightException(pomFile.getAbsolutePath() + " file does not exist!");
         }
         FileInputStream fileInputStream = null;
         Model model;
@@ -53,7 +54,7 @@ public class InitStarterPlugin extends AbstractMojo {
             fileInputStream = new FileInputStream(pomFile);
             model = new MavenXpp3Reader().read(fileInputStream);
         } catch (Exception e) {
-            throw new RuntimeException("Parse pom.xml error in " + pomFile.getAbsolutePath(),e);
+            throw new LightException("Parse pom.xml error in " + pomFile.getAbsolutePath(),e);
         }finally {
             try {
                 if(fileInputStream != null){
@@ -64,7 +65,7 @@ public class InitStarterPlugin extends AbstractMojo {
         }
         boolean existLightCore = false;
         String lightGroupId = "com.lightframework";
-        String lightArtifactId = "light-core";
+        String lightArtifactId = "light-web-core";
         for (Dependency dependency : model.getDependencies()) {
             if(lightArtifactId.equals(dependency.getArtifactId()) && lightGroupId.equals(dependency.getGroupId())){
                 existLightCore = true;
@@ -81,7 +82,7 @@ public class InitStarterPlugin extends AbstractMojo {
                 outputStream = new FileOutputStream(pomFile);
                 writer.write(outputStream, model);
             } catch (Exception e) {
-                throw new RuntimeException("Error Write to pom.xml file " + pomFile.getAbsolutePath(),e);
+                throw new LightException("Error Write to pom.xml file " + pomFile.getAbsolutePath(),e);
             } finally {
                 if (outputStream != null) {
                     try {

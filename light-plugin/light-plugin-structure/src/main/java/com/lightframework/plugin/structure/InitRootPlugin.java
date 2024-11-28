@@ -1,5 +1,6 @@
 package com.lightframework.plugin.structure;
 
+import com.lightframework.common.LightException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -32,7 +33,7 @@ public class InitRootPlugin extends AbstractMojo {
             }
             JarUtil.extract("structure/init-root",basedir,false);
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new LightException(e.getMessage());
         }
     }
 
