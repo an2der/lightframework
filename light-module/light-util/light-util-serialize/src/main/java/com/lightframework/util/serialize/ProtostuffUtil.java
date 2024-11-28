@@ -21,7 +21,7 @@ public class ProtostuffUtil {
      * @return
      */
     public static byte[] serialize(Object obj) {
-        if(Modifier.isPublic(obj.getClass().getModifiers())){
+        if(!Modifier.isPublic(obj.getClass().getModifiers())){
             throw new LightException("对象不是公共类，无法被序列化");
         }
         LinkedBuffer buffer = LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE);
