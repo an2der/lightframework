@@ -49,7 +49,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 try {
                     JwtUserInfo jwtUserInfo = jwtTokenUtil.getUserInfo(claims);
                     //存入SecurityContextHolder
-                    SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(jwtUserInfo, null, jwtUserInfo.getAuthorities()));
+                    if(jwtUserInfo != null) {
+                        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(jwtUserInfo, null, jwtUserInfo.getAuthorities()));
+                    }
                 }catch (Exception e){
                     log.error("JWT检查用户登录状态时发生异常",e);
                 }
