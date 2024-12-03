@@ -1,6 +1,5 @@
 package com.lightframework.websocket.netty.server;
 
-import cn.hutool.json.JSONUtil;
 import com.lightframework.comm.tcp.server.TcpServerManager;
 import com.lightframework.util.spring.web.SpringJacksonUtil;
 import com.lightframework.websocket.common.model.WebSocketMessage;

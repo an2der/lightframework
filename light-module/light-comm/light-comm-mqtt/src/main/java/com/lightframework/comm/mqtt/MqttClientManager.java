@@ -14,12 +14,27 @@ public class MqttClientManager {
 
     private MqttConfig mqttConfig;
 
+    private MqttConnectOptions mqttConnectOptions;
+
     private MqttClient mqttClient;
 
     private volatile boolean disconnected = false;
 
     public MqttClientManager(MqttConfig mqttConfig){
         this.mqttConfig = mqttConfig;
+        this.mqttConnectOptions = new MqttConnectOptions();
+        this.mqttConnectOptions.setUserName(mqttConfig.getUsername());
+        this.mqttConnectOptions.setPassword(mqttConfig.getPassword().toCharArray());
+        this.mqttConnectOptions.setKeepAliveInterval(mqttConfig.getKeepAliveInterval());
+        this.mqttConnectOptions.setMaxInflight(mqttConfig.getMaxInflight());
+        this.mqttConnectOptions.setConnectionTimeout(mqttConfig.getConnectionTimeout());
+        this.mqttConnectOptions.setAutomaticReconnect(false);//关闭mqttClient自带的重连
+        this.mqttConnectOptions.setCleanSession(true);
+        this.mqttConnectOptions.setHttpsHostnameVerificationEnabled(false);
+        if(mqttConfig.getWillMessage() != null) {
+            this.mqttConnectOptions.setWill(mqttConfig.getWillMessage().getTopic(), mqttConfig.getWillMessage().getPayload().getBytes()
+                    , mqttConfig.getWillMessage().getQos(), mqttConfig.getWillMessage().isRetained());
+        }
     }
 
     public boolean connect(){
@@ -30,17 +45,17 @@ public class MqttClientManager {
     private synchronized boolean connect(boolean isReconnect){
         if(mqttClient == null || !mqttClient.isConnected()) {
             try {
-                mqttClient = new MqttClient(mqttConfig.getHost(), mqttConfig.getName() + "[" + mqttConfig.getClientId() + "]", new MemoryPersistence());
+                mqttClient = new MqttClient(mqttConfig.getServerUri(), mqttConfig.getName() + "[" + mqttConfig.getClientId() + "]", new MemoryPersistence());
             } catch (MqttException e) {
                 throw new LightException(e);
             }
             mqttClient.setTimeToWait(mqttConfig.getTimeToWait());//设置客户端发送超时时间，防止无限阻塞。
             mqttClient.setCallback(new MqttCallback());
             try {
-                mqttClient.connect(mqttConfig);
+                mqttClient.connect(mqttConnectOptions);
                 return true;
             } catch (MqttException e) {
-                log.info(mqttConfig.getName() + "连接失败！" + e.getMessage());
+                log.info("{}连接失败！ServerUri:{},cause:{}",mqttConfig.getName(),mqttConfig.getServerUri(), e.getMessage());
                 if(!isReconnect) {
                     reconnect();
                 }
@@ -52,6 +67,9 @@ public class MqttClientManager {
         }
     }
 
+    /**
+     * 与服务器断开后操作mqtt不同的情况会报不同的异常，mqttClient自带的重连不好控制
+     */
     private void reconnect(){
         if(!disconnected && mqttConfig.getReconnectInterval() > 0){
             ThreadUtil.execute(() -> {
@@ -197,7 +215,7 @@ public class MqttClientManager {
 
         @Override
         public void connectComplete(boolean reconnect, String serverURI) {
-            log.info(mqttConfig.getName() + "连接成功！");
+            log.info("{}连接成功！ServerUri:{}",mqttConfig.getName(),mqttConfig.getServerUri());
             try {
                 mqttClient.subscribe(mqttConfig.getTopicFilters());
                 log.info(mqttConfig.getName() + "订阅主题成功！");

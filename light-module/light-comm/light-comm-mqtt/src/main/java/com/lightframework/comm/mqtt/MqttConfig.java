@@ -7,39 +7,88 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 
 @Getter
 @Setter
-public class MqttConfig extends MqttConnectOptions {
-
-    private String host;//mqtt服务器主机地址
-
-    private String name = "MQTT CLIENT";//客户端名称
-
-    private String clientId = String.valueOf(ShortSnowflakeId.getNextId());
-
-    private int timeToWait = 10000;//发布消息超时时间 单位毫秒
-
-    private String [] topicFilters;//订阅主题列表，推荐使用主题通配符 /+ 或者 /#，（例：'upgrade/' 订阅主题 'upgrade/clientId,用来接收中心发出的指令）
-
-    private int reconnectInterval = 3;//重连时间间隔 (秒)，大于0自动重连
-
-    private MqttDataReceiver mqttDataReceiver;
-
-    public MqttConfig(){
-        super.setMaxInflight(100);//最大并发条数
-        super.setAutomaticReconnect(false); //关闭MQTT Client默认的断开自动重连
-        super.setHttpsHostnameVerificationEnabled(false);//https证书验证
-    }
-
-    public void setPassword(String password) {
-        super.setPassword(password.toCharArray());
-    }
+public class MqttConfig {
 
     /**
-     * 无效，改为reconnectInterval控制是否重新连接
-     * @param automaticReconnect
+     * mqtt服务器主机地址
      */
-    @Deprecated
-    @Override
-    public void setAutomaticReconnect(boolean automaticReconnect) {
+    private String serverUri;
 
+    /**
+     * 用户名
+     */
+    private String username;
+
+    /**
+     * 密码
+     */
+    private String password;
+
+    /**
+     * 客户端名称
+     */
+    private String name = "MqttClient";
+
+    /**
+     * 客户端ID编号
+     */
+    private String clientId = String.valueOf(ShortSnowflakeId.getNextId());
+
+    /**
+     * 发布消息超时时间 单位毫秒
+     */
+    private int timeToWait = 10000;
+
+    /**
+     * 订阅主题列表，推荐使用主题通配符 /+ 或者 /#，（例：'upgrade/' 订阅主题 'upgrade/clientId,用来接收中心发出的指令）
+     */
+    private String [] topicFilters;
+
+    /**
+     * 重连时间间隔 (秒)，大于0自动重连
+     */
+    private int reconnectInterval = 3;
+    /**
+     * 心跳时间间隔 单位：秒
+     */
+    private int keepAliveInterval = 60;
+    /**
+     * 最大并发条数
+     */
+    private int maxInflight = 100;
+    /**
+     * 连接超时时间 单位：秒
+     */
+    private int connectionTimeout = 30;
+
+    /**
+     * 遗嘱消息
+     */
+    private MqttWillMessage willMessage;
+
+    /**
+     * 消息接收器
+     */
+    private MqttDataReceiver mqttDataReceiver;
+
+    @Getter
+    @Setter
+    public static class MqttWillMessage {
+        /**
+         * 遗嘱消息主题
+         */
+        private String topic;
+        /**
+         * 遗嘱消息数据
+         */
+        private String payload;
+        /**
+         * 消息服务质量
+         */
+        private int qos = 2;
+        /**
+         * 是否保留最后一条消息
+         */
+        private boolean retained = false;
     }
 }

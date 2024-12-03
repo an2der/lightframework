@@ -15,7 +15,10 @@ public class TcpClientProperties {
      */
     private boolean enabled = true;
 
-    private String name = "TCP CLIENT";
+    /**
+     * 客户端名称
+     */
+    private String name = "TcpClient";
 
     /**
      * 服务端主机地址

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>light-module</artifactId>
         <groupId>com.lightframework</groupId>
-        <version>1.0.13</version>
+        <version>1.0.14</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <description>web实用工具</description>
@@ -25,6 +25,7 @@
         <module>light-util-byte</module>
         <module>light-util-spring-web</module>
         <module>light-util-serialize</module>
+        <module>light-util-json</module>
     </modules>
     <artifactId>light-util</artifactId>
     <packaging>pom</packaging>

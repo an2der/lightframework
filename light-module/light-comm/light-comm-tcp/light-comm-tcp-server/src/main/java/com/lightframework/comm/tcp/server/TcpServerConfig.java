@@ -11,7 +11,7 @@ public class TcpServerConfig {
     /**
      * TcpServer名称
      */
-    private String name = "TCP SERVER";
+    private String name = "TcpServer";
 
     /**
      * 绑定host

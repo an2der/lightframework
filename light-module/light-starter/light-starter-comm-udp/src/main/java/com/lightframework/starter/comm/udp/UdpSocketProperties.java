@@ -18,7 +18,7 @@ public class UdpSocketProperties {
     /**
      * UdpSocket名称
      */
-    private String name = "UDP SOCKET";
+    private String name = "UdpSocket";
 
     /**
      * 绑定host

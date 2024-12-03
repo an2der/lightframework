@@ -12,7 +12,7 @@
 
     <groupId>com.lightframework</groupId>
     <artifactId>lightframework</artifactId>
-    <version>1.0.13</version>
+    <version>1.0.14</version>
     <modules>
         <module>light-plugin</module>
         <module>light-parent</module>
@@ -48,6 +48,7 @@
         <protostuff.version>1.8.0</protostuff.version>
         <svnkit.version>1.10.11</svnkit.version>
         <reflections.version>0.10.2</reflections.version>
+        <cglib.version>3.3.0</cglib.version>
     </properties>
 
     <dependencies>
@@ -87,244 +88,254 @@
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-auth-common</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-auth-core</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-auth-oauth2</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-auth-shiro</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-auth-jwt</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
 
             <!-- light-comm -->
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-comm-serial</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-comm-ftp</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-comm-tcp-server</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
 
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-comm-tcp-client</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-comm-tcp-common</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-comm-mqtt</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-comm-svn</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-comm-udp</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
 
             <!-- light-common -->
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-common</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <!-- light-web -->
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-web-common</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-web-core</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <!-- light-database -->
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-database-jta-atomikos</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-database-mybatisplus</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-database-mybatisplus-dynamic-datasource</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-database-redis</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <!-- light-ssl -->
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-ssl</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <!-- light-starter -->
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-starter-comm-mqtt</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-starter-simple-app</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-starter-comm-tcp-client</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-starter-comm-tcp-server</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-starter-comm-tcp-common</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-starter-comm-udp</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-starter-database-redis</artifactId>
+                <version>1.0.14</version>
             </dependency>
             <!-- light-system-log -->
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-system-log</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <!-- light-util -->
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-codec</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-crypto</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-excel</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-io</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-net</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-project</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-command</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-spring</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-spring-web</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-toolkit</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-verifycode</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-os</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-id</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-byte</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-util-serialize</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-json</artifactId>
+                <version>1.0.14</version>
             </dependency>
             <!-- light-websocket -->
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-websocket-common</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-websocket-tomcat</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>com.lightframework</groupId>
                 <artifactId>light-websocket-netty</artifactId>
-                <version>1.0.13</version>
+                <version>1.0.14</version>
             </dependency>
             <!-- light-framework end  -->
             <dependency>
@@ -429,6 +440,11 @@
                 <artifactId>reflections</artifactId>
                 <version>${reflections.version}</version>
             </dependency>
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -439,17 +455,17 @@
                 <plugin>
                     <groupId>com.lightframework.plugin</groupId>
                     <artifactId>light-plugin-pack</artifactId>
-                    <version>1.0.13</version>
+                    <version>1.0.14</version>
                 </plugin>
                 <plugin>
                     <groupId>com.lightframework.plugin</groupId>
                     <artifactId>light-plugin-structure</artifactId>
-                    <version>1.0.13</version>
+                    <version>1.0.14</version>
                 </plugin>
                 <plugin>
                     <groupId>com.lightframework.plugin</groupId>
                     <artifactId>light-plugin-version</artifactId>
-                    <version>1.0.13</version>
+                    <version>1.0.14</version>
                 </plugin>
             </plugins>
         </pluginManagement>

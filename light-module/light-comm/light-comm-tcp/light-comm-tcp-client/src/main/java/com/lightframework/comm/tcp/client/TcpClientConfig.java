@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class TcpClientConfig {
 
-    private String name = "TCP CLIENT";
+    private String name = "TcpClient";
 
     /**
      * 服务端主机地址

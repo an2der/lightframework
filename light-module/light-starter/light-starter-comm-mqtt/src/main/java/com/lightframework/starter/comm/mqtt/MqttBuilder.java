@@ -1,7 +1,9 @@
 package com.lightframework.starter.comm.mqtt;
 
 import com.lightframework.comm.mqtt.MqttClientManager;
+import com.lightframework.comm.mqtt.MqttConfig;
 import com.lightframework.comm.mqtt.MqttDataReceiver;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -19,10 +21,14 @@ public class MqttBuilder {
 
     @Bean(MqttClientManagerHolder.MQTT_CLIENT_MANAGER_NAME)
     public MqttClientManager buildMqttClientManager(){
-        properties.setMqttDataReceiver(mqttDataReceiver);
-        if(properties.getWillMsg() != null) {
-            properties.setWill(properties.getWillMsg().getTopic(), properties.getWillMsg().getPayload().getBytes(), properties.getWillMsg().getQos(), properties.getWillMsg().isRetained());
+        MqttConfig mqttConfig = new MqttConfig();
+        BeanUtils.copyProperties(properties,mqttConfig);
+        if(properties.getWillMessage() != null) {
+            mqttConfig.setWillMessage(new MqttConfig.MqttWillMessage());
+            BeanUtils.copyProperties(properties.getWillMessage(), mqttConfig.getWillMessage());
         }
-        return new MqttClientManager(properties);
+        mqttConfig.setMqttDataReceiver(mqttDataReceiver);
+        return new MqttClientManager(mqttConfig);
     }
+
 }
