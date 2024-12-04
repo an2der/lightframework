@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnProperty(prefix = "redis",name = "enabled",havingValue = "true",matchIfMissing = true)
 @Slf4j
-public class RedisBuilder {
+public class RedisRunner {
 
     @Autowired
     private RedisProperties redisProperties;

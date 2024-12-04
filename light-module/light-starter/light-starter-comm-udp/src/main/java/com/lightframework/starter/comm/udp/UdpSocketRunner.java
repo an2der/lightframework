@@ -7,14 +7,15 @@ import com.lightframework.util.spring.SpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(prefix = "udp",name = "enabled",havingValue = "true",matchIfMissing = true)
 @Slf4j
-public class UdpSocketRunner implements CommandLineRunner {
+public class UdpSocketRunner implements ApplicationRunner {
 
     @Autowired
     private UdpSocketProperties udpSocketProperties;
@@ -25,7 +26,7 @@ public class UdpSocketRunner implements CommandLineRunner {
     private UdpSocket udpSocket;
 
     @Override
-    public void run(String... args) {
+    public void run(ApplicationArguments args) throws Exception {
         try{
             UdpSocketConfig udpSocketConfig = new UdpSocketConfig();
             BeanUtils.copyProperties(udpSocketProperties,udpSocketConfig);
@@ -37,5 +38,4 @@ public class UdpSocketRunner implements CommandLineRunner {
             SpringContextUtil.exit();
         }
     }
-
 }

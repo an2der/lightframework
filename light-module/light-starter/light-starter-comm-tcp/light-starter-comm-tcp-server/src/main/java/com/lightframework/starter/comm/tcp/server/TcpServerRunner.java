@@ -4,18 +4,18 @@ import com.lightframework.comm.tcp.common.handler.ChannelInitializationHandler;
 import com.lightframework.comm.tcp.server.TcpServer;
 import com.lightframework.comm.tcp.server.TcpServerConfig;
 import com.lightframework.util.spring.SpringContextUtil;
-import com.lightframework.util.spring.SpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(prefix = "tcp.server",name = "enabled",havingValue = "true",matchIfMissing = true)
 @Slf4j
-public class TcpServerRunner implements CommandLineRunner {
+public class TcpServerRunner implements ApplicationRunner {
 
     @Autowired
     private TcpServerProperties tcpServerProperties;
@@ -26,7 +26,7 @@ public class TcpServerRunner implements CommandLineRunner {
     private TcpServer tcpServer;
 
     @Override
-    public void run(String... args) {
+    public void run(ApplicationArguments args) throws Exception {
         try{
             TcpServerConfig tcpServerConfig = new TcpServerConfig();
             BeanUtils.copyProperties(tcpServerProperties,tcpServerConfig);
@@ -38,5 +38,4 @@ public class TcpServerRunner implements CommandLineRunner {
             SpringContextUtil.exit();
         }
     }
-
 }
