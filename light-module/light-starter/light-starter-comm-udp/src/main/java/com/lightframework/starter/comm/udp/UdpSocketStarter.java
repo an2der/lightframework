@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnProperty(prefix = "udp",name = "enabled",havingValue = "true",matchIfMissing = true)
 @Slf4j
-public class UdpSocketRunner implements ApplicationRunner {
+public class UdpSocketStarter implements ApplicationRunner {
 
     @Autowired
     private UdpSocketProperties udpSocketProperties;

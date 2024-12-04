@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnProperty(prefix = "tcp.server",name = "enabled",havingValue = "true",matchIfMissing = true)
 @Slf4j
-public class TcpServerRunner implements ApplicationRunner {
+public class TcpServerStarter implements ApplicationRunner {
 
     @Autowired
     private TcpServerProperties tcpServerProperties;

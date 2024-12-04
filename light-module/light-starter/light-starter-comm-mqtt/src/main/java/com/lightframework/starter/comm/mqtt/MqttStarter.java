@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConditionalOnProperty(prefix = "mqtt",name = "enabled",havingValue = "true",matchIfMissing = true)
-public class MqttRunner implements ApplicationRunner {
+public class MqttStarter implements ApplicationRunner {
 
     @Autowired
     private MqttProperties properties;

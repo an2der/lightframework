@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConditionalOnProperty(prefix = "tcp.client",name = "enabled",havingValue = "true",matchIfMissing = true)
-public class TcpClientRunner implements ApplicationRunner {
+public class TcpClientStarter implements ApplicationRunner {
 
     @Autowired
     private TcpClientProperties tcpClientProperties;
