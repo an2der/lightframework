@@ -8,6 +8,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /*** 
@@ -55,6 +56,26 @@ public class WebSocketManager {
     public static ChannelFuture sendMessage(String clientId, WebSocketMessage message) {
         Channel channel = tcpServerManager.getChannel(clientId);
         return sendMessage(channel, message);
+    }
+
+    /**
+     * 群发消息
+     * @param channels
+     * @param message
+     */
+    public static void sendMessageToChannels(List<Channel> channels, WebSocketMessage message){
+        String stringMessage = springJacksonUtil.serialize(message);
+        channels.forEach(channel->sendMessage(channel,stringMessage));
+    }
+
+    /**
+     * 群发消息
+     * @param channelIds
+     * @param message
+     */
+    public static void sendMessageToChannelIds(List<String> channelIds, WebSocketMessage message){
+        String stringMessage = springJacksonUtil.serialize(message);
+        channelIds.forEach(channelId->sendMessage(tcpServerManager.getChannel(channelId),stringMessage));
     }
 
     /**

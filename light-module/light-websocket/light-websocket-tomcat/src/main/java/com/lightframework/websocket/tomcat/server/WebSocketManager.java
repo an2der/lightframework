@@ -1,12 +1,12 @@
 package com.lightframework.websocket.tomcat.server;
 
-import cn.hutool.json.JSONUtil;
 import com.lightframework.util.spring.web.SpringJacksonUtil;
 import com.lightframework.websocket.common.model.WebSocketMessage;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /*** 
@@ -61,11 +61,27 @@ public class WebSocketManager {
      */
     public static void sendMessage(String clientId, WebSocketMessage message) {
         Session session = SESSIONS.get(clientId);
-        try {
-            sendMessage(session, message);
-        } catch (Exception e) {
-            log.error("WebSocket sendMessage error!", e);
-        }
+        sendMessage(session, message);
+    }
+
+    /**
+     * 群发消息
+     * @param sessions
+     * @param message
+     */
+    public static void sendMessageToSessions(List<Session> sessions, WebSocketMessage message){
+        String stringMessage = springJacksonUtil.serialize(message);
+        sessions.forEach(session->sendMessage(session,stringMessage));
+    }
+
+    /**
+     * 群发消息
+     * @param sessionIds
+     * @param message
+     */
+    public static void sendMessageToSessionIds(List<String> sessionIds, WebSocketMessage message){
+        String stringMessage = springJacksonUtil.serialize(message);
+        sessionIds.forEach(sessionId->sendMessage(SESSIONS.get(sessionId),stringMessage));
     }
 
     /**
