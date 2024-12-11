@@ -1,7 +1,8 @@
 #!/bin/sh
 
 NAME=${package.name}
-if systemctl status "$NAME" >/dev/null 2>&1; then
+systemctl_list=$(systemctl list-unit-files --no-pager --type=service --all)
+if echo "$systemctl_list" | grep -q "$NAME"; then
     systemctl stop $NAME.service && systemctl disable $NAME.service
     rm -f /etc/systemd/system/$NAME.service
     systemctl daemon-reload
