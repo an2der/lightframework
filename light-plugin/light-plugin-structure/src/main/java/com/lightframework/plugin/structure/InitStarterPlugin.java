@@ -37,7 +37,7 @@ public class InitStarterPlugin extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
             JarUtil.extract("structure/init-starter",new File(basedir,"src/main").getAbsolutePath(),false);
-            addDependency();
+//            addDependency();
         } catch (IOException e) {
             throw new LightException(e.getMessage());
         }

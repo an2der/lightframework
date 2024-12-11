@@ -19,7 +19,7 @@ public class JarPlugin extends JarMojo {
     @Parameter( defaultValue = "${project.build.finalName}", readonly = true )
     private String jarFinalName;
 
-    @Parameter(defaultValue = "${mainClass}", readonly = true )
+    @Parameter(defaultValue = "${package.mainClass}", readonly = true )
     private String mainClass;
 
     @Override

@@ -1,0 +1,13 @@
+[Unit]
+Description=${package.name} Service
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/home/${package.name}/startup.sh
+ExecStop=/home/${package.name}/shutdown.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

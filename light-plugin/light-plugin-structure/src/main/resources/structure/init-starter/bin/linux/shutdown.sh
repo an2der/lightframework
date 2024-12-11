@@ -1,11 +1,7 @@
 #!/bin/bash
 
-## java env
-#export JAVA_HOME=/home/java/jdk1.8.0_291
-#export JRE_HOME=$JAVA_HOME/jre
-
 ## service name
-APP_NAME=${appName}
+APP_NAME=${package.name}
 
 cd `dirname $0`
 SERVICE_DIR=`pwd`

@@ -7,20 +7,10 @@
 		<format>zip</format>
 	</formats>
 	<includeBaseDirectory>true</includeBaseDirectory>
-	<baseDirectory>${appName}</baseDirectory>
+	<baseDirectory>${package.name}</baseDirectory>
 	<fileSets>
 		<fileSet>
-			<directory>src/main/bin</directory>
-			<outputDirectory>${file.separator}</outputDirectory>
-			<includes>
-				<include>*.sh</include>
-			</includes>
-			<fileMode>0755</fileMode>
-			<lineEnding>unix</lineEnding>
-			<filtered>true</filtered>
-		</fileSet>
-		<fileSet>
-			<directory>src/main/bin</directory>
+			<directory>src/main/bin/windows</directory>
 			<outputDirectory>${file.separator}</outputDirectory>
 			<includes>
 				<include>*.bat</include>
@@ -32,8 +22,8 @@
 			<directory>src/main/bin</directory>
 			<outputDirectory>${file.separator}</outputDirectory>
 			<excludes>
-				<exclude>*.bat</exclude>
-				<exclude>*.sh</exclude>
+				<exclude>linux/</exclude>
+				<exclude>windows/</exclude>
 			</excludes>
 		</fileSet>
 		<fileSet>
@@ -44,9 +34,20 @@
 
 	<files>
 		<file>
-			<source>${project.build.directory}/${appName}-run.jar</source>
+			<source>${project.build.directory}/${package.name}-run.jar</source>
 			<outputDirectory/>
-			<destName>${appName}.jar</destName>
+			<destName>${package.name}.jar</destName>
+		</file>
+		<file>
+			<source>src/main/bin/windows/service.xml</source>
+			<outputDirectory/>
+			<destName>${package.name}.xml</destName>
+			<filtered>true</filtered>
+		</file>
+		<file>
+			<source>src/main/bin/windows/service.exe</source>
+			<outputDirectory/>
+			<destName>${package.name}.exe</destName>
 		</file>
 	</files>
 	<dependencySets>

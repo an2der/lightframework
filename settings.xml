@@ -37,6 +37,18 @@
             </properties>
         </profile>
         <profile>
+            <id>OS-Linux</id>
+            <properties>
+                <package1.linux.skipPack>false</package1.linux.skipPack>
+            </properties>
+        </profile>
+        <profile>
+            <id>OS-Windows</id>
+            <properties>
+                <package1.windows.skipPack>false</package1.windows.skipPack>
+            </properties>
+        </profile>
+        <profile>
             <id>NEXUS-ZhengZhou</id>
             <properties>
                 <!--      nexus.name与settings文件中server的id保持一致          -->

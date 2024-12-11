@@ -5,7 +5,7 @@
     <parent>
         <artifactId>lightframework</artifactId>
         <groupId>com.lightframework</groupId>
-        <version>1.0.15</version>
+        <version>1.0.17</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,10 +13,24 @@
     <packaging>pom</packaging>
 
     <properties>
-        <skipPackZip>true</skipPackZip>
-        <mainClass></mainClass>
-        <appName>${project.artifactId}</appName>
-        <manifestClassPath>./</manifestClassPath>
+        <!--suppress UnresolvedMavenProperty -->
+        <package1.mainClass>${package.mainClass}</package1.mainClass><!-- 启动类包路径 -->
+        <!--suppress UnresolvedMavenProperty -->
+        <package1.name>${package.name}</package1.name><!-- 打包名称 -->
+        <!--suppress UnresolvedMavenProperty -->
+        <package1.manifestClassPath>${package.manifestClassPath}</package1.manifestClassPath><!-- 向classpath中追加，用于添加scope=system的本地jar包，以空格分割 -->
+        <!--suppress UnresolvedMavenProperty -->
+        <package1.vmOptions>${package.vmOptions}</package1.vmOptions><!-- jvm参数 -->
+        <!-- linux properties -->
+        <!--suppress UnresolvedMavenProperty -->
+        <package1.linux.javaPath>${package.linux.javaPath}</package1.linux.javaPath>
+        <!--suppress UnresolvedMavenProperty -->
+        <package1.linux.skipPack>true</package1.linux.skipPack><!-- 不执行打包启动器，启动模块设为false -->
+        <!-- windows properties -->
+        <!--suppress UnresolvedMavenProperty -->
+        <package1.windows.javaPath>${package.windows.javaPath}</package1.windows.javaPath>
+        <!--suppress UnresolvedMavenProperty -->
+        <package1.windows.skipPack>true</package1.windows.skipPack><!-- 不执行打包启动器，启动模块设为false -->
     </properties>
 
     <dependencies>
@@ -28,6 +42,24 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>src/main/filters/build.properties</file>
+                            </files>
+                            <quiet>true</quiet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.lightframework.plugin</groupId>
                 <artifactId>light-plugin-structure</artifactId>
@@ -50,20 +82,20 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <finalName>${appName}</finalName>
+                            <finalName>${package1.name}</finalName>
                             <excludes>
                                 <exclude>config/**</exclude>
                             </excludes>
                             <archive>
                                 <manifest>
-                                    <mainClass>${mainClass}</mainClass>
+                                    <mainClass>${package1.mainClass}</mainClass>
                                     <addClasspath>true</addClasspath>
                                     <classpathPrefix>lib/</classpathPrefix>
                                 </manifest>
                                 <manifestEntries>
                                     <Implementation-Title>${project.artifactId}</Implementation-Title>
                                     <Implementation-Version>${project.version}</Implementation-Version>
-                                    <Class-Path>${manifestClassPath}</Class-Path>
+                                    <Class-Path>${package1.manifestClassPath}</Class-Path>
                                 </manifestEntries>
                             </archive>
                             <classifier>run</classifier>
@@ -71,24 +103,82 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--<plugin>
+                &lt;!&ndash; 详细文档地址：https://github.com/orphan-oss/launch4j-maven-plugin?tab=readme-ov-file&ndash;&gt;
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.5.2</version>
+                <executions>
+                    <execution>
+                        <id>launch4j-console</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            &lt;!&ndash;打包类型，可使用值:console、gui分别代表控制台和图形界面程序&ndash;&gt;
+                            <headerType>console</headerType>
+                            &lt;!&ndash;不将jar包包装到exe中&ndash;&gt;
+                            <dontWrapJar>true</dontWrapJar>
+                            &lt;!&ndash;jar文件位置&ndash;&gt;
+                            <jar>${package1.name}.jar</jar>
+                            <outfile>${project.build.directory}/${package1.name}.exe</outfile>
+                            <jre>
+                                <path>${package1.windows.javaPath}</path>
+                                <opts>-Xmx2g -Xms2g -Xmn1500m -XX:PermSize=100M -XX:MaxPermSize=200M -Xss256K -XX:+DisableExplicitGC -XX:SurvivorRatio=8 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=4 -XX:+CMSClassUnloadingEnabled -XX:LargePageSizeInBytes=128M -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=55 -XX:+PrintClassHistogram -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintHeapAtGC -Xloggc:logs/gc.log -Dlogging.config=file:./config/log4j2.xml</opts>
+                            </jre>
+                            <skip>${package1.skipPackLaunch}</skip>
+                            <versionInfo>
+                                <txtFileVersion>${project.version}</txtFileVersion>
+                                <fileDescription>${package1.name}</fileDescription>
+                                <copyright>-</copyright>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <productName>${package1.name}</productName>
+                                <companyName>-</companyName>
+                                <internalName>${package1.name}</internalName>
+                                <originalFilename>${package1.name}.exe</originalFilename>
+                                <trademarks></trademarks>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
+                        <id>assembly-linux</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                         <configuration>
-                            <finalName>${appName}-${project.version}</finalName>
+                            <finalName>${package1.name}-${project.version}</finalName>
                             <!-- not append assembly id in release file name -->
                             <appendAssemblyId>false</appendAssemblyId>
                             <descriptors>
-                                <descriptor>src/main/assembly/assembly.xml</descriptor>
+                                <descriptor>src/main/assembly/assembly-linux.xml</descriptor>
                             </descriptors>
-                            <skipAssembly>${skipPackZip}</skipAssembly>
+                            <skipAssembly>${package1.linux.skipPack}</skipAssembly>
+                            <ignoreMissingDescriptor>true</ignoreMissingDescriptor>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>assembly-windows</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${package1.name}-${project.version}</finalName>
+                            <!-- not append assembly id in release file name -->
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>src/main/assembly/assembly-windows.xml</descriptor>
+                            </descriptors>
+                            <skipAssembly>${package1.windows.skipPack}</skipAssembly>
+                            <ignoreMissingDescriptor>true</ignoreMissingDescriptor>
                         </configuration>
                     </execution>
                 </executions>
