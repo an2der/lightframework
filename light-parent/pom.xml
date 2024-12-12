@@ -14,7 +14,7 @@
 
     <properties>
         <!--suppress UnresolvedMavenProperty -->
-        <package1.mainClass>${package.mainClass}</package1.mainClass><!-- 启动类包路径 -->
+        <package1.mainClass>${package.mainClass}</package1.mainClass><!-- 启动类路径 -->
         <!--suppress UnresolvedMavenProperty -->
         <package1.name>${package.name}</package1.name><!-- 打包名称 -->
         <!--suppress UnresolvedMavenProperty -->
