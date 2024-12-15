@@ -39,15 +39,8 @@
 			<destName>${package.name}.jar</destName>
 		</file>
 		<file>
-			<source>src/main/bin/windows/service.xml</source>
+			<source>src/main/bin/windows/nssm.exe</source>
 			<outputDirectory/>
-			<destName>${package.name}.xml</destName>
-			<filtered>true</filtered>
-		</file>
-		<file>
-			<source>src/main/bin/windows/service.exe</source>
-			<outputDirectory/>
-			<destName>${package.name}.exe</destName>
 		</file>
 	</files>
 	<dependencySets>
