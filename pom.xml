@@ -33,7 +33,6 @@
         <clickhouse.version>0.4.6</clickhouse.version>
         <jsch.version>0.1.55</jsch.version>
         <commons-net.version>3.8.0</commons-net.version>
-        <commons-io.version>2.11.0</commons-io.version>
         <flatten.version>1.4.1</flatten.version>
         <maven.version>3.9.4</maven.version>
         <maven-plugin.version>3.9.0</maven-plugin.version>
@@ -358,11 +357,6 @@
                 <groupId>commons-net</groupId>
                 <artifactId>commons-net</artifactId>
                 <version>${commons-net.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commons-io.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven</groupId>

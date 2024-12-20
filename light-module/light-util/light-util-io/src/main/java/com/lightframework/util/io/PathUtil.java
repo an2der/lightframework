@@ -1,5 +1,6 @@
 package com.lightframework.util.io;
 
+import cn.hutool.core.io.FileUtil;
 import com.lightframework.util.os.OSUtil;
 import org.apache.commons.io.FileUtils;
 
@@ -62,7 +63,7 @@ public class PathUtil {
                 for (File file1 : duplicateName) {
                     if(file1.isDirectory()){
                         if(!isDir || !file1.renameTo(targetFile)){
-                            FileUtils.deleteDirectory(file1);
+                            FileUtil.del(file1);
                         }
                     }else {
                         file1.delete();
