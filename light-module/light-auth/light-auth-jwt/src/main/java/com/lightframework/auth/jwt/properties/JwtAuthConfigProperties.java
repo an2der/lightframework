@@ -36,4 +36,21 @@ public class JwtAuthConfigProperties {
      * token 前缀
      */
     private String tokenPrefix = "Bearer_";
+
+    /**
+     * 密码加密配置
+     */
+    private PasswordCrypto passwordCrypto = new PasswordCrypto();
+
+    /**
+     * 密码加密
+     */
+    @Getter
+    @Setter
+    public static class PasswordCrypto{
+        /**
+         * hash算法
+         */
+        private String hashAlgorithm;
+    }
 }

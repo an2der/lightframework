@@ -1,7 +1,8 @@
 package com.lightframework.auth.jwt.crypto;
 
 import com.lightframework.auth.core.crypto.PasswordCrypto;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /***
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtPasswordCrypto implements PasswordCrypto {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public String encryptPassword(String password, String salt) {
         return encryptPassword(password);
@@ -19,6 +23,6 @@ public class JwtPasswordCrypto implements PasswordCrypto {
 
     @Override
     public String encryptPassword(String password){
-        return new BCryptPasswordEncoder().encode(password);
+        return passwordEncoder.encode(password);
     }
 }

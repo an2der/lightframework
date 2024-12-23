@@ -6,6 +6,7 @@ import com.lightframework.auth.jwt.handler.JwtAccessDeniedHandler;
 import com.lightframework.auth.jwt.handler.JwtAuthenticationHandler;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +38,7 @@ public class SecurityConfig {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
+    @ConditionalOnMissingBean
     public PasswordEncoder getPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }

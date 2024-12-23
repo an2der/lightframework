@@ -2,7 +2,6 @@ package com.lightframework.util.io;
 
 import cn.hutool.core.io.FileUtil;
 import com.lightframework.util.os.OSUtil;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
