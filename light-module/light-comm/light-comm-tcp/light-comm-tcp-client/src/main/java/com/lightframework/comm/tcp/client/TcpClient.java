@@ -42,9 +42,10 @@ public class TcpClient {
             .handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel socketChannel) throws Exception {
-                    clientConfig.getInitializationHandler().initChannel(socketChannel);
-                    socketChannel.pipeline().addLast(new TcpClientHandler());
+                    socketChannel.pipeline().addFirst(new TcpClientInactiveHandler());
                     HeartBeatHandler.handle(socketChannel,clientConfig);
+                    clientConfig.getInitializationHandler().initChannel(socketChannel);
+                    socketChannel.pipeline().addLast(new TcpClientExceptionHandler());
                 }
             });
     }
@@ -111,7 +112,7 @@ public class TcpClient {
         }
     }
 
-    private class TcpClientHandler extends ChannelInboundHandlerAdapter {
+    private class TcpClientInactiveHandler extends ChannelInboundHandlerAdapter {
 
         @Override
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
@@ -119,6 +120,10 @@ public class TcpClient {
             reconnect();
             super.channelInactive(ctx);
         }
+
+    }
+
+    private class TcpClientExceptionHandler extends ChannelInboundHandlerAdapter {
 
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {

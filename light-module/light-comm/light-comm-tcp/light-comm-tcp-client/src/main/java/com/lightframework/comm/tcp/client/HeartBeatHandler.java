@@ -73,10 +73,11 @@ public class HeartBeatHandler {
         }
 
         @Override
-        protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) {
+        protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) throws Exception {
             if (evt.state() == IdleState.WRITER_IDLE) {
                 sendHeartBeat(ctx.channel());
             }
+            super.channelIdle(ctx, evt);
         }
 
 

@@ -23,5 +23,6 @@ public class IdleCheckHandler extends IdleStateHandler {
         if (evt.state() == IdleState.READER_IDLE) {
             ctx.channel().close();
         }
+        super.channelIdle(ctx, evt);
     }
 }

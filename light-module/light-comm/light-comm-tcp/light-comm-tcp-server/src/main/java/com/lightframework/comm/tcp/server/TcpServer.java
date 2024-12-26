@@ -51,8 +51,8 @@ public class TcpServer {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             serverConfig.getInitializationHandler().initChannel(socketChannel);
-                            socketChannel.pipeline().addLast(new TcpServerHandler());
                             socketChannel.pipeline().addLast(new IdleCheckHandler(serverConfig.getReaderIdleTimeSeconds()));
+                            socketChannel.pipeline().addLast(new TcpServerHandler());
                         }
                     });
             ChannelFuture future = bootstrap.bind().sync();
