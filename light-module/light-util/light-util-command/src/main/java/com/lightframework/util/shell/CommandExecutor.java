@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
@@ -62,12 +63,20 @@ public class CommandExecutor {
                     log.error("执行命令是读取标准异常流发生异常",e);
                 }
             });
+
+            try (OutputStream outputStream = process.getOutputStream()) {
+                outputStream.write("\r\n".getBytes());
+                outputStream.flush();
+            }
             if(waitTimeSeconds > 0) {
                 process.waitFor(waitTimeSeconds, TimeUnit.SECONDS);
+                if(process.isAlive()){
+                    process.destroy();
+                }
             }else {
                 process.waitFor();
             }
-            result.setExitVal(process.exitValue());
+            result.setExitVal(process.isAlive()?-1:process.exitValue());
             result.setContent(stringBuilder.toString());
         } catch (Exception e) {
             result.setSuccess(false);

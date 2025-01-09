@@ -14,11 +14,11 @@ if %errorLevel% == 0 (
 
     "%JAVA_DIR%\bin\java.exe" -version
 ) else (
-    goto ADMIN_START
+    goto RUN_AS_ADMIN
 )
 pause
 exit
 
-:ADMIN_START
+:RUN_AS_ADMIN
 mshta vbscript:createobject("Shell.Application").ShellExecute("""%~f0""","","","runas",1)(window.close)
 exit

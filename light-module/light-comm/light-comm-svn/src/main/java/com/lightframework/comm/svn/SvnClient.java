@@ -2,6 +2,7 @@ package com.lightframework.comm.svn;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
+import com.lightframework.comm.svn.db.WcDbManager;
 import com.lightframework.common.LightException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -225,7 +226,8 @@ public class SvnClient {
             File wcDir = new File(localPath);
             if (wcDir.exists()) {
                 clientManager.getWCClient().setEventHandler(handler);
-                clientManager.getWCClient().doCleanup(wcDir, false, true, true, removeUnversionedItems, false, true);
+                clientManager.getWCClient().doCleanup(wcDir, false, false, true, removeUnversionedItems, false, true);
+                new WcDbManager(localPath).cleanLocks();
                 return true;
             }
             return false;
