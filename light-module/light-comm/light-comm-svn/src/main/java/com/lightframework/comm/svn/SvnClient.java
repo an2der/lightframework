@@ -226,8 +226,8 @@ public class SvnClient {
             File wcDir = new File(localPath);
             if (wcDir.exists()) {
                 clientManager.getWCClient().setEventHandler(handler);
-                clientManager.getWCClient().doCleanup(wcDir, false, false, true, removeUnversionedItems, false, true);
                 new WcDbManager(localPath).cleanLocks();
+                clientManager.getWCClient().doCleanup(wcDir, false, false, true, removeUnversionedItems, false, true);
                 return true;
             }
             return false;
