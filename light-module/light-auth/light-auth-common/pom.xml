@@ -5,7 +5,7 @@
     <parent>
         <artifactId>light-auth</artifactId>
         <groupId>com.lightframework</groupId>
-        <version>1.0.20</version>
+        <version>1.0.21</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,4 +14,10 @@
     <properties>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-spring</artifactId>
+        </dependency>
+    </dependencies>
 </project>

@@ -1,4 +1,4 @@
-package com.lightframework.auth.core.util;
+package com.lightframework.auth.common.util;
 
 import com.lightframework.auth.common.model.UserInfo;
 import com.lightframework.auth.common.service.UserInfoService;
