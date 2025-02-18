@@ -10,7 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
     <description>web实用工具</description>
     <modules>
-        <module>light-util-excel</module>
         <module>light-util-command</module>
         <module>light-util-verifycode</module>
         <module>light-util-project</module>
