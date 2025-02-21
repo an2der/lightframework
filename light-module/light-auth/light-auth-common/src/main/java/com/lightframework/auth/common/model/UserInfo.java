@@ -34,10 +34,8 @@ public class UserInfo implements Serializable{
 	private String headImg;
 	private boolean isAdmin = false;
 	private boolean isEnabled = true;
-	private String roleId;
-	private String roleName;
-	private String departmentId;
-	private String departmentName;
+	private List<IdName> roles;
+	private List<IdName> departments;
 	private Set<String> permissions;
 	private Map<String,Object> others;
 
@@ -145,36 +143,20 @@ public class UserInfo implements Serializable{
 		isEnabled = enabled;
 	}
 
-	public String getRoleId() {
-		return roleId;
+	public List<IdName> getRoles() {
+		return roles;
 	}
 
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
+	public void setRoles(List<IdName> roles) {
+		this.roles = roles;
 	}
 
-	public String getRoleName() {
-		return roleName;
+	public List<IdName> getDepartments() {
+		return departments;
 	}
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
-	public String getDepartmentId() {
-		return departmentId;
-	}
-
-	public void setDepartmentId(String departmentId) {
-		this.departmentId = departmentId;
-	}
-
-	public String getDepartmentName() {
-		return departmentName;
-	}
-
-	public void setDepartmentName(String departmentName) {
-		this.departmentName = departmentName;
+	public void setDepartments(List<IdName> departments) {
+		this.departments = departments;
 	}
 
 	public Set<String> getPermissions() {
@@ -199,5 +181,31 @@ public class UserInfo implements Serializable{
 
 	public String salt(){
 		return salt;
+	}
+
+	public static class IdName {
+		private String id;
+		private String name;
+
+		public IdName(String id, String name) {
+			this.id = id;
+			this.name = name;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
 	}
 }
