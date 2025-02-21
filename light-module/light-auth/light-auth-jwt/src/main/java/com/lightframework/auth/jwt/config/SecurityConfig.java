@@ -1,10 +1,12 @@
 package com.lightframework.auth.jwt.config;
 
 import com.lightframework.auth.core.properties.AuthConfigProperties;
+import com.lightframework.auth.core.service.AuthService;
 import com.lightframework.auth.jwt.filter.JwtAuthenticationFilter;
 import com.lightframework.auth.jwt.handler.JwtAccessDeniedHandler;
 import com.lightframework.auth.jwt.handler.JwtAuthenticationHandler;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
+import com.lightframework.auth.jwt.service.impl.DefaultAuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +38,12 @@ public class SecurityConfig {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Bean
+    @ConditionalOnMissingBean(AuthService.class)
+    public AuthService getAuthService(){
+        return new DefaultAuthServiceImpl();
+    }
 
     @Bean
     @ConditionalOnMissingBean

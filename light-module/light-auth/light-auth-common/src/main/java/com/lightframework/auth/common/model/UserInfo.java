@@ -1,6 +1,7 @@
 package com.lightframework.auth.common.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,8 +35,8 @@ public class UserInfo implements Serializable{
 	private String headImg;
 	private boolean isAdmin = false;
 	private boolean isEnabled = true;
-	private List<IdName> roles;
-	private List<IdName> departments;
+	private List<IdName> roles = new ArrayList<>();
+	private List<IdName> departments = new ArrayList<>();
 	private Set<String> permissions;
 	private Map<String,Object> others;
 

@@ -1,8 +1,10 @@
 package com.lightframework.auth.shiro.config;
 
 import com.lightframework.auth.core.properties.AuthConfigProperties;
+import com.lightframework.auth.core.service.AuthService;
 import com.lightframework.auth.shiro.properties.ShiroAuthConfigProperties;
 import com.lightframework.auth.shiro.realm.DefaultShiroRealm;
+import com.lightframework.auth.shiro.service.impl.DefaultAuthServiceImpl;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -12,6 +14,7 @@ import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,6 +28,12 @@ public class ShiroConfig {
 
     @Autowired
     private ShiroAuthConfigProperties authConfigProperties;
+
+    @Bean
+    @ConditionalOnMissingBean(AuthService.class)
+    public AuthService getAuthService(){
+        return new DefaultAuthServiceImpl();
+    }
 
     @Bean
     public DefaultShiroRealm shiroRealm() {
