@@ -26,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserInfo userInfo = userService.getUserInfoByUsername(username);
         if(userInfo == null){
-            throw new BusinessException("用户不存在");
+            throw new UsernameNotFoundException("用户不存在");
         }
         JwtUserInfo jwtUserInfo = new JwtUserInfo();
         BeanUtils.copyProperties(userInfo,jwtUserInfo);

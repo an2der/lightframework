@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -36,30 +37,23 @@ public class DefaultAuthServiceImpl extends AuthService {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginParam.getUsername(),loginParam.getPassword());
         try {
             Authentication authentication = authenticationManager.authenticate(token);
-            if(authentication == null){
-                throw new BusinessException("登录失败");
-            }
             UserInfo userInfo = (UserInfo) authentication.getPrincipal();
-            if(userInfo != null){
-                if(!userInfo.isEnabled()){
-                    throw new BusinessException("登录失败，用户已被禁用！");
-                }
-                userInfo.setPassword(null);
-                String accessToken = authConfigProperties.getTokenPrefix() + jwtTokenUtil.generateToken(userInfo);
-                HttpServletResponse response = SpringServletUtil.getResponse();
-                Cookie cookie = new Cookie(authConfigProperties.getConfiguration().getTokenKey(),accessToken);
-                cookie.setMaxAge(authConfigProperties.getConfiguration().getExpireTimeMinute() > 0?
-                        (int)(authConfigProperties.getConfiguration().getExpireTimeMinute() * 60):Integer.MAX_VALUE);
-                cookie.setHttpOnly(true);
-                cookie.setPath("/");
-                response.addCookie(cookie);
-                userInfo.setAccessToken(accessToken);
-                return userInfo;
-            }else {
-                throw new BusinessException("用户不存在！");
+            if(!userInfo.isEnabled()){
+                throw new BusinessException("登录失败，用户已被禁用！");
             }
+            userInfo.setPassword(null);
+            String accessToken = authConfigProperties.getTokenPrefix() + jwtTokenUtil.generateToken(userInfo);
+            HttpServletResponse response = SpringServletUtil.getResponse();
+            Cookie cookie = new Cookie(authConfigProperties.getConfiguration().getTokenKey(),accessToken);
+            cookie.setMaxAge(authConfigProperties.getConfiguration().getExpireTimeMinute() > 0?
+                    (int)(authConfigProperties.getConfiguration().getExpireTimeMinute() * 60):Integer.MAX_VALUE);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+            userInfo.setAccessToken(accessToken);
+            return userInfo;
         }catch (BadCredentialsException e){
-            throw new BusinessException("密码错误！");
+            throw new BusinessException("用户名或密码不正确");
         }
 
     }
