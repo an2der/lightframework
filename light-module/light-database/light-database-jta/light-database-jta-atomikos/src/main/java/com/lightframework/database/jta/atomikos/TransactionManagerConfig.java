@@ -2,6 +2,9 @@ package com.lightframework.database.jta.atomikos;
 
 import com.atomikos.icatch.jta.UserTransactionImp;
 import com.atomikos.icatch.jta.UserTransactionManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.transaction.TransactionProperties;
+import org.springframework.boot.jta.atomikos.AtomikosProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -21,10 +24,13 @@ import javax.transaction.UserTransaction;
 @EnableTransactionManagement
 public class TransactionManagerConfig {
 
+    @Autowired
+    private TransactionProperties transactionProperties;
+
     @Bean(name = "userTransaction")
     public UserTransaction userTransaction() throws Throwable {
         UserTransactionImp userTransactionImp = new UserTransactionImp();
-        userTransactionImp.setTransactionTimeout(10000);
+        userTransactionImp.setTransactionTimeout(300);
         return userTransactionImp;
     }
 
@@ -38,6 +44,8 @@ public class TransactionManagerConfig {
     @Bean(name = "transactionManager")
     @DependsOn({"userTransaction", "atomikosTransactionManager"})
     public PlatformTransactionManager transactionManager() throws Throwable {
-        return new JtaTransactionManager(userTransaction(), atomikosTransactionManager());
+        JtaTransactionManager jtaTransactionManager = new JtaTransactionManager(userTransaction(), atomikosTransactionManager());
+        jtaTransactionManager.setDefaultTimeout((int) transactionProperties.getDefaultTimeout().getSeconds());
+        return jtaTransactionManager;
     }
 }
