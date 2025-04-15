@@ -82,25 +82,30 @@ public class SystemLogAspect {
      */
     private void systemLogHandler(JoinPoint joinPoint, BusinessStatus status){
         Date date = new Date();
-        HttpServletRequest request = SpringServletUtil.getRequest();
-        UserInfo userInfo = userInfoService == null?null:userInfoService.getUserInfo();
-        executorService.execute(()->{
+        try {
+            HttpServletRequest request = SpringServletUtil.getRequest();
             SystemLogger logger = getAnnotation(joinPoint);
-            SystemLog systemLog = new SystemLog();
-            if(userInfo != null) {
-                systemLog.setUserId(userInfo.getUserId());
-                systemLog.setUsername(userInfo.getUsername());
-            }
-            systemLog.setCreateTime(date);
-            systemLog.setIpAddr(IPUtil.getRemoteIpAddr(request));
-            systemLog.setRequestParam(getArgsToJsonArrayString(joinPoint));
-            systemLog.setExecuteResult(status.getCode());
-            systemLog.setOperationDesc(logger.operationDesc());
-            systemLog.setOperationType(logger.businessType().getCode());
-            systemLog.setModuleKey(logger.moduleKey());
-            systemLog.setModuleName(logger.moduleName());
-            systemLogService.save(systemLog);
-        });
+            UserInfo userInfo = userInfoService == null ? null : userInfoService.getUserInfo();
+            String remoteIpAddr = IPUtil.getRemoteIpAddr(request);
+            executorService.execute(() -> {
+                SystemLog systemLog = new SystemLog();
+                if (userInfo != null) {
+                    systemLog.setUserId(userInfo.getUserId());
+                    systemLog.setUsername(userInfo.getUsername());
+                }
+                systemLog.setCreateTime(date);
+                systemLog.setIpAddr(remoteIpAddr);
+                systemLog.setRequestParam(getArgsToJsonArrayString(joinPoint));
+                systemLog.setExecuteResult(status.getCode());
+                systemLog.setOperationDesc(logger.operationDesc());
+                systemLog.setOperationType(logger.businessType().getCode());
+                systemLog.setModuleKey(logger.moduleKey());
+                systemLog.setModuleName(logger.moduleName());
+                systemLogService.save(systemLog);
+            });
+        }catch (Exception e){
+            log.error("系统日志AOP记录日志时发生异常",e);
+        }
     }
 
     private SystemLogger getAnnotation(JoinPoint joinPoint){
