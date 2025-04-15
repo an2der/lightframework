@@ -83,12 +83,7 @@ public class SystemLogAspect {
     private void systemLogHandler(JoinPoint joinPoint, BusinessStatus status){
         Date date = new Date();
         HttpServletRequest request = SpringServletUtil.getRequest();
-        UserInfo userInfo;
-        if(userInfoService != null) {
-            userInfo = userInfoService.getUserInfo();
-        } else {
-            userInfo = null;
-        }
+        UserInfo userInfo = userInfoService == null?null:userInfoService.getUserInfo();
         executorService.execute(()->{
             SystemLogger logger = getAnnotation(joinPoint);
             SystemLog systemLog = new SystemLog();

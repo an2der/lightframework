@@ -15,6 +15,7 @@ public class ShiroUserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfo getUserInfo() {
-        return (UserInfo) SecurityUtils.getSubject().getPrincipal();
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        return (UserInfo) (principal instanceof UserInfo ? principal : null);
     }
 }

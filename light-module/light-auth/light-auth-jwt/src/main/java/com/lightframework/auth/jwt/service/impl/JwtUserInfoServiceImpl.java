@@ -15,6 +15,7 @@ public class JwtUserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfo getUserInfo() {
-        return (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return (UserInfo) (principal instanceof UserInfo ? principal : null);
     }
 }
