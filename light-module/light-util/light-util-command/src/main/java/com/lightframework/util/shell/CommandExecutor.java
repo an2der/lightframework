@@ -52,12 +52,13 @@ public class CommandExecutor {
                 }
             });
             BufferedReader errorBufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream(), charset));
+            StringBuilder errorStringBuilder = new StringBuilder();
             ThreadUtil.execute(()->{
                 String line;
                 try {
                     while ((line = errorBufferedReader.readLine()) != null){
                         result.setSuccess(false);
-                        stringBuilder.append(line + "\n");
+                        errorStringBuilder.append(line + "\n");
                     }
                 }catch (Exception e){
                     log.error("执行命令是读取标准异常流发生异常",e);
@@ -71,13 +72,20 @@ public class CommandExecutor {
             if(waitTimeSeconds > 0) {
                 process.waitFor(waitTimeSeconds, TimeUnit.SECONDS);
                 if(process.isAlive()){
+                    result.setSuccess(false);
+                    result.setContent("执行命令超过等待时间(" + waitTimeSeconds + "秒)，强制终止命令执行！" + "\n");
+                    result.setExitVal(-1);
                     process.destroy();
                 }
             }else {
                 process.waitFor();
             }
-            result.setExitVal(process.isAlive()?-1:process.exitValue());
-            result.setContent(stringBuilder.toString());
+            if(result.getExitVal() != -1) {
+                result.setExitVal(process.exitValue());
+            }
+            if(result.getContent() == null) {
+                result.setContent(result.isSuccess() ? stringBuilder.toString() : errorStringBuilder.toString());
+            }
         } catch (Exception e) {
             result.setSuccess(false);
             throw new LightException(e);

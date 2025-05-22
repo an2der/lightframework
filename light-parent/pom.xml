@@ -5,7 +5,7 @@
     <parent>
         <artifactId>lightframework</artifactId>
         <groupId>com.lightframework</groupId>
-        <version>1.0.25</version>
+        <version>1.0.26</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -93,7 +93,7 @@
                                     <classpathPrefix>lib/</classpathPrefix>
                                 </manifest>
                                 <manifestEntries>
-                                    <Implementation-Title>${project.artifactId}</Implementation-Title>
+                                    <Implementation-Title>${package1.name}</Implementation-Title>
                                     <Implementation-Version>${project.version}</Implementation-Version>
                                     <Class-Path>${package1.manifestClassPath}</Class-Path>
                                 </manifestEntries>

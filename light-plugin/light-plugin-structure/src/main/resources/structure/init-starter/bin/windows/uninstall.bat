@@ -34,7 +34,7 @@ exit
 :RUN
 for /f "delims=" %%i in ('sc query ${package.name} ^| findstr /I "STATE"') do set SERVICE_STATUS=%%i
 if defined SERVICE_STATUS (
-    echo %SERVICE_STATUS% | findstr /I "STOPPED" 1>nul 2>nul&&set STATUS_STOPPED=1
+    echo !SERVICE_STATUS! | findstr /I "STOPPED" 1>nul 2>nul&&set STATUS_STOPPED=1
     if defined STATUS_STOPPED (
         echo Service current status is stopped.
     ) else (

@@ -13,8 +13,8 @@ public class WindowsUtil {
      * @return
      */
     public static boolean isLoginToDesktop(){
-        CommandLine commandLine = CommandLine.build("tasklist 2>nul | findstr explorer.exe 1>nul 2>nul&&echo 1 || echo 0");
-        CommandResult result = CommandExecutor.exec(commandLine);
+        CommandLine commandLine = CommandLine.buildForCommand("tasklist 2>nul | findstr explorer.exe 1>nul 2>nul&&echo 1 || echo 0");
+        CommandResult result = CommandExecutor.exec(commandLine,60);
         if (result.isSuccess()) {
             return result.getContent().trim().equals("1");
         }

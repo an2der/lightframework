@@ -5,8 +5,11 @@ import com.lightframework.common.LightException;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 /**
  * @author yg
@@ -16,6 +19,40 @@ import java.util.Enumeration;
 public class IPUtil {
 
     private IPUtil(){}
+
+    public static List<InetAddress> getAllLocalAddresses() {
+        return getAllLocalAddresses(false);
+    }
+
+    public static List<InetAddress> getAllLocalAddresses(boolean containsIPv6) {
+        try {
+            List<InetAddress> addresseList = new ArrayList<>();
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = interfaces.nextElement();
+                // 排除虚拟网络接口，比如VMware的虚拟网络接口
+                if (networkInterface.isVirtual() || !networkInterface.isUp()) {
+                    continue;
+                }
+
+                Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    // 过滤掉回环地址
+                    if (!addr.isLoopbackAddress()) {
+                        //IPv6地址检查
+                        if(!containsIPv6 && addr.getHostAddress().contains(":")){
+                            continue;
+                        }
+                        addresseList.add(addr);
+                    }
+                }
+            }
+            return addresseList;
+        } catch (SocketException e) {
+            throw new LightException(e);
+        }
+    }
 
     /**
      * 获取本地ip

@@ -50,7 +50,8 @@ exit
 :SERVICE_RESTART
 echo Service stopping...
 nssm.exe stop ${package.name} 1>nul 2>nul
-timeout /t 3 >nul
+:: 等待服务停止
+ping 127.0.0.1 -n 3 -w 1000 >nul
 echo Service starting...
 nssm.exe start ${package.name}
 exit

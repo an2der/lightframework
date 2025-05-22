@@ -10,8 +10,12 @@ public class CommandLine {
         return command;
     }
 
-    public static CommandLine build(String command){
+    public static CommandLine buildForCommand(String command){
         return build(command,false);
+    }
+
+    public static CommandLine buildForScript(String script){
+        return build(script,true);
     }
 
     public static CommandLine build(String command,boolean script){
