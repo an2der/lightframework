@@ -32,6 +32,7 @@ public class AuthConfigProperties {
 
     /**
      * token过期时间 单位：分钟
+     * 值为0表示不过期
      */
     private long expireTimeMinute = 43200; //分钟
 

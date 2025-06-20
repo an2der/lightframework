@@ -31,7 +31,9 @@ public class JwtTokenUtil {
         claims.put(USERINFO, new String(SerializeUtil.protostuffSerialize(userInfo), StandardCharsets.ISO_8859_1));
         return Jwts.builder()
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + authConfigProperties.getConfiguration().getExpireTimeMinute() * 60 * 1000))
+                .setExpiration(authConfigProperties.getConfiguration().getExpireTimeMinute() > 0
+                        ? new Date(System.currentTimeMillis() + authConfigProperties.getConfiguration().getExpireTimeMinute() * 60 * 1000)
+                        : null)
                 .setId(userInfo.getUserId())
                 .addClaims(claims)
                 .signWith(SignatureAlgorithm.HS512, authConfigProperties.getConfiguration().getSecret())
@@ -59,7 +61,7 @@ public class JwtTokenUtil {
      */
     public boolean isTokenExpired(Claims claims) {
         Date expiration = claims.getExpiration();
-        return expiration.before(new Date());
+        return expiration != null && expiration.before(new Date());
     }
 
 }
