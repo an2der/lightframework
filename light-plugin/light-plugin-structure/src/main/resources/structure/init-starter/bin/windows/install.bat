@@ -36,7 +36,7 @@ for /f "delims=" %%i in ('sc query ${package.name} ^| findstr /I "STATE"') do se
 if defined SERVICE_STATUS (
     echo Service already installed.
 ) else (
-    nssm.exe install ${package.name} "%CD%\startup.bat" 0 service&&echo Service install successful.
+    nssm.exe install ${package.name} "%CD%\startup.bat" 0 service
 )
 %@REM% pause
 exit
