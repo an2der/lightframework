@@ -1,0 +1,8 @@
+server:
+  ssl:
+    enabled: true
+    key-store: classpath:light_ssl.keystore
+    key-store-type: JKS
+    key-alias: lightframework
+    key-password: LIGHT123456789ABCDEF
+    key-store-password: LIGHT123456789ABCDEF

@@ -20,3 +20,9 @@ target/
 .classpath
 .idea
 *.iml
+.flattened-pom.xml
+*.lck
+pom.xml.releaseBackup
+pom.xml.versionBackup
+release.properties
+version.properties

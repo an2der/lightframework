@@ -1,58 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-  <servers>
-	<server>
-      <id>CongXing</id>
-      <username>admin</username>
-      <password>admin888</password>
-    </server>
-	<server>
-      <id>releases</id>  
-      <username>admin</username>
-      <password>admin888</password>
-    </server>
-     <server>
-      <id>snapshots</id> 
-      <username>admin</username>
-      <password>admin888</password>
-    </server>
-  </servers>
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+    <servers>
+        <!--   郑州   -->
+        <server>
+            <id>ZhengZhou</id>
+            <username>admin</username>
+            <password>admin</password>
+        </server>
+        <!--   北京   -->
+        <server>
+            <id>BeiJing</id>
+            <username>admin</username>
+            <password>admin888</password>
+        </server>
+    </servers>
+    <!--解决 Since Maven 3.8.1 http repositories are blocked.问题-->
     <mirrors>
         <mirror>
-            <id>CongXing</id>
-            <name>CongXing Central</name>
-            <url>http://192.168.1.221:8081/repository/maven-public/</url>
-            <mirrorOf>central</mirrorOf>
+            <id>maven-default-http-blocker</id>
+            <mirrorOf>dummy</mirrorOf>
+            <name>Dummy mirror to override default blockingmirror that blocks http</name>
+            <url>http://0.0.0.0/</url>
+            <blocked>false</blocked>
         </mirror>
     </mirrors>
     <profiles>
         <profile>
-            <id>dev</id>
+            <id>ENV-dev</id>
             <properties>
                 <env>dev</env>
-                <skipBuild>true</skipBuild>
             </properties>
-            <activation>
-                <!--不指定环境的时候默认使用dev-->
-                <activeByDefault>true</activeByDefault>
-            </activation>
         </profile>
         <profile>
-            <id>uat</id>
+            <id>ENV-uat</id>
             <properties>
                 <env>uat</env>
-                <skipBuild>false</skipBuild>
             </properties>
         </profile>
         <profile>
-            <id>pro</id>
+            <id>ENV-pro</id>
             <properties>
                 <env>pro</env>
-                <skipBuild>false</skipBuild>
             </properties>
+        </profile>
+        <profile>
+            <id>OS-Linux</id>
+            <properties>
+                <package1.linux.skipPack>false</package1.linux.skipPack>
+            </properties>
+        </profile>
+        <profile>
+            <id>OS-Windows</id>
+            <properties>
+                <package1.windows.skipPack>false</package1.windows.skipPack>
+            </properties>
+        </profile>
+        <profile>
+            <id>NEXUS-ZhengZhou</id>
+            <properties>
+                <!--      nexus.name与settings文件中server的id保持一致          -->
+                <nexus.name>ZhengZhou</nexus.name>
+                <nexus.url>http://192.168.51.9:8081</nexus.url>
+            </properties>
+            <repositories>
+                <repository>
+                    <id>ZhengZhou-central</id>
+                    <name>ZhengZhou Central</name>
+                    <url>http://192.168.51.9:8081/repository/maven-public/</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>ZhengZhou-central</id>
+                    <name>ZhengZhou Central</name>
+                    <url>http://192.168.51.9:8081/repository/maven-public/</url>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+        <profile>
+            <id>NEXUS-BeiJing</id>
+            <properties>
+                <!--      nexus.name与settings文件中server的id保持一致          -->
+                <nexus.name>BeiJing</nexus.name>
+                <nexus.url>http://192.168.33.21:8081</nexus.url>
+            </properties>
+            <repositories>
+                <repository>
+                    <id>BeiJing-central</id>
+                    <name>BeiJing Central</name>
+                    <url>http://192.168.33.21:8081/repository/maven-public/</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>BeiJing-central</id>
+                    <name>BeiJing Central</name>
+                    <url>http://192.168.33.21:8081/repository/maven-public/</url>
+                </pluginRepository>
+            </pluginRepositories>
         </profile>
     </profiles>
 

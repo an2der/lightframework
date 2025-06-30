@@ -12,47 +12,421 @@
 
     <groupId>com.lightframework</groupId>
     <artifactId>lightframework</artifactId>
-    <version>1.0</version>
+    <version>1.0.26</version>
     <modules>
+        <module>light-plugin</module>
+        <module>light-parent</module>
         <module>light-common</module>
-        <module>light-core</module>
-        <module>light-auth</module>
-        <module>light-websocket</module>
-        <module>light-database</module>
-        <module>light-starter</module>
-        <module>light-util</module>
+        <module>light-module</module>
     </modules>
     <packaging>pom</packaging>
-    <description>微框架</description>
-
-    <distributionManagement>
-        <!-- 注意： maven会判断工程版本version后面是否带了-SNAPSHOT，如果带了就发布到snapshots仓库，否则发布到release仓库。-->
-        <repository>
-            <!--id任意，在setting文件中<server>的ID与这里一致-->
-            <id>releases</id>
-            <!--指向仓库类型为host(宿主仓库）的储存类型为Release的仓库-->
-            <url>http://192.168.1.221:8081/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <!--指向仓库类型为host(宿主仓库）的储存类型为Snapshot的仓库-->
-            <url>http://192.168.1.221:8081/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <description>微框架,用于解决开发过程中重复的工作，提高效率，同时降低出错率，
+        此项目提供快速生成新项目结构需要的文件，统一的公共配置（如：MAVEN私服、MAVEN打包插件、API接口统一返回处理等配置），高内聚低耦合的可插拔公共功能模块 ，
+        依赖版本统一管理与依赖版本兼容解决，项目版本管理，更实用的工具类，提高项目代码的整洁度
+    </description>
 
     <properties>
-        <lightframework.version>1.0</lightframework.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <fastjson2.version>2.0.27</fastjson2.version>
+        <spring-boot.version>2.7.0</spring-boot.version>
+        <clickhouse.version>0.4.6</clickhouse.version>
+        <jsch.version>0.1.55</jsch.version>
+        <commons-net.version>3.8.0</commons-net.version>
+        <flatten.version>1.4.1</flatten.version>
+        <maven.version>3.9.4</maven.version>
+        <maven-plugin.version>3.9.0</maven-plugin.version>
+        <hutool.version>5.8.34</hutool.version>
+        <maven-versions-plugin.version>2.16.2</maven-versions-plugin.version>
+        <mybatis.version>3.5.9</mybatis.version>
+        <mybatis-spring.version>2.0.7</mybatis-spring.version>
+        <mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
+        <sqlite-jdbc.version>3.44.1.0</sqlite-jdbc.version>
+        <netty.version>4.1.110.Final</netty.version>
+        <jedis.version>4.2.3</jedis.version>
+        <protostuff.version>1.8.0</protostuff.version>
+        <svnkit.version>1.10.11</svnkit.version>
+        <reflections.version>0.10.2</reflections.version>
+        <cglib.version>3.3.0</cglib.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
+            <!-- spring-boot -->
             <dependency>
-                <groupId>com.alibaba.fastjson2</groupId>
-                <artifactId>fastjson2</artifactId>
-                <version>${fastjson2.version}</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring-boot.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- light-framework start -->
+
+            <!-- light-auth -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-auth-common</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-auth-core</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-auth-oauth2</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-auth-shiro</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-auth-jwt</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+
+            <!-- light-comm -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-serial</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-ftp</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-tcp-server</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-tcp-client</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-tcp-common</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-mqtt</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-svn</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-comm-udp</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+
+            <!-- light-common -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-common</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <!-- light-web -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-web-common</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-web-core</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <!-- light-database -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-database-jta-atomikos</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-database-mybatisplus</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-database-mybatisplus-dynamic-datasource</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-database-redis</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <!-- light-ssl -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-ssl</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <!-- light-starter -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-starter-comm-mqtt</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-starter-simple-app</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-starter-comm-tcp-client</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-starter-comm-tcp-server</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-starter-comm-tcp-common</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-starter-comm-udp</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-starter-database-redis</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <!-- light-system-log -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-system-log</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <!-- light-util -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-codec</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-crypto</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-io</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-net</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-project</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-command</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-spring</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-spring-web</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-toolkit</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-verifycode</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-os</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-id</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-byte</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-serialize</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-util-json</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <!-- light-websocket -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-websocket-common</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-websocket-tomcat</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-websocket-netty</artifactId>
+                <version>1.0.26</version>
+            </dependency>
+            <!-- light-framework end  -->
+            <dependency>
+                <groupId>com.clickhouse</groupId>
+                <artifactId>clickhouse-jdbc</artifactId>
+                <version>${clickhouse.version}</version>
+                <classifier>all</classifier>
+            </dependency>
+            <dependency>
+                <groupId>com.jcraft</groupId>
+                <artifactId>jsch</artifactId>
+                <version>${jsch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>${commons-net.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-model</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-tools</groupId>
+                <artifactId>maven-plugin-annotations</artifactId>
+                <version>${maven-plugin.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis-spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.xerial</groupId>
+                <artifactId>sqlite-jdbc</artifactId>
+                <version>${sqlite-jdbc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${jedis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-runtime</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.tmatesoft.svnkit</groupId>
+                <artifactId>svnkit</artifactId>
+                <version>${svnkit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -60,50 +434,107 @@
     <build>
         <pluginManagement>
             <plugins>
+                <!-- light-plugin -->
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <configuration>
-                        <excludes>
-                            <exclude>config/**</exclude>
-                        </excludes>
-                        <archive>
-                            <manifest>
-                                <mainClass>${mainClass}</mainClass>
-                                <addClasspath>true</addClasspath>
-                                <classpathPrefix>lib/</classpathPrefix>
-                            </manifest>
-                            <manifestEntries>
-                                <Implementation-Title>${project.artifactId}</Implementation-Title>
-                                <Implementation-Version>${project.version}</Implementation-Version>
-                                <Class-Path>./</Class-Path>
-                            </manifestEntries>
-                        </archive>
-                        <skip>${skipBuild}</skip>
-                    </configuration>
+                    <groupId>com.lightframework.plugin</groupId>
+                    <artifactId>light-plugin-pack</artifactId>
+                    <version>1.0.26</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <configuration>
-                        <!-- not append assembly id in release file name -->
-                        <appendAssemblyId>false</appendAssemblyId>
-                        <descriptors>
-                            <descriptor>src/main/assembly/assembly.xml</descriptor>
-                        </descriptors>
-                        <skipAssembly>${skipBuild}</skipAssembly>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>make-assembly</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>single</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    <groupId>com.lightframework.plugin</groupId>
+                    <artifactId>light-plugin-structure</artifactId>
+                    <version>1.0.26</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.lightframework.plugin</groupId>
+                    <artifactId>light-plugin-version</artifactId>
+                    <version>1.0.26</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>properties-maven-plugin</artifactId>
+                    <version>1.2.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins><!--
+            &lt;!&ndash;    maven版本管理插件        &ndash;&gt;
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten.version}</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${maven-versions-plugin.version}</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms> <!-- 禁用备份pom文件的生成 -->
+                </configuration>
+                <inherited>false</inherited>
+            </plugin>
+        </plugins>
     </build>
+    <profiles>
+        <profile>
+            <!-- 需要配合settings配置文件使用，并且id一致 -->
+            <id>NEXUS-ZhengZhou</id>
+            <distributionManagement>
+                <!-- 注意： maven会判断工程版本version后面是否带了-SNAPSHOT，如果带了就发布到snapshots仓库，否则发布到release仓库。-->
+                <repository>
+                    <!--id任意，在setting文件中<server>的ID与这里一致-->
+                    <id>${nexus.name}</id>
+                    <name>${nexus.name} Releases</name>
+                    <!--指向仓库类型为host(宿主仓库）的储存类型为Release的仓库-->
+                    <url>${nexus.url}/repository/maven-releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>${nexus.name}</id>
+                    <name>${nexus.name} Snapshots</name>
+                    <!--指向仓库类型为host(宿主仓库）的储存类型为Snapshot的仓库-->
+                    <url>${nexus.url}/repository/maven-snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <!-- 需要配合settings配置文件使用，并且id一致 -->
+            <id>NEXUS-BeiJing</id>
+            <distributionManagement>
+                <!-- 注意： maven会判断工程版本version后面是否带了-SNAPSHOT，如果带了就发布到snapshots仓库，否则发布到release仓库。-->
+                <repository>
+                    <!--id任意，在setting文件中<server>的ID与这里一致-->
+                    <id>${nexus.name}</id>
+                    <name>${nexus.name} Releases</name>
+                    <!--指向仓库类型为host(宿主仓库）的储存类型为Release的仓库-->
+                    <url>${nexus.url}/repository/maven-releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>${nexus.name}</id>
+                    <name>${nexus.name} Snapshots</name>
+                    <!--指向仓库类型为host(宿主仓库）的储存类型为Snapshot的仓库-->
+                    <url>${nexus.url}/repository/maven-snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 </project>

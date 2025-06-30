@@ -1,0 +1,25 @@
+server:
+  port: 8080
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:3306/${database}?autoReconnect=true&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=true
+#    username: ${username}
+#    password: ${password}
+#mybatis-plus:
+#  mapper-locations: classpath*:mapper/*.xml
+#  type-aliases-package: ${modelPackage} #数据库实体类包路径，多个以逗号分割或使用通配符*
+#  mapper-scan-package: ${daoPackage} #数据库mapper包路径，多个以逗号分割或使用通配符*
+#  configuration:
+#    map-underscore-to-camel-case: true
+#logging:
+#  level:
+#    root: debug #开启debug日志
+#    com.lightframework.dao: debug #打印这个包下sql日志
+auth:
+  intercept-url:
+    includes:
+      - "/api/**"

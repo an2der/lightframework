@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>light-util</artifactId>
+        <groupId>com.lightframework</groupId>
+        <version>1.0.26</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>light-util-toolkit</artifactId>
+    <description>工具箱</description>
+    <properties>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-net</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-project</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-byte</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-crypto</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-serialize</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-json</artifactId>
+        </dependency>
+    </dependencies>
+</project>
