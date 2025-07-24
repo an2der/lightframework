@@ -1,5 +1,6 @@
 package com.lightframework.plugin.structure;
 
+import cn.hutool.core.io.FileUtil;
 import com.lightframework.common.LightException;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -22,11 +23,11 @@ import java.util.List;
  * @date 2023/8/31 21:19
  * @version 1.0
  */
-@Mojo(name = "init-starter",aggregator = true,defaultPhase = LifecyclePhase.NONE)
+//@Mojo(name = "init-starter",aggregator = true,defaultPhase = LifecyclePhase.NONE)
 public class InitStarterPlugin extends AbstractMojo {
 
     @Parameter(defaultValue = "${basedir}",readonly = true)
-    private String basedir;
+    protected String basedir;
 
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     protected MavenProject project;
@@ -37,35 +38,19 @@ public class InitStarterPlugin extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
             JarUtil.extract("structure/init-starter",new File(basedir,"src/main").getAbsolutePath(),false);
-//            addDependency();
         } catch (IOException e) {
             throw new LightException(e.getMessage());
         }
     }
 
-    private void addDependency(){
-        File pomFile = new File(basedir,"pom.xml");
+    protected void  addDependency(String lightArtifactId){
+        File pomFile = getRootPomFile();
         if(!pomFile.exists()){
             throw new LightException(pomFile.getAbsolutePath() + " file does not exist!");
         }
-        FileInputStream fileInputStream = null;
-        Model model;
-        try {
-            fileInputStream = new FileInputStream(pomFile);
-            model = new MavenXpp3Reader().read(fileInputStream);
-        } catch (Exception e) {
-            throw new LightException("Parse pom.xml error in " + pomFile.getAbsolutePath(),e);
-        }finally {
-            try {
-                if(fileInputStream != null){
-                    fileInputStream.close();
-                }
-            } catch (IOException e) {
-            }
-        }
+        Model model = getModel(pomFile);
         boolean existLightCore = false;
         String lightGroupId = "com.lightframework";
-        String lightArtifactId = "light-web-core";
         for (Dependency dependency : model.getDependencies()) {
             if(lightArtifactId.equals(dependency.getArtifactId()) && lightGroupId.equals(dependency.getGroupId())){
                 existLightCore = true;
@@ -92,5 +77,44 @@ public class InitStarterPlugin extends AbstractMojo {
                 }
             }
         }
+    }
+
+    protected Model getModel(File pomFile){
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(pomFile);
+            return new MavenXpp3Reader().read(fileInputStream);
+        } catch (Exception e) {
+            throw new LightException("Parse pom.xml error in " + pomFile.getAbsolutePath(),e);
+        }finally {
+            try {
+                if(fileInputStream != null){
+                    fileInputStream.close();
+                }
+            } catch (IOException e) {
+            }
+        }
+    }
+
+    protected File getRootPomFile(){
+        // 获取根项目文件路径
+        MavenProject rootProject = project;
+        while (rootProject.getParentFile() != null) {
+            rootProject = rootProject.getParent();
+        }
+        return rootProject.getFile();
+    }
+
+    protected void replaceMainClassValue(String group){
+        File filtersFile = new File(basedir,"src/main/filters/build.properties");
+
+        List<String> strings = FileUtil.readUtf8Lines(filtersFile);
+        for (int i = 0; i < strings.size(); i++) {
+            String line = strings.get(i);
+            if (line.startsWith("package.mainClass=")) {
+                strings.set(i, "package.mainClass="+group+".Application");
+            }
+        }
+        FileUtil.writeUtf8Lines(strings, filtersFile);
     }
 }

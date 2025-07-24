@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -92,7 +93,14 @@ public class CommandExecutor {
         } finally {
             if (process != null) {
                 process.destroy();
+                try {
+                    process.getInputStream().close();
+                    process.getErrorStream().close();
+                    process.getOutputStream().close();
+                }catch (IOException e) {
+                }
             }
+
         }
         return result;
     }
