@@ -1,6 +1,6 @@
 package com.lightframework.websocket.netty.handler;
 
-import com.lightframework.util.spring.web.SpringJacksonUtil;
+import com.lightframework.util.spring.SpringJacksonUtil;
 import com.lightframework.websocket.common.constant.WebSocketMsgTypeConstants;
 import com.lightframework.websocket.common.model.TextWebSocketMessage;
 import com.lightframework.websocket.common.model.WebSocketMessage;

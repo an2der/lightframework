@@ -1,6 +1,8 @@
 package com.lightframework.comm.tcp.client;
 
 import com.lightframework.comm.tcp.common.handler.FailMessageHandler;
+import com.lightframework.comm.tcp.common.handler.IdleCheckHandler;
+import com.lightframework.comm.tcp.common.heartbeat.HeartBeatHandler;
 import com.lightframework.common.LightException;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -11,13 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class TcpClient {
 
     private EventLoopGroup group;
+
+    private boolean shareGroup;
 
     private Bootstrap bootstrap;
 
@@ -30,24 +33,31 @@ public class TcpClient {
     private volatile boolean disconnected = false;
 
     public TcpClient(TcpClientConfig tcpClientConfig){
-        this.group = new NioEventLoopGroup(tcpClientConfig.getThreadCount());
+        this(tcpClientConfig, new NioEventLoopGroup(tcpClientConfig.getThreadCount()),false);
+    }
+
+    TcpClient(TcpClientConfig tcpClientConfig,EventLoopGroup eventLoopGroup,boolean shareGroup){
+        this.shareGroup = shareGroup;
+        this.group = eventLoopGroup;
         this.clientConfig = tcpClientConfig;
         this.failMessageHandler = new FailMessageHandler(tcpClientConfig.getName());
         this.bootstrap = new Bootstrap();
         this.bootstrap.group(group)
-            .channel(NioSocketChannel.class)
-            .remoteAddress(clientConfig.getServerHost(), clientConfig.getServerPort())
-            .option(ChannelOption.SO_KEEPALIVE, clientConfig.isKeepalive())
-            .option(ChannelOption.TCP_NODELAY, clientConfig.isNoDelay())
-            .handler(new ChannelInitializer<SocketChannel>() {
-                @Override
-                protected void initChannel(SocketChannel socketChannel) throws Exception {
-                    socketChannel.pipeline().addFirst(new TcpClientInactiveHandler());
-                    HeartBeatHandler.handle(socketChannel,clientConfig);
-                    clientConfig.getInitializationHandler().initChannel(socketChannel);
-                    socketChannel.pipeline().addLast(new TcpClientExceptionHandler());
-                }
-            });
+                .channel(NioSocketChannel.class)
+                .remoteAddress(clientConfig.getServerHost(), clientConfig.getServerPort())
+                .option(ChannelOption.SO_KEEPALIVE, clientConfig.isKeepalive())
+                .option(ChannelOption.TCP_NODELAY, clientConfig.isNoDelay())
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        clientConfig.getInitializationHandler().initChannel(socketChannel);
+                        socketChannel.pipeline().addFirst(new TcpClientHandler());
+                        HeartBeatHandler.handle(socketChannel,clientConfig.getName(),group,clientConfig.getHeartBeatConfig());
+                        if(clientConfig.getReaderIdleTimeSeconds() > 0) {
+                            socketChannel.pipeline().addFirst(new IdleCheckHandler(clientConfig.getReaderIdleTimeSeconds()));
+                        }
+                    }
+                });
     }
 
     public synchronized boolean connect(){
@@ -58,16 +68,16 @@ public class TcpClient {
                 if (future.isSuccess()) {
                     channel = future.channel();
                     InetSocketAddress socketAddress = (InetSocketAddress) channel.localAddress();
-                    log.info("{}连接服务端成功！LocalPort:{};Remote Server IP:{},PORT:{}",clientConfig.getName(),socketAddress.getPort(),clientConfig.getServerHost(), clientConfig.getServerPort());
+                    log.info("{}连接服务端成功！LocalPort:{};RemoteAddress:[{}:{}]",clientConfig.getName(),socketAddress.getPort(),clientConfig.getServerHost(), clientConfig.getServerPort());
                     return true;
                 }
             } catch (Exception e) {
 
             }
-            log.info("{}连接服务端失败！Remote Server IP:{},PORT:{}",clientConfig.getName(),clientConfig.getServerHost(), clientConfig.getServerPort());
+            log.info("{}连接服务端失败！RemoteAddress:[{}:{}]",clientConfig.getName(),clientConfig.getServerHost(), clientConfig.getServerPort());
             reconnect();
         }else {
-            log.info(clientConfig.getName() + "客户端已连接，请勿重复连接！");
+            log.info("{}客户端已连接，请勿重复连接！RemoteAddress:[{}:{}]",clientConfig.getName(),clientConfig.getServerHost(),clientConfig.getServerPort());
         }
         return false;
     }
@@ -76,9 +86,13 @@ public class TcpClient {
         return this.channel;
     }
 
+    public boolean isConnected(){
+        return this.channel != null && this.channel.isActive();
+    }
+
     public ChannelFuture sendMessage(Object message){
         if(this.channel == null){
-            throw new LightException(clientConfig.getName()+"服务没有启动！");
+            throw new LightException(clientConfig.getName()+"服务没有启动！无法发送到RemoteAddress:["+clientConfig.getServerHost()+":"+clientConfig.getServerPort()+"]");
         }
         ChannelFuture channelFuture = this.channel.writeAndFlush(message);
         channelFuture.addListener(failMessageHandler);
@@ -95,6 +109,9 @@ public class TcpClient {
     }
 
     public void destroy(){
+        if(shareGroup){
+            throw new LightException("不能销毁共享的线程组，请通过管理器销毁！");
+        }
         try {
             if (group != null) {
                 group.shutdownGracefully().sync();
@@ -106,31 +123,30 @@ public class TcpClient {
     private void reconnect(){
         if(!disconnected && (channel == null || !channel.isActive()) && clientConfig.getReconnectInterval() >0) {
             group.schedule(() ->{
-                log.info("{}尝试重新连接到服务端！Remote Server IP:{},PORT:{}",clientConfig.getName(),clientConfig.getServerHost(), clientConfig.getServerPort());
+                log.info("{}尝试重新连接到服务端！RemoteAddress:[{}:{}]",clientConfig.getName(),clientConfig.getServerHost(), clientConfig.getServerPort());
                 connect();
             }, clientConfig.getReconnectInterval(), TimeUnit.SECONDS);
         }
     }
 
-    private class TcpClientInactiveHandler extends ChannelInboundHandlerAdapter {
+    private class TcpClientHandler extends ChannelInboundHandlerAdapter {
 
         @Override
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-            log.info(clientConfig.getName() + "连接断开！");
+            log.info("{}连接断开！RemoteAddress:[{}:{}]",clientConfig.getName(),clientConfig.getServerHost(), clientConfig.getServerPort());
             reconnect();
             super.channelInactive(ctx);
         }
 
-    }
-
-    private class TcpClientExceptionHandler extends ChannelInboundHandlerAdapter {
-
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
             if(!((cause instanceof IOException) && cause.getMessage().equals("远程主机强迫关闭了一个现有的连接。"))) {
-                log.error(clientConfig.getName() + "捕获异常：" + cause.getMessage(), cause);
+                log.error(clientConfig.getName() + "捕获异常！RemoteAddress:["+clientConfig.getServerHost()+":"+clientConfig.getServerPort()+"]", cause);
             }
             ctx.channel().close();
+            super.exceptionCaught(ctx, cause);
         }
+
     }
+
 }

@@ -55,4 +55,28 @@ public class TcpServerProperties {
      */
     private int readerIdleTimeSeconds = 0;
 
+    /**
+     * 心跳配置
+     */
+    private HeartBeatConfig heartBeatConfig = new HeartBeatConfig();
+
+    /**
+     * 心跳配置对象
+     */
+    @Getter
+    @Setter
+    public static class HeartBeatConfig{
+
+        /**
+         * 心跳间隔（秒），大于0发送心跳
+         */
+        private int heartBeatInterval = 0;
+
+        /**
+         * 是否固定按固定心跳周期发送
+         * 否：在客户端心跳间隔时间内没有向服务端发送任何数据时发送心跳
+         */
+        private boolean fixedCycleSend = false;
+
+    }
 }

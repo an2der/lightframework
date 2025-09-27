@@ -1,6 +1,8 @@
 package com.lightframework.comm.tcp.server;
 
 import com.lightframework.comm.tcp.common.handler.ChannelInitializationHandler;
+import com.lightframework.comm.tcp.common.heartbeat.HeartBeatConfig;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -52,4 +54,11 @@ public class TcpServerConfig {
      * 通道初始化
      */
     private ChannelInitializationHandler initializationHandler;
+
+    /**
+     * 心跳配置
+     */
+    @Setter(AccessLevel.NONE)
+    private HeartBeatConfig heartBeatConfig = new HeartBeatConfig();
+
 }

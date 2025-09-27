@@ -44,7 +44,9 @@ public class TransactionManagerConfig {
     @DependsOn({"userTransaction", "atomikosTransactionManager"})
     public PlatformTransactionManager transactionManager() throws Throwable {
         JtaTransactionManager jtaTransactionManager = new JtaTransactionManager(userTransaction(), atomikosTransactionManager());
-        jtaTransactionManager.setDefaultTimeout((int) transactionProperties.getDefaultTimeout().getSeconds());
+        if(transactionProperties.getDefaultTimeout()!=null) {
+            jtaTransactionManager.setDefaultTimeout((int) transactionProperties.getDefaultTimeout().getSeconds());
+        }
         return jtaTransactionManager;
     }
 }

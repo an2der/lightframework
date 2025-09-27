@@ -51,6 +51,11 @@ public class TcpClientProperties {
     private int reconnectInterval = 5;
 
     /**
+     * 读空闲检查，超过空闲时间断开连接。0：不检查
+     */
+    private int readerIdleTimeSeconds = 0;
+
+    /**
      * 心跳配置
      */
     private HeartBeatConfig heartBeatConfig = new HeartBeatConfig();

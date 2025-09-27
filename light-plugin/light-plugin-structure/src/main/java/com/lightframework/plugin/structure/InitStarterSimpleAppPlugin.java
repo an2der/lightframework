@@ -1,6 +1,7 @@
 package com.lightframework.plugin.structure;
 
 import cn.hutool.core.io.FileUtil;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -22,7 +23,22 @@ public class InitStarterSimpleAppPlugin extends InitStarterPlugin {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         super.execute();
-        addDependency("light-starter-simple-app");
+        Dependency dependency = new Dependency();
+        dependency.setGroupId("com.lightframework");
+        dependency.setArtifactId("light-starter-simple-app");
+        addDependency(dependency,project.getFile());
+
+        Dependency springbootDependency = new Dependency();
+        springbootDependency.setGroupId("org.springframework.boot");
+        springbootDependency.setArtifactId("spring-boot");
+        springbootDependency.setOptional(true);
+        addDependency(springbootDependency,getRootPomFile());
+
+        Dependency springbootAutoconfigDependency = new Dependency();
+        springbootAutoconfigDependency.setGroupId("org.springframework.boot");
+        springbootAutoconfigDependency.setArtifactId("spring-boot-autoconfigure");
+        springbootAutoconfigDependency.setOptional(true);
+        addDependency(springbootAutoconfigDependency,getRootPomFile());
         Model model = getModel(project.getFile());
         String group = model.getGroupId() != null && model.getGroupId().trim().length() > 0?model.getGroupId().trim():model.getParent().getGroupId().trim();
         String packagePath = group.replaceAll("\\.", "/").trim();

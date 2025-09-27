@@ -1,6 +1,7 @@
 package com.lightframework.comm.tcp.client;
 
 import com.lightframework.comm.tcp.common.handler.ChannelInitializationHandler;
+import com.lightframework.comm.tcp.common.heartbeat.HeartBeatConfig;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,6 +43,11 @@ public class TcpClientConfig {
     private int reconnectInterval = 5;
 
     /**
+     * 读空闲检查，超过空闲时间断开连接。0：不检查
+     */
+    private int readerIdleTimeSeconds = 0;
+
+    /**
      * 通道初始化
      */
     private ChannelInitializationHandler initializationHandler;
@@ -52,30 +58,5 @@ public class TcpClientConfig {
     @Setter(AccessLevel.NONE)
     private HeartBeatConfig heartBeatConfig = new HeartBeatConfig();
 
-    /**
-     * 心跳配置对象
-     */
-    @Getter
-    @Setter
-    public static class HeartBeatConfig{
-
-
-
-        /**
-         * 心跳间隔（秒），大于0发送心跳
-         */
-        private int heartBeatInterval = 0;
-
-        /**
-         * 是否固定按固定心跳周期发送
-         * 否：在客户端心跳间隔时间内没有向服务端发送任何数据时发送心跳
-         */
-        private boolean fixedCycleSend = false;
-
-        /**
-         * 构建心跳
-         */
-        private HeartBeatBuilder heartBeatBuilder = () -> new byte[0];
-    }
 
 }

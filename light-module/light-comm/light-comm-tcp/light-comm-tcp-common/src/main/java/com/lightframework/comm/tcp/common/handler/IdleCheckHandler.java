@@ -1,4 +1,4 @@
-package com.lightframework.comm.tcp.server;
+package com.lightframework.comm.tcp.common.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleState;

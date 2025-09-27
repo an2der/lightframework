@@ -2,10 +2,12 @@ package com.lightframework.util.io;
 
 import cn.hutool.core.io.FileUtil;
 import com.lightframework.util.os.OSUtil;
+import com.lightframework.util.project.ProjectUtil;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 /***
  * @author yg
@@ -15,6 +17,10 @@ import java.io.IOException;
 public class PathUtil {
 
     private PathUtil(){}
+
+    public static String toAbsolutePath(String path){
+        return Paths.get(ProjectUtil.getProjectRootPath(), path).toString();
+    }
 
     /**
      * 清除windows文件名中特殊字符

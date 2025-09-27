@@ -1,6 +1,6 @@
 package com.lightframework.starter.comm.tcp.client;
 
-import com.lightframework.comm.tcp.client.HeartBeatBuilder;
+import com.lightframework.comm.tcp.common.heartbeat.HeartBeatBuilder;
 import com.lightframework.comm.tcp.client.TcpClient;
 import com.lightframework.comm.tcp.client.TcpClientConfig;
 import com.lightframework.comm.tcp.common.handler.ChannelInitializationHandler;

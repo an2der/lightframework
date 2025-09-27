@@ -4,7 +4,7 @@ package com.lightframework.websocket.netty.server;
 import com.lightframework.comm.tcp.server.TcpServer;
 import com.lightframework.comm.tcp.server.TcpServerConfig;
 import com.lightframework.util.spring.SpringContextUtil;
-import com.lightframework.util.spring.web.SpringJacksonUtil;
+import com.lightframework.util.spring.SpringJacksonUtil;
 import com.lightframework.websocket.netty.handler.AbstractWebSocketHandler;
 import com.lightframework.websocket.netty.handler.WebSocketInboundHandler;
 import com.lightframework.websocket.netty.properties.WebSocketConfigProperties;

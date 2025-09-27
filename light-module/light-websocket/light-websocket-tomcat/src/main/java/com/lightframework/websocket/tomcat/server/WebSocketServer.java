@@ -1,7 +1,6 @@
 package com.lightframework.websocket.tomcat.server;
 
-import cn.hutool.json.JSONUtil;
-import com.lightframework.util.spring.web.SpringJacksonUtil;
+import com.lightframework.util.spring.SpringJacksonUtil;
 import com.lightframework.websocket.common.constant.WebSocketMsgTypeConstants;
 import com.lightframework.websocket.common.model.TextWebSocketMessage;
 import com.lightframework.websocket.common.model.WebSocketMessage;

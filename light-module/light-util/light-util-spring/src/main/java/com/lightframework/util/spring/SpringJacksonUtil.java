@@ -1,4 +1,4 @@
-package com.lightframework.util.spring.web;
+package com.lightframework.util.spring;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,5 +1,7 @@
 package com.lightframework.comm.tcp.server;
 
+import com.lightframework.comm.tcp.common.handler.IdleCheckHandler;
+import com.lightframework.comm.tcp.common.heartbeat.HeartBeatHandler;
 import com.lightframework.common.LightException;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -51,8 +53,11 @@ public class TcpServer {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             serverConfig.getInitializationHandler().initChannel(socketChannel);
-                            socketChannel.pipeline().addFirst(new IdleCheckHandler(serverConfig.getReaderIdleTimeSeconds()));
-                            socketChannel.pipeline().addLast(new TcpServerHandler());
+                            socketChannel.pipeline().addFirst(new TcpServerHandler());
+                            HeartBeatHandler.handle(socketChannel, serverConfig.getName(),workGroup,serverConfig.getHeartBeatConfig());
+                            if(serverConfig.getReaderIdleTimeSeconds() > 0) {
+                                socketChannel.pipeline().addFirst(new IdleCheckHandler(serverConfig.getReaderIdleTimeSeconds()));
+                            }
                         }
                     });
             ChannelFuture future = bootstrap.bind().sync();
@@ -92,11 +97,12 @@ public class TcpServer {
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
             if(!((cause instanceof IOException) && cause.getMessage().equals("远程主机强迫关闭了一个现有的连接。"))) {
                 InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-                String ip = socketAddress.getAddress().getHostAddress();
+                String host = socketAddress.getAddress().getHostAddress();
                 int port = socketAddress.getPort();
-                log.error(serverConfig.getName() + "捕获异常，address：["+ip+":"+port+"]，cause：" + cause.getMessage(), cause);
+                log.error(serverConfig.getName() + "捕获异常，RemoteAddress:["+host+":"+port+"]，cause：" + cause.getMessage(), cause);
             }
             ctx.channel().close();
+            super.exceptionCaught(ctx, cause);
         }
     }
 }

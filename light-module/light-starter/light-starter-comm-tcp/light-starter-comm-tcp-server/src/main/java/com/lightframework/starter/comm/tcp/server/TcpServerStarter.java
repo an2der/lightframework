@@ -1,6 +1,7 @@
 package com.lightframework.starter.comm.tcp.server;
 
 import com.lightframework.comm.tcp.common.handler.ChannelInitializationHandler;
+import com.lightframework.comm.tcp.common.heartbeat.HeartBeatBuilder;
 import com.lightframework.comm.tcp.server.TcpServer;
 import com.lightframework.comm.tcp.server.TcpServerConfig;
 import com.lightframework.util.spring.SpringContextUtil;
@@ -23,6 +24,9 @@ public class TcpServerStarter implements ApplicationRunner {
     @Autowired
     private ChannelInitializationHandler channelInitializationHandler;
 
+    @Autowired(required = false)
+    private HeartBeatBuilder heartBeatBuilder;
+
     private TcpServer tcpServer;
 
     @Override
@@ -30,7 +34,11 @@ public class TcpServerStarter implements ApplicationRunner {
         try{
             TcpServerConfig tcpServerConfig = new TcpServerConfig();
             BeanUtils.copyProperties(tcpServerProperties,tcpServerConfig);
+            BeanUtils.copyProperties(tcpServerProperties.getHeartBeatConfig(),tcpServerConfig.getHeartBeatConfig());
             tcpServerConfig.setInitializationHandler(channelInitializationHandler);
+            if(heartBeatBuilder != null){
+                tcpServerConfig.getHeartBeatConfig().setHeartBeatBuilder(heartBeatBuilder);
+            }
             tcpServer = TcpServer.start(tcpServerConfig);
             SpringContextUtil.registerBean(TcpServerManagerHolder.TCP_SERVER_MANAGER_NAME,tcpServer.getTcpServerManager());
         }catch (Exception e){

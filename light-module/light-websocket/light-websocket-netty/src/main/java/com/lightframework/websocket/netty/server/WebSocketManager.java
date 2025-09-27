@@ -1,7 +1,7 @@
 package com.lightframework.websocket.netty.server;
 
 import com.lightframework.comm.tcp.server.TcpServerManager;
-import com.lightframework.util.spring.web.SpringJacksonUtil;
+import com.lightframework.util.spring.SpringJacksonUtil;
 import com.lightframework.websocket.common.model.WebSocketMessage;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>light-util</artifactId>
         <groupId>com.lightframework</groupId>
-        <version>1.0.28</version>
+        <version>1.0.29</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,6 +16,10 @@
         <dependency>
             <groupId>com.lightframework</groupId>
             <artifactId>light-util-os</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lightframework</groupId>
+            <artifactId>light-util-project</artifactId>
         </dependency>
     </dependencies>
 </project>

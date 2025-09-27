@@ -1,6 +1,6 @@
 package com.lightframework.websocket.tomcat.server;
 
-import com.lightframework.util.spring.web.SpringJacksonUtil;
+import com.lightframework.util.spring.SpringJacksonUtil;
 import com.lightframework.websocket.common.model.WebSocketMessage;
 import lombok.extern.slf4j.Slf4j;
 

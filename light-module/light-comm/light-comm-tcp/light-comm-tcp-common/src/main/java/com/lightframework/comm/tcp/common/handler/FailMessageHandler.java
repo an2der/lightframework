@@ -21,7 +21,7 @@ public class FailMessageHandler implements ChannelFutureListener {
             InetSocketAddress socketAddress = (InetSocketAddress) channelFuture.channel().remoteAddress();
             String ip = socketAddress.getAddress().getHostAddress();
             int port = socketAddress.getPort();
-            log.error(name+"服务发送消息失败，address：["+ip+":"+port+"]，cause：" + channelFuture.cause().getMessage(),channelFuture.cause());
+            log.error(name+"服务发送消息失败，RemoteAddress:["+ip+":"+port+"]，cause：" + channelFuture.cause().getMessage(),channelFuture.cause());
         }
     }
 }

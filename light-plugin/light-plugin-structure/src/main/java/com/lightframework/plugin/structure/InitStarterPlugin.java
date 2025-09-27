@@ -43,24 +43,19 @@ public class InitStarterPlugin extends AbstractMojo {
         }
     }
 
-    protected void  addDependency(String lightArtifactId){
-        File pomFile = getRootPomFile();
+    protected void addDependency(Dependency dependency,File pomFile){
         if(!pomFile.exists()){
             throw new LightException(pomFile.getAbsolutePath() + " file does not exist!");
         }
         Model model = getModel(pomFile);
         boolean existLightCore = false;
-        String lightGroupId = "com.lightframework";
-        for (Dependency dependency : model.getDependencies()) {
-            if(lightArtifactId.equals(dependency.getArtifactId()) && lightGroupId.equals(dependency.getGroupId())){
+        for (Dependency dependency1 : model.getDependencies()) {
+            if(dependency.getArtifactId().equals(dependency1.getArtifactId()) && dependency.getGroupId().equals(dependency1.getGroupId())){
                 existLightCore = true;
             }
         }
         if(!existLightCore) {
             MavenXpp3Writer writer = new MavenXpp3Writer();
-            Dependency dependency = new Dependency();
-            dependency.setGroupId(lightGroupId);
-            dependency.setArtifactId(lightArtifactId);
             model.addDependency(dependency);
             OutputStream outputStream = null;
             try {
