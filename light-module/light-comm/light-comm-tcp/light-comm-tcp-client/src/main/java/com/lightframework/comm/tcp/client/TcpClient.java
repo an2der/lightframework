@@ -9,14 +9,19 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
+import static com.lightframework.comm.tcp.client.TcpMultiClientManager.CLIENT_ID;
+
 @Slf4j
 public class TcpClient {
+
+    private String id;
 
     private EventLoopGroup group;
 
@@ -56,6 +61,7 @@ public class TcpClient {
                         if(clientConfig.getReaderIdleTimeSeconds() > 0) {
                             socketChannel.pipeline().addFirst(new IdleCheckHandler(clientConfig.getReaderIdleTimeSeconds()));
                         }
+                        socketChannel.pipeline().addLast(new TcpClientExceptionHandler());
                     }
                 });
     }
@@ -67,6 +73,7 @@ public class TcpClient {
                 ChannelFuture future = bootstrap.connect().sync();
                 if (future.isSuccess()) {
                     channel = future.channel();
+                    bindId();
                     InetSocketAddress socketAddress = (InetSocketAddress) channel.localAddress();
                     log.info("{}连接服务端成功！LocalPort:{};RemoteAddress:[{}:{}]",clientConfig.getName(),socketAddress.getPort(),clientConfig.getServerHost(), clientConfig.getServerPort());
                     return true;
@@ -80,6 +87,26 @@ public class TcpClient {
             log.info("{}客户端已连接，请勿重复连接！RemoteAddress:[{}:{}]",clientConfig.getName(),clientConfig.getServerHost(),clientConfig.getServerPort());
         }
         return false;
+    }
+
+    void setId(String id){
+        this.id = id;
+        bindId();
+    }
+
+    void unsetId(){
+        this.id = null;
+        if (channel != null) {
+            channel.attr(AttributeKey.valueOf(CLIENT_ID)).set(null);
+        }
+    }
+
+    void bindId(){
+        if(id != null && !id.isEmpty()) {
+            if (channel != null) {
+                channel.attr(AttributeKey.valueOf(CLIENT_ID)).set(id);
+            }
+        }
     }
 
     public Channel getChannel(){
@@ -148,5 +175,16 @@ public class TcpClient {
         }
 
     }
+
+    private class TcpClientExceptionHandler extends ChannelInboundHandlerAdapter {
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+            //不调用super.exceptionCaught()，停止传递
+        }
+
+    }
+
+
 
 }

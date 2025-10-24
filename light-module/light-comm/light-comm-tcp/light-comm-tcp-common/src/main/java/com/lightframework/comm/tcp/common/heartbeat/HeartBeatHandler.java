@@ -1,5 +1,6 @@
 package com.lightframework.comm.tcp.common.heartbeat;
 
+import cn.hutool.json.JSONUtil;
 import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleState;
@@ -50,13 +51,13 @@ public class HeartBeatHandler {
                             InetSocketAddress socketAddress = (InetSocketAddress) channel.remoteAddress();
                             String targetHost = socketAddress.getAddress().getHostAddress();
                             int targetPort = socketAddress.getPort();
-                            log.debug("{}发送心跳成功，目标地址 {}:{}，数据:{}", name,targetHost, targetPort, heartbeat);
+                            log.debug("{}发送心跳成功，目标地址 {}:{}，数据:{}", name,targetHost, targetPort, JSONUtil.toJsonStr(heartbeat));
                         }
                     } else {
                         InetSocketAddress socketAddress = (InetSocketAddress) channel.remoteAddress();
                         String host = socketAddress.getAddress().getHostAddress();
                         int port = socketAddress.getPort();
-                        log.error("{}发送心跳失败，目标地址 {}:{}，数据:{}，异常：{}", name, host, port, heartbeat,future.cause().getMessage());
+                        log.error(String.format("%s发送心跳失败，目标地址 %s:%s，数据:%s", name, host, port, JSONUtil.toJsonStr(heartbeat)),future.cause());
                         future.channel().close();
                     }
                 }

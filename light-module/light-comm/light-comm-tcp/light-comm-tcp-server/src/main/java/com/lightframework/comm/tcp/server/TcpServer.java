@@ -58,6 +58,7 @@ public class TcpServer {
                             if(serverConfig.getReaderIdleTimeSeconds() > 0) {
                                 socketChannel.pipeline().addFirst(new IdleCheckHandler(serverConfig.getReaderIdleTimeSeconds()));
                             }
+                            socketChannel.pipeline().addLast(new TcpServerExceptionHandler());
                         }
                     });
             ChannelFuture future = bootstrap.bind().sync();
@@ -103,6 +104,13 @@ public class TcpServer {
             }
             ctx.channel().close();
             super.exceptionCaught(ctx, cause);
+        }
+    }
+
+    private class TcpServerExceptionHandler extends ChannelInboundHandlerAdapter {
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+            //不调用super.exceptionCaught()，停止传递
         }
     }
 }

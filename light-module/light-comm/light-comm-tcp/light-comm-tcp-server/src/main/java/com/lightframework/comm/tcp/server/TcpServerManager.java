@@ -21,7 +21,7 @@ public class TcpServerManager {
 
     private final ConcurrentHashMap<String, Channel> CHANNELS = new ConcurrentHashMap<>();
 
-    private final String CLIENT_ID = "CLIENT_ID";
+    private static final String CLIENT_ID = "CLIENT_ID";
 
     private FailMessageHandler failMessageHandler;
 
@@ -55,7 +55,7 @@ public class TcpServerManager {
         return CHANNELS.get(id);
     }
 
-    public String getId(Channel channel){
+    public static String getClientId(Channel channel){
         Attribute<Object> attr = channel.attr(AttributeKey.valueOf(CLIENT_ID));
         return attr == null?null:(String)attr.get();
     }
