@@ -32,18 +32,21 @@
             <id>ENV-dev</id>
             <properties>
                 <env>dev</env>
+                <config.dir.name>config</config.dir.name>
             </properties>
         </profile>
         <profile>
             <id>ENV-uat</id>
             <properties>
                 <env>uat</env>
+                <config.dir.name>config</config.dir.name>
             </properties>
         </profile>
         <profile>
             <id>ENV-pro</id>
             <properties>
                 <env>pro</env>
+                <config.dir.name>config</config.dir.name>
             </properties>
         </profile>
         <profile>

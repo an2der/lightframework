@@ -29,7 +29,11 @@
 		</fileSet>
 		<fileSet>
 			<directory>src/main/env/${env}</directory>
-			<outputDirectory>config</outputDirectory>
+			<outputDirectory>${config.dir.name}</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/resources/${config.dir.name}</directory>
+			<outputDirectory>${config.dir.name}</outputDirectory>
 		</fileSet>
 	</fileSets>
 
