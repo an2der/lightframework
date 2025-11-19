@@ -510,7 +510,7 @@
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms> <!-- 禁用备份pom文件的生成 -->
                 </configuration>
-                <inherited>false</inherited>
+<!--                <inherited>false</inherited>-->
             </plugin>
         </plugins>
     </build>
