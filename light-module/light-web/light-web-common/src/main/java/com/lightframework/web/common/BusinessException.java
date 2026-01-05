@@ -11,8 +11,14 @@ public class BusinessException extends LightException {
 
     private int code;
 
+    private Object data;
+
     public BusinessException(String message){
         this(message,null);
+    }
+
+    public BusinessException(Object data){
+        this(BusinessStatus.FAIL.getCode(),null, data,null);
     }
 
     public BusinessException(BusinessStatus status){
@@ -24,20 +30,25 @@ public class BusinessException extends LightException {
     }
 
     public BusinessException(int code, String message){
-        this(code,message,null);
+        this(code,message,null,null);
     }
 
     public BusinessException(String message, Throwable throwable){
-        this(BusinessStatus.FAIL.getCode(),message,throwable);
+        this(BusinessStatus.FAIL.getCode(),message, null,throwable);
     }
 
-    public BusinessException(int code, String message, Throwable throwable){
+    public BusinessException(int code, String message,Object data, Throwable throwable){
         super(message,throwable);
         this.code = code;
+        this.data = data;
     }
 
     public int getCode() {
         return code;
+    }
+
+    public Object getData() {
+        return data;
     }
 
 }
