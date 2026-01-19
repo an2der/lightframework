@@ -67,8 +67,12 @@ public class TcpClient {
     }
 
     public synchronized boolean connect(){
+        this.disconnected = false;
+        return connectToServer();
+    }
+
+    private synchronized boolean connectToServer(){
         if(channel == null || !channel.isActive()) {
-            this.disconnected = false;
             try {
                 ChannelFuture future = bootstrap.connect().sync();
                 if (future.isSuccess()) {
@@ -152,7 +156,7 @@ public class TcpClient {
             group.schedule(() ->{
                 if(!disconnected) {
                     log.info("{}尝试重新连接到服务端！RemoteAddress:[{}:{}]", clientConfig.getName(), clientConfig.getServerHost(), clientConfig.getServerPort());
-                    connect();
+                    connectToServer();
                 }
             }, clientConfig.getReconnectInterval(), TimeUnit.SECONDS);
         }
