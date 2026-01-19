@@ -148,10 +148,12 @@ public class TcpClient {
     }
 
     private void reconnect(){
-        if(!disconnected && (channel == null || !channel.isActive()) && clientConfig.getReconnectInterval() >0) {
+        if(clientConfig.getReconnectInterval() >0) {
             group.schedule(() ->{
-                log.info("{}尝试重新连接到服务端！RemoteAddress:[{}:{}]",clientConfig.getName(),clientConfig.getServerHost(), clientConfig.getServerPort());
-                connect();
+                if(!disconnected) {
+                    log.info("{}尝试重新连接到服务端！RemoteAddress:[{}:{}]", clientConfig.getName(), clientConfig.getServerHost(), clientConfig.getServerPort());
+                    connect();
+                }
             }, clientConfig.getReconnectInterval(), TimeUnit.SECONDS);
         }
     }
