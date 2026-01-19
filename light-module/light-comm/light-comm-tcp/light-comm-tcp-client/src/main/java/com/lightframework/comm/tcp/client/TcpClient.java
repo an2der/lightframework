@@ -128,8 +128,8 @@ public class TcpClient {
 
 
     public void disconnect(){
+        this.disconnected = true;
         if(this.channel != null) {
-            this.disconnected = true;
             this.channel.close();//关闭TCP连接
             this.channel = null;
         }
