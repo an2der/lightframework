@@ -103,7 +103,6 @@ public class UdpSocket {
             String ip = socketAddress.getAddress().getHostAddress();
             int port = socketAddress.getPort();
             log.error(udpSocketConfig.getName() + "捕获异常，address：["+ip+":"+port+"]，cause：" + cause.getMessage(), cause);
-            ctx.channel().close();
             super.exceptionCaught(ctx, cause);
         }
     }
