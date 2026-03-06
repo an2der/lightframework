@@ -30,7 +30,7 @@ public class UdpSocketConfig {
     /**
      * 重用地址
      */
-    private boolean reuseaddr = true;
+    private boolean reuseaddr = false;
 
     /**
      * 每帧数据最大长度
