@@ -25,14 +25,18 @@ public class WebSocketManager {
 
     private WebSocketManager(){}
 
-    public static void putChannel(Channel channel){
+    public static void putChannel(String id,Channel channel){
         if(channel != null) {
-            tcpServerManager.putChannel(channel.id().asLongText(), channel);
+            tcpServerManager.putChannel(id, channel);
         }
     }
 
+    public static void removeChannel(String id){
+        tcpServerManager.removeChannel(id);
+    }
+
     public static void removeChannel(Channel channel){
-        tcpServerManager.removeChannel(channel.id().asLongText());
+        tcpServerManager.removeChannel(channel);
     }
 
     public static Channel getChannel(String channelId){

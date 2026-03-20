@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /*** 
@@ -23,14 +25,36 @@ public class WebSocketManager {
 
     private WebSocketManager(){}
 
-    public static void putSession(Session session){
+    public static void putSession(String id,Session session){
         if(session != null) {
-            SESSIONS.put(session.getId(), session);
+            SESSIONS.put(id, session);
         }
     }
 
+    public static void removeSession(String id){
+        Session session = SESSIONS.get(id);
+        if(session != null) {
+            try {
+                session.close();
+            } catch (IOException e) {
+            }
+        }
+        SESSIONS.remove(id);
+    }
+
     public static void removeSession(Session session){
-        SESSIONS.remove(session.getId());
+        Iterator<Map.Entry<String, Session>> iterator = SESSIONS.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry<String, Session> next = iterator.next();
+            if(next.getValue() == session){
+                try {
+                    session.close();
+                } catch (IOException e) {
+                }
+                iterator.remove();
+                break;
+            }
+        }
     }
 
     public static Session getSession(String sessionId){

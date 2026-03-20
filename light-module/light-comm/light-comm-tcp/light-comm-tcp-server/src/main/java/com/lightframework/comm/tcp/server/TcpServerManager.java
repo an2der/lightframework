@@ -37,6 +37,10 @@ public class TcpServerManager {
     }
 
     public void removeChannel(String id){
+        Channel channel = CHANNELS.get(id);
+        if (channel != null){
+            channel.close();
+        }
         CHANNELS.remove(id);
     }
 
@@ -45,6 +49,7 @@ public class TcpServerManager {
         while (iterator.hasNext()){
             Map.Entry<String, Channel> next = iterator.next();
             if(next.getValue() == channel){
+                channel.close();
                 iterator.remove();
                 break;
             }

@@ -1,7 +1,7 @@
 package com.lightframework.websocket.tomcat.server;
 
 import com.lightframework.util.spring.SpringJacksonUtil;
-import com.lightframework.websocket.common.constant.WebSocketMsgTypeConstants;
+import com.lightframework.websocket.common.constant.WebSocketConstants;
 import com.lightframework.websocket.common.model.TextWebSocketMessage;
 import com.lightframework.websocket.common.model.WebSocketMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.util.List;
+import java.util.Map;
 
 
 /** websocket Server
@@ -39,9 +41,13 @@ public class WebSocketServer {
      */
     @OnOpen
     public void onOpen(Session session) {
-        WebSocketManager.putSession(session);
+        Map<String, List<String>> paramMap = session.getRequestParameterMap();
+
+        List<String> values = paramMap != null ? paramMap.get(WebSocketConstants.PARAM_USER_ID) : null;
+        String userId = values != null && !values.isEmpty() ? values.get(0) : session.getId();
+        WebSocketManager.putSession(userId, session);
         try {
-            WebSocketManager.sendMessage(session, new WebSocketMessage(WebSocketMsgTypeConstants.SESSION_ID,session.getId()));
+            WebSocketManager.sendMessage(session, new WebSocketMessage(WebSocketConstants.SESSION_ID,userId));
             abstractWebSocketHandler.open(session);
         }catch (Exception e){
             log.error("WebSocket Open发生异常 ", e);
