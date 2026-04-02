@@ -1,14 +1,11 @@
-package com.lightframework.util.shell;
+package com.lightframework.util.command;
 
 import cn.hutool.core.thread.ThreadUtil;
 import com.lightframework.common.LightException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
@@ -104,4 +101,5 @@ public class CommandExecutor {
         }
         return result;
     }
+
 }

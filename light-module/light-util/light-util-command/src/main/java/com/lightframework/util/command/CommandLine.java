@@ -1,4 +1,4 @@
-package com.lightframework.util.shell;
+package com.lightframework.util.command;
 
 public class CommandLine {
 

@@ -9,9 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpringJacksonUtil extends JacksonUtil {
 
-    @Autowired
+    @Autowired(required = false)
     private void setObjectMapper(ObjectMapper objectMapper){
-        SpringJacksonUtil.objectMapper = objectMapper;
+        if(objectMapper != null) {
+            SpringJacksonUtil.objectMapper = objectMapper;
+        }
     }
 
 }

@@ -1,8 +1,8 @@
 package com.lightframework.util.os;
 
-import com.lightframework.util.shell.CommandExecutor;
-import com.lightframework.util.shell.CommandLine;
-import com.lightframework.util.shell.CommandResult;
+import com.lightframework.util.command.CommandExecutor;
+import com.lightframework.util.command.CommandLine;
+import com.lightframework.util.command.CommandResult;
 
 public class WindowsUtil {
 
