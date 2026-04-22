@@ -29,8 +29,8 @@ public class InitStarterWebPlugin extends InitStarterPlugin {
         addDependency(dependency,project.getFile());
 
         Dependency springbootDependency = new Dependency();
-        springbootDependency.setGroupId("org.springframework.boot");
-        springbootDependency.setArtifactId("spring-boot");
+        springbootDependency.setGroupId("com.lightframework");
+        springbootDependency.setArtifactId("light-web-common");
         springbootDependency.setOptional(true);
         addDependency(springbootDependency,getRootPomFile());
 

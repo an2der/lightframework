@@ -7,7 +7,7 @@ import com.lightframework.auth.core.service.AuthService;
 import com.lightframework.web.common.BusinessException;
 import com.lightframework.web.common.BusinessType;
 import com.lightframework.web.common.annotation.SystemLogger;
-import com.lightframework.web.core.annotation.BusinessController;
+import com.lightframework.web.common.annotation.BusinessController;
 import com.lightframework.util.verifycode.VerifyCode;
 import com.lightframework.util.verifycode.VerifyCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.lightframework.web.core.annotation;
+package com.lightframework.web.common.annotation;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Controller;

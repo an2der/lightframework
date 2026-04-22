@@ -3,7 +3,7 @@ package com.lightframework.auth.core.controller;
 import com.lightframework.auth.common.model.UserInfo;
 import com.lightframework.web.common.BusinessType;
 import com.lightframework.web.common.annotation.SystemLogger;
-import com.lightframework.web.core.annotation.BusinessController;
+import com.lightframework.web.common.annotation.BusinessController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
