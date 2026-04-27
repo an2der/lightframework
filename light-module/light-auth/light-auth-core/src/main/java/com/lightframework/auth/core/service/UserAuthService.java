@@ -11,4 +11,5 @@ public interface UserAuthService {
     
     UserInfo getUserInfoByUsername(String username);
 
+    void fillUserInfoAfterLoginSuccess(UserInfo userInfo);
 }

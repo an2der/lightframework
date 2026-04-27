@@ -13,7 +13,7 @@ public class BusinessResponse implements Serializable {
 
     private int code;
 
-    private String message;
+    private String msg;
 
     private Object data;
 
@@ -25,12 +25,12 @@ public class BusinessResponse implements Serializable {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public Object getData() {
@@ -53,17 +53,17 @@ public class BusinessResponse implements Serializable {
         this(BusinessStatus.SUCCESS.getCode(), BusinessStatus.SUCCESS.getMessage(),data);
     }
 
-    public BusinessResponse(int code,String message){
-        this(code,message,null);
+    public BusinessResponse(int code,String msg){
+        this(code, msg,null);
     }
 
-    public BusinessResponse(String message, Object data) {
-        this(BusinessStatus.SUCCESS.getCode(),message,data);
+    public BusinessResponse(String msg, Object data) {
+        this(BusinessStatus.SUCCESS.getCode(), msg,data);
     }
 
-    public BusinessResponse(int code, String message, Object data) {
+    public BusinessResponse(int code, String msg, Object data) {
         this.code = code;
-        this.message = message;
+        this.msg = msg;
         this.data = data;
     }
 
@@ -72,6 +72,6 @@ public class BusinessResponse implements Serializable {
     }
 
     public void throwBusinessException(){
-        throw new BusinessException(this.code,this.message);
+        throw new BusinessException(this.code,this.msg);
     }
 }

@@ -3,6 +3,7 @@ package com.lightframework.auth.jwt.service.impl;
 import com.lightframework.auth.common.model.UserInfo;
 import com.lightframework.auth.core.model.LoginParam;
 import com.lightframework.auth.core.service.AuthService;
+import com.lightframework.auth.core.service.UserAuthService;
 import com.lightframework.auth.jwt.properties.JwtAuthConfigProperties;
 import com.lightframework.auth.jwt.util.JwtTokenUtil;
 import com.lightframework.web.common.BusinessException;
@@ -32,6 +33,9 @@ public class DefaultAuthServiceImpl extends AuthService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private UserAuthService userAuthService;
+
     @Override
     public UserInfo login(LoginParam loginParam) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginParam.getUsername(),loginParam.getPassword());
@@ -41,7 +45,9 @@ public class DefaultAuthServiceImpl extends AuthService {
             if(!userInfo.isEnabled()){
                 throw new BusinessException("登录失败，用户已被禁用！");
             }
+            userAuthService.fillUserInfoAfterLoginSuccess(userInfo);
             userInfo.setPassword(null);
+            userInfo.setSalt(null);
             String accessToken = authConfigProperties.getTokenPrefix() + jwtTokenUtil.generateToken(userInfo);
             HttpServletResponse response = SpringServletUtil.getResponse();
             Cookie cookie = new Cookie(authConfigProperties.getConfiguration().getTokenKey(),accessToken);
@@ -54,6 +60,8 @@ public class DefaultAuthServiceImpl extends AuthService {
             return userInfo;
         }catch (BadCredentialsException e){
             throw new BusinessException("用户名或密码不正确");
+        }catch (UsernameNotFoundException e){
+            throw new BusinessException("用户不存在");
         }
 
     }

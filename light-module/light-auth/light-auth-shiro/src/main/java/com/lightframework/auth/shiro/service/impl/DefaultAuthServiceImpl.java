@@ -3,6 +3,7 @@ package com.lightframework.auth.shiro.service.impl;
 import com.lightframework.auth.core.model.LoginParam;
 import com.lightframework.auth.common.model.UserInfo;
 import com.lightframework.auth.core.service.AuthService;
+import com.lightframework.auth.core.service.UserAuthService;
 import com.lightframework.auth.shiro.properties.ShiroAuthConfigProperties;
 import com.lightframework.web.common.BusinessException;
 import com.lightframework.util.verifycode.VerifyCode;
@@ -25,6 +26,9 @@ public class DefaultAuthServiceImpl extends AuthService {
     @Autowired
     private ShiroAuthConfigProperties authConfigProperties;
 
+    @Autowired
+    private UserAuthService userAuthService;
+
     @Override
     public UserInfo login(LoginParam loginParam) {
         UsernamePasswordToken token = new UsernamePasswordToken(loginParam.getUsername(), loginParam.getPassword());
@@ -39,6 +43,7 @@ public class DefaultAuthServiceImpl extends AuthService {
                     throw new BusinessException("登录失败，用户已被禁用！");
                 }
                 userInfo.setAccessToken(subject.getSession().getId().toString());
+                userAuthService.fillUserInfoAfterLoginSuccess(userInfo);
                 return userInfo;
             }else {
                 throw new BusinessException("用户不存在！");

@@ -51,6 +51,6 @@ public class JwtAuthConfigProperties {
         /**
          * hash算法
          */
-        private String hashAlgorithm;
+        private String hashAlgorithm = "MD5";
     }
 }

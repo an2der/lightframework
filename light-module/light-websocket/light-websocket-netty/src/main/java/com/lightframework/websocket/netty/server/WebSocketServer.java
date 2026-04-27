@@ -64,7 +64,7 @@ public class WebSocketServer implements ApplicationRunner, ApplicationListener<C
             // 聚合器，将HttpMessage和HttpContent集合成FullHttpRequest，设置单次请求文件的大小
             socketChannel.pipeline().addLast(new HttpObjectAggregator(webSocketConfigProperties.getMaxContentLength()));
             // websocket服务器处理的协议，用于指定给客户端连接访问的路由
-            socketChannel.pipeline().addLast(new WebSocketServerProtocolHandler(webSocketConfigProperties.getWebsocketPath()));
+            socketChannel.pipeline().addLast(new WebSocketServerProtocolHandler(webSocketConfigProperties.getWebsocketPath(), true));
             // 业务事件处理
             socketChannel.pipeline().addLast(new WebSocketInboundHandler(abstractWebSocketHandler,springJacksonUtil));
         });

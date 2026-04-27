@@ -37,6 +37,12 @@ public class AuthController {
     @PostMapping("/login")
     @SystemLogger(moduleKey = "AUTH", moduleName = "授权",operationDesc = "登录",businessType = BusinessType.LOGIN)
     public UserInfo login(@RequestBody LoginParam loginParam){
+        if(loginParam.getUsername() == null || loginParam.getUsername().isEmpty()){
+            throw new BusinessException("请输入用户名");
+        }
+        if(loginParam.getPassword() == null || loginParam.getPassword().isEmpty()){
+            throw new BusinessException("请输入密码");
+        }
         if(authConfigProperties.getVerifyCode().isEnableVerifyCode()){
             validateCode(loginParam.getVerifyCode());
         }
