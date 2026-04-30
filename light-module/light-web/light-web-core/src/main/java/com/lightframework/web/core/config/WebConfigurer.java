@@ -10,7 +10,7 @@ public class WebConfigurer implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")  // 匹配所有路径
-                .allowedOrigins("*") // 允许所有源（生产环境建议指定具体域名）
+                .allowedOriginPatterns("*") // 允许所有源（生产环境建议指定具体域名）
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true)
