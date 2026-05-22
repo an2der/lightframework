@@ -171,22 +171,16 @@ public class TcpClient {
             super.channelInactive(ctx);
         }
 
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-            if(!((cause instanceof IOException) && cause.getMessage().equals("远程主机强迫关闭了一个现有的连接。"))) {
-                log.error(clientConfig.getName() + "捕获异常！RemoteAddress:["+clientConfig.getServerHost()+":"+clientConfig.getServerPort()+"]", cause);
-            }
-            ctx.channel().close();
-            super.exceptionCaught(ctx, cause);
-        }
-
     }
 
     private class TcpClientExceptionHandler extends ChannelInboundHandlerAdapter {
 
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-            //不调用super.exceptionCaught()，停止传递
+            if(!((cause instanceof IOException) && cause.getMessage().equals("远程主机强迫关闭了一个现有的连接。"))) {
+                log.error(clientConfig.getName() + "捕获异常！RemoteAddress:["+clientConfig.getServerHost()+":"+clientConfig.getServerPort()+"]", cause);
+            }
+            ctx.channel().close();
         }
 
     }

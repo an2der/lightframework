@@ -53,7 +53,6 @@ public class TcpServer {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             serverConfig.getInitializationHandler().initChannel(socketChannel);
-                            socketChannel.pipeline().addFirst(new TcpServerHandler());
                             HeartBeatHandler.handle(socketChannel, serverConfig.getName(),workGroup,serverConfig.getHeartBeatConfig());
                             if(serverConfig.getReaderIdleTimeSeconds() > 0) {
                                 socketChannel.pipeline().addFirst(new IdleCheckHandler(serverConfig.getReaderIdleTimeSeconds()));
@@ -92,7 +91,7 @@ public class TcpServer {
         return tcpServerManager;
     }
 
-    private class TcpServerHandler extends ChannelInboundHandlerAdapter {
+    private class TcpServerExceptionHandler extends ChannelInboundHandlerAdapter {
 
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
@@ -103,14 +102,7 @@ public class TcpServer {
                 log.error(serverConfig.getName() + "捕获异常，RemoteAddress:["+host+":"+port+"]，cause：" + cause.getMessage(), cause);
             }
             ctx.channel().close();
-            super.exceptionCaught(ctx, cause);
         }
     }
 
-    private class TcpServerExceptionHandler extends ChannelInboundHandlerAdapter {
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-            //不调用super.exceptionCaught()，停止传递
-        }
-    }
 }

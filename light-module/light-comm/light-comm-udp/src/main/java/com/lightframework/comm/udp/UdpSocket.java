@@ -52,7 +52,6 @@ public class UdpSocket {
                         @Override
                         protected void initChannel(NioDatagramChannel socketChannel) throws Exception {
                             socketChannel.pipeline().addLast(udpSocketConfig.getDatagramReceiver());
-                            socketChannel.pipeline().addFirst(new UdpSocketHandler());
                             socketChannel.pipeline().addLast(new UdpSocketExceptionHandler());
                         }
                     });
@@ -95,7 +94,7 @@ public class UdpSocket {
         }
     }
 
-    private class UdpSocketHandler extends ChannelInboundHandlerAdapter {
+    private class UdpSocketExceptionHandler extends ChannelInboundHandlerAdapter {
 
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
@@ -103,14 +102,6 @@ public class UdpSocket {
             String ip = socketAddress.getAddress().getHostAddress();
             int port = socketAddress.getPort();
             log.error(udpSocketConfig.getName() + "捕获异常，address：["+ip+":"+port+"]，cause：" + cause.getMessage(), cause);
-            super.exceptionCaught(ctx, cause);
-        }
-    }
-
-    private class UdpSocketExceptionHandler extends ChannelInboundHandlerAdapter {
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-            //不调用super.exceptionCaught()，停止传递
         }
     }
 
