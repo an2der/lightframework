@@ -98,10 +98,7 @@ public class UdpSocket {
 
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-            InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-            String ip = socketAddress.getAddress().getHostAddress();
-            int port = socketAddress.getPort();
-            log.error(udpSocketConfig.getName() + "捕获异常，address：["+ip+":"+port+"]，cause：" + cause.getMessage(), cause);
+            log.error(udpSocketConfig.getName() + "捕获异常，cause：" + cause.getMessage(), cause);
         }
     }
 
