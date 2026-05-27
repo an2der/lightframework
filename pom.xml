@@ -47,6 +47,7 @@
         <svnkit.version>1.10.11</svnkit.version>
         <reflections.version>0.10.2</reflections.version>
         <cglib.version>3.3.0</cglib.version>
+        <swagger.version>2.2.48</swagger.version>
     </properties>
 
     <dependencies>
@@ -82,6 +83,13 @@
                 </exclusions>
             </dependency>
             <!-- light-framework start -->
+
+            <!-- light-ai -->
+            <dependency>
+                <groupId>com.lightframework</groupId>
+                <artifactId>light-ai-ollama</artifactId>
+                <version>1.0.32</version>
+            </dependency>
 
             <!-- light-auth -->
             <dependency>
@@ -446,6 +454,16 @@
                 <groupId>cglib</groupId>
                 <artifactId>cglib</artifactId>
                 <version>${cglib.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-core</artifactId>
+                <version>${swagger.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -18,8 +18,8 @@ public class MyBatisPlusGenerator {
     }
 
     private void generator(String databaseName,String name){
-        FastAutoGenerator.create("jdbc:mysql://192.168.33.233:3306/"+databaseName+"?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai"
-                , "root", "blessme")  //数据库连接配置，必不可少的一个配置
+        FastAutoGenerator.create("jdbc:mysql://127.0.0.1:3306/"+databaseName+"?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai"
+                , "root", "123456")  //数据库连接配置，必不可少的一个配置
                 .globalConfig(builder -> {  //全局配置
                     builder.author("yg") // 设置作者
 //                            .enableSwagger() // 开启 swagger 模式
@@ -40,7 +40,7 @@ public class MyBatisPlusGenerator {
                 .strategyConfig(builder -> {
                     builder.addTablePrefix("t_")
                             .addInclude(
-                                    "t_market_device"
+                                    "t_market_project_acceptance"
                                     )
                             .entityBuilder()
                             .enableLombok(); // 设置过滤表前缀,忽略一些表头，如“sys_user”,填写了sys，就会忽略sys，生成user
