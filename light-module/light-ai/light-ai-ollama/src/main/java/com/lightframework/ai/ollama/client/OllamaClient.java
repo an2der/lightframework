@@ -125,6 +125,8 @@ public class OllamaClient {
         try (HttpResponse response = HttpRequest.post(url)
                 .header("Content-Type", "application/json")
                 .body(JSONUtil.toJsonStr(requestBody))
+                .setConnectionTimeout(effectiveConfig.getConnectTimeout())
+                .setReadTimeout(effectiveConfig.getReadTimeout())
                 .execute()) {
 
             if (!response.isOk()) {
@@ -191,6 +193,8 @@ public class OllamaClient {
         try (HttpResponse response = HttpRequest.post(url)
                 .header("Content-Type", "application/json")
                 .body(JSONUtil.toJsonStr(requestBody))
+                .setConnectionTimeout(effectiveConfig.getConnectTimeout())
+                .setReadTimeout(effectiveConfig.getReadTimeout())
                 .execute()) {
 
             if (!response.isOk()) {
@@ -275,8 +279,8 @@ public class OllamaClient {
                 connection.setDoOutput(true);
                 connection.setRequestProperty("Content-Type", "application/json");
                 connection.setRequestProperty("Accept", "application/x-ndjson");
-                connection.setConnectTimeout(10000);
-                connection.setReadTimeout(0);
+                connection.setConnectTimeout(effectiveConfig.getConnectTimeout());
+                connection.setReadTimeout(effectiveConfig.getReadTimeout());
 
                 connection.getOutputStream().write(JSONUtil.toJsonStr(requestBody).getBytes(StandardCharsets.UTF_8));
                 connection.getOutputStream().flush();
@@ -298,41 +302,36 @@ public class OllamaClient {
                     while ((line = reader.readLine()) != null) {
                         if (line.trim().isEmpty()) continue;
 
-                        try {
-                            JSONObject jsonResponse = JSONUtil.parseObj(line);
-                            String content = jsonResponse.getStr("response");
-                            String thinkingContent = jsonResponse.getStr("thinking");
-                            boolean done = jsonResponse.getBool("done");
+                        JSONObject jsonResponse = JSONUtil.parseObj(line);
+                        String content = jsonResponse.getStr("response");
+                        String thinkingContent = jsonResponse.getStr("thinking");
+                        boolean done = jsonResponse.getBool("done");
 
-                            if (thinkingContent != null && !thinkingContent.isEmpty()) {
-                                thinkingBuilder.append(thinkingContent);
-                                callback.onThinking(thinkingContent);
-                            }
-                            if (content != null && !content.isEmpty()) {
-                                responseBuilder.append(content);
-                                callback.onChunk(content);
-                            }
+                        if (thinkingContent != null && !thinkingContent.isEmpty()) {
+                            thinkingBuilder.append(thinkingContent);
+                            callback.onThinking(thinkingContent);
+                        }
+                        if (content != null && !content.isEmpty()) {
+                            responseBuilder.append(content);
+                            callback.onChunk(content);
+                        }
 
-                            if (done) {
-                                // jsonSchema 模式：从累积的 response 中提取纯 JSON
-                                if (effectiveConfig.getJsonSchema() != null) {
-                                    if (responseBuilder.length() > 0) {
-                                        String extracted = tryExtractJsonFromText(responseBuilder.toString());
-                                        if (extracted != null) {
-                                            callback.onExtractedJson(extracted);
-                                        }
-                                    } else if (thinkingBuilder.length() > 0) {
-                                        String extracted = tryExtractJsonFromText(thinkingBuilder.toString());
-                                        if (extracted != null) {
-                                            callback.onExtractedJson(extracted);
-                                        }
+                        if (done) {
+                            // jsonSchema 模式：从累积的 response 中提取纯 JSON
+                            if (effectiveConfig.getJsonSchema() != null) {
+                                if (responseBuilder.length() > 0) {
+                                    String extracted = tryExtractJsonFromText(responseBuilder.toString());
+                                    if (extracted != null) {
+                                        callback.onExtractedJson(extracted);
+                                    }
+                                } else if (thinkingBuilder.length() > 0) {
+                                    String extracted = tryExtractJsonFromText(thinkingBuilder.toString());
+                                    if (extracted != null) {
+                                        callback.onExtractedJson(extracted);
                                     }
                                 }
-                                callback.onDone();
-                                break;
                             }
-                        } catch (Exception e) {
-                            log.warn("Failed to parse stream line: {}", line);
+                            break;
                         }
                     }
                 }
@@ -343,6 +342,12 @@ public class OllamaClient {
                 if (connection != null) {
                     connection.disconnect();
                 }
+                try {
+                    callback.onDone();
+                }catch (Exception e){
+                    log.error("Stream generate request callback failed", e);
+                }
+
             }
         });
     }
@@ -380,8 +385,8 @@ public class OllamaClient {
                 connection.setDoOutput(true);
                 connection.setRequestProperty("Content-Type", "application/json");
                 connection.setRequestProperty("Accept", "application/x-ndjson");
-                connection.setConnectTimeout(10000);
-                connection.setReadTimeout(0);
+                connection.setConnectTimeout(effectiveConfig.getConnectTimeout());
+                connection.setReadTimeout(effectiveConfig.getReadTimeout());
 
                 connection.getOutputStream().write(JSONUtil.toJsonStr(requestBody).getBytes(StandardCharsets.UTF_8));
                 connection.getOutputStream().flush();
@@ -403,42 +408,37 @@ public class OllamaClient {
                     while ((line = reader.readLine()) != null) {
                         if (line.trim().isEmpty()) continue;
 
-                        try {
-                            JSONObject jsonResponse = JSONUtil.parseObj(line);
-                            JSONObject message = jsonResponse.getJSONObject("message");
-                            String content = message != null ? message.getStr("content") : "";
-                            String thinkingContent = message != null ? message.getStr("thinking") : null;
-                            boolean done = jsonResponse.getBool("done");
+                        JSONObject jsonResponse = JSONUtil.parseObj(line);
+                        JSONObject message = jsonResponse.getJSONObject("message");
+                        String content = message != null ? message.getStr("content") : "";
+                        String thinkingContent = message != null ? message.getStr("thinking") : null;
+                        boolean done = jsonResponse.getBool("done");
 
-                            if (thinkingContent != null && !thinkingContent.isEmpty()) {
-                                thinkingBuilder.append(thinkingContent);
-                                callback.onThinking(thinkingContent);
-                            }
-                            if (content != null && !content.isEmpty()) {
-                                responseBuilder.append(content);
-                                callback.onChunk(content);
-                            }
+                        if (thinkingContent != null && !thinkingContent.isEmpty()) {
+                            thinkingBuilder.append(thinkingContent);
+                            callback.onThinking(thinkingContent);
+                        }
+                        if (content != null && !content.isEmpty()) {
+                            responseBuilder.append(content);
+                            callback.onChunk(content);
+                        }
 
-                            if (done) {
-                                // jsonSchema 模式：从累积的 response 中提取纯 JSON
-                                if (effectiveConfig.getJsonSchema() != null) {
-                                    if (responseBuilder.length() > 0) {
-                                        String extracted = tryExtractJsonFromText(responseBuilder.toString());
-                                        if (extracted != null) {
-                                            callback.onExtractedJson(extracted);
-                                        }
-                                    } else if (thinkingBuilder.length() > 0) {
-                                        String extracted = tryExtractJsonFromText(thinkingBuilder.toString());
-                                        if (extracted != null) {
-                                            callback.onExtractedJson(extracted);
-                                        }
+                        if (done) {
+                            // jsonSchema 模式：从累积的 response 中提取纯 JSON
+                            if (effectiveConfig.getJsonSchema() != null) {
+                                if (responseBuilder.length() > 0) {
+                                    String extracted = tryExtractJsonFromText(responseBuilder.toString());
+                                    if (extracted != null) {
+                                        callback.onExtractedJson(extracted);
+                                    }
+                                } else if (thinkingBuilder.length() > 0) {
+                                    String extracted = tryExtractJsonFromText(thinkingBuilder.toString());
+                                    if (extracted != null) {
+                                        callback.onExtractedJson(extracted);
                                     }
                                 }
-                                callback.onDone();
-                                break;
                             }
-                        } catch (Exception e) {
-                            log.warn("Failed to parse stream line: {}", line);
+                            break;
                         }
                     }
                 }
@@ -448,6 +448,11 @@ public class OllamaClient {
             } finally {
                 if (connection != null) {
                     connection.disconnect();
+                }
+                try {
+                    callback.onDone();
+                }catch (Exception e){
+                    log.error("Stream generate request callback failed", e);
                 }
             }
         });
@@ -511,6 +516,8 @@ public class OllamaClient {
         merged.setStream(config.getStream() != null ? config.getStream() : defaultConfig.getStream());
         merged.setThink(config.getThink() != null ? config.getThink() : defaultConfig.getThink());
         merged.setKeepAlive(config.getKeepAlive() != null ? config.getKeepAlive() : defaultConfig.getKeepAlive());
+        merged.setConnectTimeout(config.getConnectTimeout() != null ? config.getConnectTimeout() : defaultConfig.getConnectTimeout());
+        merged.setReadTimeout(config.getReadTimeout() != null ? config.getReadTimeout() : defaultConfig.getReadTimeout());
 
         // Options 子参数
         merged.setNumCtx(config.getNumCtx() != null ? config.getNumCtx() : defaultConfig.getNumCtx());
@@ -945,7 +952,9 @@ public class OllamaClient {
          * 接收错误
          * @param e 异常
          */
-        void onError(Exception e);
+        default void onError(Exception e){
+
+        }
     }
 
     /**

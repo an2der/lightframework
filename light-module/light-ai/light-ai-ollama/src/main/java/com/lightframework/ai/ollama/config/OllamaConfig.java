@@ -58,6 +58,23 @@ public class OllamaConfig {
      */
     private Object keepAlive;
 
+    // ===== 超时控制参数 =====
+
+    /**
+     * 连接超时时间（毫秒）
+     * 默认 30000 毫秒（30秒）
+     * 设置为 0 表示无限等待
+     */
+    private Integer connectTimeout = 10000;
+
+    /**
+     * 读取超时时间（毫秒）
+     * 默认 0 毫秒（无限等待）
+     * 设置大于0的值表示：请求发送后在指定时间内没有返回数据则中断请求
+     * 流式响应时建议设置为 0（无限等待），或设置一个较大的值如 300000（5分钟）
+     */
+    private Integer readTimeout = 0;
+
     // ===== Options 子参数 =====
 
     /**
@@ -209,6 +226,26 @@ public class OllamaConfig {
 
     public OllamaConfig keepAlive(Integer keepAlive) {
         this.keepAlive = keepAlive;
+        return this;
+    }
+
+    /**
+     * 设置连接超时时间
+     * @param connectTimeout 超时时间（毫秒）
+     * @return 当前配置对象
+     */
+    public OllamaConfig connectTimeout(Integer connectTimeout) {
+        this.connectTimeout = connectTimeout;
+        return this;
+    }
+
+    /**
+     * 设置读取超时时间
+     * @param readTimeout 超时时间（毫秒），设置为0表示无限等待
+     * @return 当前配置对象
+     */
+    public OllamaConfig readTimeout(Integer readTimeout) {
+        this.readTimeout = readTimeout;
         return this;
     }
 
