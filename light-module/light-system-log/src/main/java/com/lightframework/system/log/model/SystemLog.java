@@ -52,17 +52,27 @@ public class SystemLog implements Serializable {
     /**
      * 执行结果（200：成功，300：失败，500：异常）
      */
-    private Integer executeResult;
+    private int resultCode;
 
     /**
      * 操作类型（0：其它，1：新增，2：删除，3：修改，4：查询，5：登录，6：登出）
      */
-    private Integer operationType;
+    private int operationType;
 
     /**
      * 操作描述
      */
     private String operationDesc;
+
+    /**
+     * 是否执行成功
+     */
+    private boolean successful;
+
+    /**
+     * 失败原因
+     */
+    private String failReason;
 
     /**
      * 模块key

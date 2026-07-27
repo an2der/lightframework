@@ -63,7 +63,7 @@ public class SystemLogAspect {
      */
     @AfterReturning(pointcut = "systemLogPointCut()", returning = "result")
     public void returningHandler(JoinPoint joinPoint,Object result){
-        systemLogHandler(joinPoint,BusinessStatus.SUCCESS);
+        systemLogHandler(joinPoint,null);
     }
     /**
      * 处理异常返回逻辑
@@ -72,15 +72,16 @@ public class SystemLogAspect {
      */
     @AfterThrowing(value = "systemLogPointCut()", throwing = "throwable")
     public void throwingHandler(JoinPoint joinPoint,Throwable throwable){
-        systemLogHandler(joinPoint,(throwable instanceof BusinessException)?BusinessStatus.FAIL:BusinessStatus.ERROR);
+        systemLogHandler(joinPoint,(throwable instanceof BusinessException)? (BusinessException) throwable
+                : new BusinessException(BusinessStatus.ERROR));
     }
 
     /**
      * 保存系统日志，全程异步处理不影响主业务
      * @param joinPoint
-     * @param status
+     * @param exception
      */
-    private void systemLogHandler(JoinPoint joinPoint, BusinessStatus status){
+    private void systemLogHandler(JoinPoint joinPoint, BusinessException exception){
         Date date = new Date();
         try {
             HttpServletRequest request = SpringServletUtil.getRequest();
@@ -97,9 +98,16 @@ public class SystemLogAspect {
                     systemLog.setCreateTime(date);
                     systemLog.setIpAddr(remoteIpAddr);
                     systemLog.setRequestParam(getArgsToJsonArrayString(joinPoint));
-                    systemLog.setExecuteResult(status.getCode());
                     systemLog.setOperationDesc(logger.operationDesc());
                     systemLog.setOperationType(logger.businessType().getCode());
+                    if(exception == null){
+                        systemLog.setSuccessful(true);
+                        systemLog.setResultCode(BusinessStatus.SUCCESS.getCode());
+                    }else {
+                        systemLog.setSuccessful(false);
+                        systemLog.setResultCode(exception.getCode());
+                        systemLog.setFailReason(exception.getMessage());
+                    }
                     systemLog.setModuleKey(logger.moduleKey());
                     systemLog.setModuleName(logger.moduleName());
                     systemLogService.save(systemLog);
