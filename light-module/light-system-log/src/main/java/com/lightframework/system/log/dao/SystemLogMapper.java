@@ -17,8 +17,8 @@ import java.time.LocalDate;
 public interface SystemLogMapper {
 
     @Insert("INSERT INTO `t_system_log` " +
-            "(`id`, `user_id`, `username`, `create_time`, `ip_addr`, `request_param`, `execute_result`, `operation_type`, `operation_desc`, `module_key`, `module_name`)" +
-            " VALUES (#{id}, #{userId}, #{username}, #{createTime}, #{ipAddr}, #{requestParam}, #{executeResult}, #{operationType}, #{operationDesc}, #{moduleKey}, #{moduleName})")
+            "(`id`, `user_id`, `username`, `create_time`, `ip_addr`, `request_param`, `result_code`, `operation_type`, `operation_desc`, `successful`, `fail_reason`, `module_key`, `module_name`)" +
+            " VALUES (#{id}, #{userId}, #{username}, #{createTime}, #{ipAddr}, #{requestParam}, #{resultCode}, #{operationType}, #{operationDesc}, #{successful}, #{failReason}, #{moduleKey}, #{moduleName})")
     void insert(SystemLog systemLog);
 
     @Delete("DELETE FROM t_system_log WHERE create_time < #{localDate}")
