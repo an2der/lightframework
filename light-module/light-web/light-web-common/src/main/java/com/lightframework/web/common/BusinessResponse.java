@@ -45,7 +45,7 @@ public class BusinessResponse implements Serializable {
         this(e.getCode(),e.getMessage(),e.getData());
     }
 
-    public BusinessResponse(BusinessStatus status){
+    public BusinessResponse(BusinessStatus.Status status){
         this(status.getCode(),status.getMessage(),null);
     }
 

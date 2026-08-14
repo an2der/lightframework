@@ -79,10 +79,5 @@ public class SystemLog implements Serializable {
      */
     private String moduleKey;
 
-    /**
-     * 模块名
-     */
-    private String moduleName;
-
 
 }

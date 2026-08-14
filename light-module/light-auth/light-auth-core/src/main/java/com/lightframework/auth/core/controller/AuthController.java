@@ -35,7 +35,7 @@ public class AuthController {
     private AuthConfigProperties authConfigProperties;
 
     @PostMapping("/login")
-    @SystemLogger(moduleKey = "AUTH", moduleName = "授权",operationDesc = "登录",businessType = BusinessType.LOGIN)
+    @SystemLogger(moduleKey = "AUTH",operationDesc = "登录",businessType = BusinessType.LOGIN)
     public UserInfo login(@RequestBody LoginParam loginParam){
         if(loginParam.getUsername() == null || loginParam.getUsername().isEmpty()){
             throw new BusinessException("请输入用户名");
@@ -50,7 +50,7 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    @SystemLogger(moduleKey = "AUTH", moduleName = "授权",operationDesc = "登出",businessType = BusinessType.LOGOUT)
+    @SystemLogger(moduleKey = "AUTH",operationDesc = "登出",businessType = BusinessType.LOGOUT)
     public boolean logout() {
         return authService.logout();
     }

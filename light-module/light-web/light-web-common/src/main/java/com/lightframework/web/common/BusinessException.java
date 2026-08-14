@@ -21,7 +21,7 @@ public class BusinessException extends LightException {
         this(BusinessStatus.FAIL.getCode(),null, data,null);
     }
 
-    public BusinessException(BusinessStatus status){
+    public BusinessException(BusinessStatus.Status status){
         this(status.getCode(), status.getMessage());
     }
 

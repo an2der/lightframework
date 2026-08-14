@@ -14,6 +14,5 @@ CREATE TABLE IF NOT EXISTS `t_system_log` (
   `successful` tinyint(1) DEFAULT NULL COMMENT '是否执行成功',
   `fail_reason` varchar(500) DEFAULT NULL COMMENT '失败原因',
   `module_key` varchar(64) DEFAULT NULL COMMENT '模块key',
-  `module_name` varchar(255) DEFAULT NULL COMMENT '模块名',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

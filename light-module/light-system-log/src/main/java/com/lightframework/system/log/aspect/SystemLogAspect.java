@@ -99,7 +99,7 @@ public class SystemLogAspect {
                     systemLog.setIpAddr(remoteIpAddr);
                     systemLog.setRequestParam(getArgsToJsonArrayString(joinPoint));
                     systemLog.setOperationDesc(logger.operationDesc());
-                    systemLog.setOperationType(logger.businessType().getCode());
+                    systemLog.setOperationType(logger.businessType());
                     if(exception == null){
                         systemLog.setSuccessful(true);
                         systemLog.setResultCode(BusinessStatus.SUCCESS.getCode());
@@ -109,7 +109,6 @@ public class SystemLogAspect {
                         systemLog.setFailReason(exception.getMessage());
                     }
                     systemLog.setModuleKey(logger.moduleKey());
-                    systemLog.setModuleName(logger.moduleName());
                     systemLogService.save(systemLog);
                 }catch (Exception e){
                     log.error("系统日志AOP保存日志时发生异常",e);

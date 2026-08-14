@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class LoginUserController {
 
     @GetMapping("/userinfo")
-    @SystemLogger(moduleKey = "USER", moduleName = "用户",operationDesc = "获取登录用户信息",businessType = BusinessType.SELECT)
+    @SystemLogger(moduleKey = "USER",operationDesc = "获取登录用户信息",businessType = BusinessType.SELECT)
     public UserInfo userinfo(UserInfo userInfo){
         return userInfo;
     }

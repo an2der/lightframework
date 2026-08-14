@@ -16,9 +16,7 @@ public @interface SystemLogger {
 
     String operationDesc();
 
-    BusinessType businessType() default BusinessType.OTHER;
-
-    String moduleName() default "";
+    int businessType() default BusinessType.OTHER;
 
     String moduleKey() default "";
 }
